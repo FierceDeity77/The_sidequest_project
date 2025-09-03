@@ -1,0 +1,113 @@
+{% load static %}
+<!-- Sidebar Column -->
+
+<!-- About Community -->
+<div class="card shadow-sm mb-3">
+  <div class="card-header bg-light fw-bold">
+    About Community
+  </div>
+  <div class="card-body">
+    <!-- Community name + icon -->
+    <div class="d-flex align-items-center mb-3">
+      {% if community.icon %}
+        <img src="{{ community.icon.url }}" alt="{{ community.name }}"
+             class="rounded me-2" width="40" height="40">
+      {% else %}
+        <div class="rounded bg-secondary me-2" 
+             style="width:40px; height:40px;"></div>
+      {% endif %}
+      <div>
+        <h6 class="mb-0">{{ community.name }}</h6>
+        <small class="text-muted">Created {{ community.created_at|date:"M d, Y" }}</small>
+      </div>
+    </div>
+
+    <!-- Description -->
+    {% if community.description %}
+      <p class="small text-muted">{{ community.description|truncatechars:120 }}</p>
+    {% endif %}
+
+    <!-- Join Button -->
+    <div class="d-grid gap-2 mb-3">
+      <a href="#" 
+         class="btn btn-primary btn-sm fw-bold">
+        Join
+      </a>
+    </div>
+
+    <!-- Create Sub-community -->
+     
+    <div class="mb-3">
+      {% if community.content_type == "Community" %}
+      <a href="#" 
+         class="btn btn-outline-secondary btn-sm w-100">
+        Create Sub-community
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Mods -->
+    <h6 class="fw-bold">Moderators</h6>
+    <ul class="list-unstyled small mb-3">
+      <li class="text-muted">No moderators yet.</li>
+      {% comment %}{% for mod in community.moderators.all %}
+        <li>@{{ mod.username }}</li>
+      {% empty %}
+        <li class="text-muted">No moderators yet.</li>
+      {% endfor %}{% endcomment %}
+    </ul>
+
+    <!-- Rules -->
+    <h6 class="fw-bold">Rules</h6>
+    <ul class="small ps-3">
+      <li class="text-muted">No rules added yet.</li>
+      {% comment %} {% for rule in community.rules.all %}
+        <li>{{ rule.text }}</li>
+      {% empty %}
+        <li class="text-muted">No rules added yet.</li>
+      {% endfor %} {% endcomment %}
+    </ul>
+  </div>
+</div>
+
+<!-- Top Sub-communities -->
+ {% if community.content_type == "Community" %}
+<div class="card mb-3 shadow-sm">
+  <div class="card-header fw-bold">    
+    🏛 Top Sub-communities
+  </div>
+  <ul class="list-group list-group-flush">
+    {% for sub in community.sub_communities.all %}
+      <li class="list-group-item">
+        <a href="{% url 'content:community-detail' sub.slug %}">
+          {{ sub.name }}
+        </a>
+      </li>
+    {% empty %}
+      <li class="list-group-item text-muted">No sub-communities yet.</li>
+    {% endfor %}
+  </ul>
+</div> {% endif %}
+
+<!-- User Followed Communities -->
+<div class="card shadow-sm">
+  <div class="card-header fw-bold">
+    ⭐ Your Communities
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item text-muted">You don’t follow any yet.</li>
+    {% comment %} {% if user.is_authenticated %}
+      {% for followed in user.followed_communities.all %}
+        <li class="list-group-item">
+          <a href="{% url 'content:community-detail' followed.slug %}">
+            {{ followed.name }}
+          </a>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">You don’t follow any yet.</li>
+      {% endfor %}
+    {% else %}
+      <li class="list-group-item text-muted">Login to see followed communities.</li>
+    {% endif %} {% endcomment %}
+  </ul>
+</div>

@@ -1,0 +1,20 @@
+{% load comments_tags %}
+
+{% comment %} the recursive part, this render the comment itself {% endcomment %}
+{% comment %} checks if it has children if yes then calls the same tag again {% endcomment %}
+<div class="d-flex mb-2 ms-{{ comment.parent|yesno:'4,0' }}"> {% comment %} indents replies if yes ms-4 if no ms-0 {% endcomment %}
+  <img src="{{ comment.author.avatar }}" alt="avatar" class="rounded-circle me-2" width="28" height="28">
+  <div>
+    <span class="fw-bold">{{ comment.author.username }}</span>
+    <span class="text-muted small">{{ comment.created_at|timesince }} ago</span>
+    <p class="mb-0">{{ comment.text }}</p>
+
+    {% include "content/includes/reply.html" %}
+
+    <!-- Render replies recursively -->
+    {% for reply in comment.replies.all %}
+      {% render_comment reply topic %} {% comment %} calls the templatetag here again {% endcomment %} 
+    {% endfor %}
+  </div>
+</div>
+

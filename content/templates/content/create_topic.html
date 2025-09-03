@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+<h2>Create Topic</h2>
+<div class="form-container">
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="mb-4 text-center">Create Topic for {{ community.name }}</h2>
+      <form method="post" class="p-4 border rounded shadow-sm bg-light">
+        {% csrf_token %}
+        {% for field in topic_form %}
+          <div class="mb-3">
+            <label class="form-label">{{ field.label }} {{ field.help_text }}</label>
+            {% render_field field class="form-control" %}
+            <div class="text-danger small">{{ field.errors }}</div>
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %} <h1> meow </h1> {% endblock %}
+
+{% csrf_token %}
+
+{% block news %}
+
+{% for news in article%}
+     <div class="col-md-4">
+        <div class="card h-100 shadow-sm position-relative overflow-hidden">
+          <img src="{% static news.image %}" class="card-img-top" alt="News Image">
+            <div class="card-img-overlay d-flex align-items-end p-3">
+              <h5 class="card-title mb-0">{{ news.title }}</h5>
+            </div>
+              <a href="{{ news.href }}" target="_blank" class="stretched-link"></a>
+        </div>
+      </div> 
+  {% endfor %}
+  
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+<h2>Create</h2>
+<div class="form-container">
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="mb-4 text-center">Add Content</h2>
+      <form method="post" class="p-4 border rounded shadow-sm bg-light">
+        {% csrf_token %}
+        {% for field in reg_form %}
+          <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label>
+            {% render_field field class="form-control" %}
+            <div class="text-danger small">{{ field.errors }}</div>
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary w-100">Create</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% for message in messages %}
+  <p style="color: red;">{{ message }}</p>
+{% endfor %}
+{% endblock %}

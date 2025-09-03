@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %} Community {% endblock %}
+
+{% block content %}
+<section class="community-list-section my-4">
+  <h2 class="mb-3">List of Communities</h2>
+
+  <div class="row g-3">
+    {% for community in communities %}
+      <div class="col-md-4 col-sm-6">
+        <div class="d-flex align-items-center border rounded p-2 h-100">
+          <!-- Number -->
+          <span class="fw-bold me-3 text-primary">{{ forloop.counter }}.</span>
+
+          <!-- Thumbnail / logo -->
+          {% if community.icon %}
+            <img src="{{ community.icon.url }}" alt="{{ community.name }}"
+                 class="rounded me-3" width="40" height="40">
+          {% else %}
+            <div class="rounded bg-secondary me-3" 
+                 style="width:40px; height:40px;"></div>
+          {% endif %}
+
+          <!-- Name + description -->
+          <div>
+            <a href="{% url 'content:community-detail' community.slug %}" 
+               class="fw-bold text-decoration-none text-dark">
+              {{ community.name }}
+            </a>
+            {% if community.description %}
+              <p class="text-muted small mb-0">{{ community.description|truncatechars:60 }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-muted">No communities yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
