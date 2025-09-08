@@ -1,129 +1,123 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block page_title %} Detail {% endblock %}
 
 {% block header %} Detail {% endblock %}
 
 {% block content %} 
-<div class="container mt-4">
-  <div class="row">
-    <!-- Main Column -->
-    <div class="col-lg-8">
-      
-      <!-- Banner -->
-      <div class="banner-wrapper">
-          {% if community.banner %}
-              <img src="{{ community.banner.url }}" 
-                   alt="{{ community.name }} banner" 
-                   class="banner-img">
-          {% else %}
-              <img src="{% static 'banners/ResidentEvil2.jpg' %}" 
-                   alt="Default banner" 
-                   class="banner-img">
-          {% endif %}
-      </div>
 
-      <!-- Community Header -->
-      <div class="card-body">
-          <div class="d-flex align-items-center mb-3">
-              {% if community.icon %}
-                  <img src="{{ community.icon.url }}" 
-                       alt="{{ community.name }} icon"
-                       class="rounded-circle border me-3"
-                       width="60" height="60">
-              {% else %}
-                  <img src="{% static 'icons/re2icon.png' %}" 
-                       alt="Default community icon"
-                       class="rounded-circle border me-3"
-                       width="60" height="60">
-              {% endif %}
+<!-- Banner (full width) -->
+<div class="banner-wrapper mb-3">
+  {% if community.banner %}
+    <img src="{{ community.banner.url }}" 
+         alt="{{ community.name }} banner" 
+         class="banner-img w-100">
+  {% else %}
+    <img src="{% static 'banners/ResidentEvil2.jpg' %}" 
+         alt="Default banner" 
+         class="banner-img w-100">
+  {% endif %}
+</div>
 
-              <div>
-                  <h2 class="card-title mb-1">{{ community.name }}</h2>
-                  <small class="text-muted">{{ community.description }}</small>
+<!-- Community Header -->
+<div class="card-body">
+  <div class="d-flex align-items-center mb-3">
+    {% if community.icon %}
+      <img src="{{ community.icon.url }}" 
+           alt="{{ community.name }} icon"
+           class="rounded-circle border me-3"
+           width="60" height="60">
+    {% else %}
+      <img src="{% static 'icons/re2icon.png' %}" 
+           alt="Default community icon"
+           class="rounded-circle border me-3"
+           width="60" height="60">
+    {% endif %}
 
-                  <!-- Meta Info -->
-                  <div class="d-flex flex-wrap text-muted small mt-2">
-                      <span class="me-3">
-                          👤 <strong>{{ community.created_by.username }}</strong>
-                      </span>
-                      <span class="me-3">
-                          📅 {{ community.created_at|timesince }} ago
-                      </span>
-                      {% if community.parent %}
-                          <span class="me-3">
-                              🏛 
-                              <a href="{% url 'content:community-detail' community.parent.slug %}">
-                                  <strong>{{ community.parent.name }}</strong>
-                              </a>
-                          </span>
-                      {% endif %}
-                      {% if community.content_type == "Community" %}
-                          <span class="me-3">
-                              <span class="badge bg-primary">{{ community.content_type }}</span>
-                              <span class="badge bg-success">General</span>
-                          </span>
-                      {% else %}
-                          <span class="me-3">
-                              <span class="badge bg-danger">{{ community.content_type }}</span>
-                          </span>
-                      {% endif %}
-                  </div>
-              </div>
-          </div>
-      </div>
+    <div>
+      <h2 class="card-title mb-1">{{ community.name }}</h2>
+      <small class="text-muted">{{ community.description }}</small>
 
-      <!-- Action Buttons -->
-      <div class="d-flex justify-content-between mb-3">
-          <a href="{% url 'content:create-topic' community.slug %}" class="btn btn-success">
-              ➕ Create Topic
-          </a>
-      </div>
-
-      <!-- Topics Section -->
-      <div class="card shadow-sm mb-4">
-        <div class="list-group list-group-flush">
-          {% for topic in topics %}
-            <a href="{% url 'content:topic-detail' topic.slug %}" 
-               class="list-group-item list-group-item-action py-3">
-              <div class="d-flex align-items-center mb-1">
-                {% if topic.author.avatar %}
-                  <img src="{{ topic.author.avatar }}" 
-                       alt="{{ topic.author.username }}'s avatar" 
-                       class="rounded-circle me-2"
-                       width="20" height="20">
-                {% else %}
-                  <img src="{% static 'avatars/default-avatar.jpg' %}" 
-                       alt="Default avatar" 
-                       class="rounded-circle me-2"
-                       width="20" height="20">
-                {% endif %}
-                <small class="text-muted">
-                  <span class="fw-semibold">{{ topic.author.username }}</span>
-                  • {{ topic.created_at|timesince }} ago
-                </small>
-              </div>
-              <div class="fs-5 fw-bold text-dark">
-                {{ topic.title }}
-              </div>
+      <!-- Meta Info -->
+      <div class="d-flex flex-wrap text-muted small mt-2">
+        <span class="me-3">👤 <strong>{{ community.created_by.username }}</strong></span>
+        <span class="me-3">📅 {{ community.created_at|timesince }} ago</span>
+        {% if community.parent %}
+          <span class="me-3">🏛 
+            <a href="{% url 'content:community-detail' community.parent.slug %}">
+              <strong>{{ community.parent.name }}</strong>
             </a>
-          {% empty %}
-            <div class="list-group-item text-muted">No topics available.</div>
-          {% endfor %}
-        </div>
+          </span>
+        {% endif %}
+        {% if community.content_type == "Community" %}
+          <span class="me-3">
+            <span class="badge bg-primary">{{ community.content_type }}</span>
+            <span class="badge bg-success">General</span>
+          </span>
+        {% else %}
+          <span class="me-3">
+            <span class="badge bg-danger">{{ community.content_type }}</span>
+          </span>
+        {% endif %}
       </div>
-    </div>
-
-    <!-- Side Panel -->
-    <div class="col-lg-4">
-      {% include "content/includes/sidepanel.html" %}
     </div>
   </div>
 </div>
 
-            
+<!-- Action Buttons -->
+<div class="d-flex justify-content-between mb-3">
+  <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createTopicModal">
+    ➕ Create Topic
+  </a>
+</div>
 
-            
+<!-- Topics Section -->
+<div class="topics-list">
+  {% for topic in topics %}
+    <div class="card shadow-sm mb-3">
+      <a href="{% url 'content:topic-detail' topic.slug %}" 
+         class="text-decoration-none text-dark p-3 d-block">
+        
+        <!-- Author + timestamp -->
+        <div class="d-flex align-items-center mb-2">
+          {% if topic.author.avatar %}
+            <img src="{{ topic.author.avatar }}" 
+                 alt="{{ topic.author.username }}'s avatar" 
+                 class="rounded-circle me-2"
+                 width="24" height="24">
+          {% else %}
+            <img src="{% static 'avatars/default-avatar.jpg' %}" 
+                 alt="Default avatar" 
+                 class="rounded-circle me-2"
+                 width="24" height="24">
+          {% endif %}
+          <small class="text-muted">
+            <span class="fw-semibold">{{ topic.author.username }}</span>
+            • {{ topic.created_at|timesince }} ago
+          </small>
+        </div>
 
+        <!-- Title -->
+        <div class="fs-5 fw-bold">{{ topic.title }}</div>
+      </a>
+    </div>
+  {% empty %}
+    <div class="text-muted">No topics available.</div>
+  {% endfor %}
+</div>
+<!-- Include Create Topic Modal -->
+{% include "content/create_topic.html" %}
+<!-- Include Edit Community Modal -->
+{% include "content/edit_community.html" %}
+
+{% endblock %}
+
+{% block left_panel %}
+  {% include "content/includes/left_sidepanel.html" %}
+{% endblock %}
+
+{% block right_panel %}
+  {% include "content/includes/sidepanel.html" %}
 {% endblock %}

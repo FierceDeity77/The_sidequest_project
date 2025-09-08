@@ -23,3 +23,55 @@ function toggleReplyForm(commentId) {
         selectedForm.style.display = "none";
     }
 }
+
+// for AJAX
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("addGameForm");
+
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault(); // stop normal submit
+
+      const url = form.getAttribute("action");
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest" // let Django know it's AJAX
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("Network error");
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          // ✅ Close modal
+          const modalEl = document.getElementById("addGameModal");
+          const modal = bootstrap.Modal.getInstance(modalEl);
+          modal.hide();
+
+          // ✅ Optionally append new game to list
+          const gameList = document.querySelector(".game-list-section ol");
+          if (gameList) {
+            gameList.insertAdjacentHTML("beforeend", data.new_game_html);
+          }
+
+          form.reset(); // clear form
+        } else {
+          // Show errors (basic example)
+          alert("There were errors. Please check your form.");
+        }
+
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong!");
+      }
+    });
+  }
+});

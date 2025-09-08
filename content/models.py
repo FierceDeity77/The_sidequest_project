@@ -30,8 +30,9 @@ class Game(models.Model):
     release_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     average_rating = models.FloatField(default=0.0)
+    game_icon = models.ImageField(upload_to="game_icons/", blank=True, null=True)
     cover_image = models.ImageField(upload_to="game_covers/", blank=True, null=True)
-    content_type = models.CharField(max_length=20, null=True)
+    content_type = models.CharField(max_length=20, null=True) # for querying (Game, Review, Guide)
     slug = models.SlugField(unique=True)
 
 
@@ -106,6 +107,8 @@ def create_main_community(sender, instance, created, **kwargs):
             name=instance.title,
             is_main=True,
             content_type="Community",
+            icon=instance.game_icon, # use game_icon for now
+            banner=instance.cover_image,  # use game's cover image as banner
             description=f"The main community for {instance.title}",
             created_by=instance.author  # always set from the game's author this comes from author field from game model
         )

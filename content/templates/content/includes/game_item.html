@@ -1,0 +1,22 @@
+<li class="d-flex align-items-center py-3 border-bottom">
+  <!-- Numbering can be dynamic in loop or 'NEW' when via AJAX -->
+  {% if forloop %}
+    <span class="fw-bold me-3 text-primary">{{ forloop.counter }}.</span>
+  {% else %}
+    <span class="fw-bold me-3 text-primary">NEW</span>
+  {% endif %}
+
+  {% if game.game_icon %}
+    <img src="{{ game.game_icon.url }}" alt="{{ game.name }}" 
+         class="rounded me-3" width="40" height="40">
+  {% else %}
+    <div class="rounded bg-secondary me-3" style="width:40px; height:40px;"></div>
+  {% endif %}
+
+  <div class="flex-grow-1">
+    <span class="fw-bold d-block">{{ game.name }}</span>
+    {% if game.description %}
+      <p class="text-muted small mb-0">{{ game.description|truncatechars:80 }}</p>
+    {% endif %}
+  </div>
+</li>

@@ -3,37 +3,38 @@
 
 {% block page_title %} Community {% endblock %}
 
-{% block content %}
+
+{% block layout %}
 <section class="community-list-section my-4">
-  <h2 class="mb-3">List of Communities</h2>
+  <h2 class="mb-3">Communities</h2>
 
   <div class="row g-3">
     {% for community in communities %}
-      <div class="col-md-4 col-sm-6">
-        <div class="d-flex align-items-center border rounded p-2 h-100">
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <li class="d-flex align-items-center py-2 list-unstyled">
           <!-- Number -->
-          <span class="fw-bold me-3 text-primary">{{ forloop.counter }}.</span>
+          <span class="fw-bold me-2 text-primary">{{ forloop.counter }}.</span>
 
           <!-- Thumbnail / logo -->
           {% if community.icon %}
             <img src="{{ community.icon.url }}" alt="{{ community.name }}"
-                 class="rounded me-3" width="40" height="40">
+                 class="rounded me-2" width="40" height="40">
           {% else %}
-            <div class="rounded bg-secondary me-3" 
+            <div class="rounded bg-secondary me-2" 
                  style="width:40px; height:40px;"></div>
           {% endif %}
 
           <!-- Name + description -->
           <div>
             <a href="{% url 'content:community-detail' community.slug %}" 
-               class="fw-bold text-decoration-none text-dark">
+               class="fw-bold text-decoration-none text-dark d-block">
               {{ community.name }}
             </a>
             {% if community.description %}
               <p class="text-muted small mb-0">{{ community.description|truncatechars:60 }}</p>
             {% endif %}
           </div>
-        </div>
+        </li>
       </div>
     {% empty %}
       <p class="text-muted">No communities yet.</p>

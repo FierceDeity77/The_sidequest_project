@@ -5,7 +5,7 @@ from .models import Platform, Genre, Game, Comments, Community, Topic
 
 class GameAdmin(admin.ModelAdmin):
     list_filter = ("author", "genre", "release_date",)
-    list_display = ("title", "created_at", "author", "release_date", 
+    list_display = ("title", "created_at", "author", "release_date", "game_icon", "cover_image",
                     "created_at", "content_type", "average_rating", "slug")
     #list_editable = ["content_type"]
     # prepopulated_fields = {"slug": ("title",)}
@@ -13,7 +13,7 @@ class GameAdmin(admin.ModelAdmin):
 
 class CommunityAdmin(admin.ModelAdmin):
     list_filter = ("name", "created_by", "is_main",)
-    list_display = ("name", "created_by", "created_at", "is_main", 
+    list_display = ("name", "created_by", "created_at", "is_main", "icon", "banner",
                     "content_type", "parent", "game", "slug")
     #list_editable = ["content_type"]
     
@@ -32,7 +32,7 @@ class GenreAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_filter = ("text", "content_type", "created_at", "author")
+    list_filter = ("content_type", "created_at", "author")
     list_display = ("id", "text", "content_type", "object_id", "created_at", "author", "parent")
 
 

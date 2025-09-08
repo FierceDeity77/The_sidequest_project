@@ -1,0 +1,61 @@
+{% load static %}
+
+<!-- Left Panel: User Info -->
+    
+      
+        
+<div class="p-2">
+
+  <!-- Navigation -->
+  
+  <ul class="nav flex-column mb-3">
+    <li class="nav-item mb-1">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'home' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:home' %}">
+        <i class="bi bi-house-door me-2"></i> Home
+      </a>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'games' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:game-list' %}">
+        <i class="bi bi-compass me-2"></i> Games
+      </a>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'guides' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:guides' %}">
+        <i class="bi bi-book me-2"></i> Guides
+      </a>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'reviews' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:reviews' %}">
+        <i class="bi bi-star me-2"></i> Reviews
+      </a>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'discussions' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:communities' %}">
+        <i class="bi bi-chat-dots me-2"></i> Discussions
+      </a>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'community' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:communities' %}">
+        <i class="bi bi-people me-2"></i> Communities
+      </a>
+    </li>
+  </ul>
+
+  <!-- Communities Followed -->
+  <h6 class="text-uppercase text-muted small mb-2">Your Communities</h6>
+  <ul class="nav flex-column">
+    <li class="nav-item text-muted small">You don’t follow any yet.</li>
+    {% comment %} {% for c in user.followed_communities.all %}
+      <li class="nav-item mb-1">
+        <a class="nav-link d-flex align-items-center text-dark" href="{% url 'content:community-detail' c.slug %}">
+          <i class="bi bi-circle me-2"></i> {{ c.name }}
+        </a>
+      </li>
+    {% empty %}
+      <li class="nav-item text-muted small">You don’t follow any yet.</li>
+    {% endfor %}{% endcomment %}
+  </ul>
+
+</div>
+      
+    

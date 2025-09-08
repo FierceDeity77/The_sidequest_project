@@ -4,10 +4,10 @@
 
 {% csrf_token %}
 
-{% block news %}
+{% block content %}
 
 {% for news in article%}
-     <div class="col-md-4">
+     
         <div class="card h-100 shadow-sm position-relative overflow-hidden">
           <img src="{% static news.image %}" class="card-img-top" alt="News Image">
             <div class="card-img-overlay d-flex align-items-end p-3">
@@ -15,7 +15,7 @@
             </div>
               <a href="{{ news.href }}" target="_blank" class="stretched-link"></a>
         </div>
-      </div> 
+     
   {% endfor %}
   
 {% endblock %}

@@ -32,7 +32,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin): # no need to add password field, abstractbaseuser already has a password field and handles hashing
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=100, blank=True, null=False)
-    avatar = models.ImageField(upload_to="avatars", null=True)
+    avatar = models.ImageField(upload_to="user_avatars", null=True)
     about = models.CharField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     role = models.CharField(max_length=50, choices=[("admin", "Admin"), ("moderator", "Moderator"), ("user", "User")], default="user")
