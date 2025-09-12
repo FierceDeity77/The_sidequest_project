@@ -10,7 +10,7 @@
           <form method="post" action="{% url 'content:add-comment' topic.slug comment.id %}">
             {% csrf_token %}
             <div class="d-flex align-items-start">
-              <img src="{{ request.user.avatar }}" alt="avatar" 
+              <img src="{{ request.user.avatar.url }}" alt="avatar" 
                   class="rounded-circle me-2" width="32" height="32">
               <div class="flex-grow-1">
             

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, ProfileForm
+from .models import CustomUser
 from django.contrib import messages
 from django.views import View
 
@@ -47,6 +48,25 @@ class register(View):
             return redirect("content:home")
         
         return render(request, "accounts/register.html", {"reg_form": reg_form})
+    
+
+class ProfileView(View):
+    def get(self, request, email):
+        # view_user = CustomUser.objects.filter(email=email).first()
+        profile_form = ProfileForm(instance=request.user)
+        return render(request, "accounts/user_profile.html", {"user_profile": request.user,
+                                                              "profile_form": profile_form})
+
+
+    def post(self, request, email):
+        # view_user = CustomUser.objects.filter(email=email).first()
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect("user-profile", email=request.user.email)
+        return render(request, "accounts/user_profile.html", {"user_profile": request.user,
+                                                              "profile_form": profile_form})
 
 
 

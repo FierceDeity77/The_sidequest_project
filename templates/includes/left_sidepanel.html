@@ -20,23 +20,13 @@
       </a>
     </li>
     <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'guides' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:guides' %}">
-        <i class="bi bi-book me-2"></i> Guides
-      </a>
-    </li>
-    <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'reviews' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:reviews' %}">
-        <i class="bi bi-star me-2"></i> Reviews
-      </a>
-    </li>
-    <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'discussions' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:communities' %}">
-        <i class="bi bi-chat-dots me-2"></i> Discussions
-      </a>
-    </li>
-    <li class="nav-item mb-1">
       <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'community' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:communities' %}">
         <i class="bi bi-people me-2"></i> Communities
+      </a>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'news' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:communities' %}">
+        <i class="bi bi-chat-dots me-2"></i> News
       </a>
     </li>
   </ul>

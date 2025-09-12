@@ -2,25 +2,29 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% block page_title %} Community {% endblock %}
+{% block page_title %} List of Games {% endblock %}
 
 
 {% block layout %}
 <section class="game-list-section my-4">
-  <h2 class="mb-3">Games</h2>
+  
+  <!-- Heading + Add Game Button -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Games</h2>
+    <button class="btn btn-sm add-game-btn" data-bs-toggle="modal" data-bs-target="#addGameModal">
+      + Add Game
+    </button>
+  </div>
 
-  <!-- Trigger button -->
-<a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addGameModal">
-  Add Game
-</a>
-
+  <!-- Game List -->
   <ol class="list-unstyled">
-{% for game in games %}
-    {% include "content/includes/game_item.html" %} {% comment %} for ajax {% endcomment %}
-  {% empty %}
-    <p class="text-muted">No games yet.</p>
-  {% endfor %}
+    {% for game in games %}
+      {% include "content/includes/game_item.html" %} {# for ajax #}
+    {% empty %}
+      <p class="text-muted">No games yet.</p>
+    {% endfor %}
   </ol>
 </section>
-{% include "content/add_game.html" %}
+
+{% include "content/add_game_modal.html" %}
 {% endblock %}

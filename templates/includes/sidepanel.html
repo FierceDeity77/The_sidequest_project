@@ -49,7 +49,7 @@
     <div class="mb-3">
       {% if community.content_type == "Community" %}
       <a href="#" 
-         class="btn btn-outline-secondary btn-sm w-100">
+         class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#addSubCommunityModal">
         Create Sub-community
       </a>
       {% endif %}
@@ -83,25 +83,37 @@
  {% if community.content_type == "Community" %}
 <div class="card mb-3 shadow-sm">
   <div class="card-header fw-bold">    
-    🏛 Top Sub-communities
+    🏛 Sub-communities
   </div>
-  <ul class="list-group list-group-flush">
-    {% for sub in community.sub_communities.all %}
-      <li class="list-group-item">
-        <a href="{% url 'content:community-detail' sub.slug %}">
-          {{ sub.name }}
-        </a>
-      </li>
-    {% empty %}
-      <li class="list-group-item text-muted">No sub-communities yet.</li>
-    {% endfor %}
-  </ul>
+<ul class="list-group list-group-flush">
+  {% for sub in community.sub_communities.all %}
+    <li class="list-group-item d-flex align-items-center py-2">
+      <!-- Subcommunity Icon -->
+      {% if sub.icon %}
+        <img src="{{ sub.icon.url }}" alt="{{ sub.name }} icon"
+             class="rounded-circle me-2 border"
+             width="20" height="20">
+      {% else %}
+        <div class="rounded-circle bg-secondary me-2 border"
+             style="width:20px; height:20px;"></div>
+      {% endif %}
+
+      <!-- Subcommunity Name -->
+      <a href="{% url 'content:community-detail' sub.slug %}" 
+         class="sub-link small">
+        {{ sub.name }}
+      </a>
+    </li>
+  {% empty %}
+    <li class="list-group-item text-muted small">No sub-communities yet.</li>
+  {% endfor %}
+</ul>
 </div> {% endif %}
 
-<!-- User Followed Communities -->
+<!-- User Games may like -->
 <div class="card shadow-sm">
   <div class="card-header fw-bold">
-    ⭐ Your Communities
+    🎮 Games You May Like 
   </div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item text-muted">You don’t follow any yet.</li>

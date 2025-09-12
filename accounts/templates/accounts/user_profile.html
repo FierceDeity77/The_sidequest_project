@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}{{ user_profile.username }} - Profile{% endblock %}
+
+{% block content %}
+<!-- User Header -->
+<div class="card shadow-sm mb-4">
+  <div class="card-body d-flex align-items-center justify-content-between">
+    
+    <!-- Avatar + Info -->
+    <div class="d-flex align-items-center">
+      {% if user_profile.avatar %}
+      <img src="{{ user_profile.avatar.url|default:'/static/avatars/default-avatar.jpg' }}" 
+           alt="{{ user_profile.username }}" 
+           class="rounded-circle me-3" width="64" height="64">
+      {% else %}
+      <img src="{% static 'avatars/default-avatar.jpg' %}" 
+           alt="Default Avatar" 
+           class="rounded-circle me-3" width="64" height="64">
+      {% endif %}
+      <div>
+        <h3 class="mb-0">{{ user_profile.username }}</h3>
+        <small class="text-muted">Joined {{ user_profile.created_at|date:"F Y" }}</small><br>
+        <small class="text-muted">Points: 0</small>
+      </div>
+    </div>
+
+    <!-- Edit Profile Button (only if it's their own profile) -->
+    {% if user_profile == request.user %}
+    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+      Edit Profile
+    </button>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link {% if tab == 'posts' %}active{% endif %}" href="?tab=posts">Posts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if tab == 'comments' %}active{% endif %}" href="?tab=comments">Comments</a>
+  </li>
+</ul>
+{% include "accounts/edit_profile_modal.html" %}
+{% endblock %}
+
+
+

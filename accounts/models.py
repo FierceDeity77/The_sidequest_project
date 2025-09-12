@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils import timezone
+from django.templatetags.static import static
 
 # Create your models here.
 
@@ -32,12 +33,19 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin): # no need to add password field, abstractbaseuser already has a password field and handles hashing
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=100, blank=True, null=False)
-    avatar = models.ImageField(upload_to="user_avatars", null=True)
+    avatar = models.ImageField(upload_to="user_avatars/", null=True)
     about = models.CharField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     role = models.CharField(max_length=50, choices=[("admin", "Admin"), ("moderator", "Moderator"), ("user", "User")], default="user")
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    
+    following = models.ManyToManyField(
+    "self",
+    through="UserFollow",
+    symmetrical=False,
+    related_name="followers"
+)
 
     objects = CustomUserManager() # tells django to use your custommanager when creating users
 
@@ -46,3 +54,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin): # no need to add password 
 
     def __str__(self): # for readability in admin/shell
         return self.email
+    
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return self.avatar.url
+        return static("default_images/default-avatar.jpg") # returns default avatar if user has not uploaded one
+    
+class UserFollow(models.Model):
+    follower = models.ForeignKey("CustomUser", related_name="following_rel", on_delete=models.CASCADE)
+    following = models.ForeignKey("CustomUser", related_name="followers_rel", on_delete=models.CASCADE)
+    followed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("follower", "following")

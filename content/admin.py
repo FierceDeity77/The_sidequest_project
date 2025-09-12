@@ -5,9 +5,9 @@ from .models import Platform, Genre, Game, Comments, Community, Topic
 
 class GameAdmin(admin.ModelAdmin):
     list_filter = ("author", "genre", "release_date",)
-    list_display = ("title", "created_at", "author", "release_date", "game_icon", "cover_image",
+    list_display = ("title", "created_at", "author", "release_date", "cover_image",
                     "created_at", "content_type", "average_rating", "slug")
-    #list_editable = ["content_type"]
+    list_editable = ["cover_image"]
     # prepopulated_fields = {"slug": ("title",)}
 
 

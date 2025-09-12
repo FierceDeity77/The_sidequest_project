@@ -10966,3 +10966,29 @@ textarea.form-control-lg {
 .comment-replies > .comment:last-child .comment-avatar::after {
   height: 28px; /* only inside avatar height */
 }
+
+.add-game-btn, .create-topic-btn {
+  background-color: transparent;       /* transparent background */
+  border: 1px solid black;             /* black border */
+  color: black;                        /* black text */
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.25rem 0.75rem;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  text-decoration: none;               /* remove underline */
+}
+
+.add-game-btn:hover {
+  background-color: rgba(0,0,0,0.05); /* subtle gray hover */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  color: black;                       /* keep text black */
+}
+
+.list-group-item a.sub-link {
+  text-decoration: none; /* default */
+  color: inherit;        /* keeps Bootstrap text color */
+}
+
+.list-group-item a.sub-link:hover {
+  text-decoration: underline;
+}

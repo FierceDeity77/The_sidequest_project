@@ -23,9 +23,9 @@
     <!-- Post Content -->
     <div class="flex-grow-1">
       <div class="d-flex align-items-center mb-2">
-        <img src="{{ topic.author.avatar }}" alt="avatar" 
+        <img src="{{ topic.author.avatar.url }}" alt="avatar" 
              class="rounded-circle me-2" width="32" height="32">
-        <span class="fw-bold me-2">{{ topic.author.username }}</span>
+        <span class="small text-muted me-2">{{ topic.author.username }}</span>
         <span class="text-muted small">{{ topic.created_at|timesince }} ago</span>
       </div>
       <h5 class="mb-2">{{ topic.title }}</h5>
@@ -39,7 +39,7 @@
         <form method="post" action="{% url 'content:add-comment' topic.slug %}" class="mb-3">
           {% csrf_token %}
           <div class="d-flex align-items-start">
-            <img src="{{ request.user.avatar }}" alt="avatar" 
+            <img src="{{ request.user.avatar.url }}" alt="avatar" 
                  class="rounded-circle me-2" width="32" height="32">
             <div class="flex-grow-1">
               {{ comment_form.text|add_class:"form-control border rounded-3 p-2" }}
@@ -54,7 +54,6 @@
         {% for comment in comment_list %}
           {% if not comment.parent %}
             {% render_comment comment topic %}
-            {% include "content/includes/reply.html" %}
           {% endif %}
         {% endfor %}
       </div>
@@ -64,9 +63,9 @@
 {% endblock %}
 
 {% block left_panel %}
-  {% include "content/includes/left_sidepanel.html" %}
+  {% include "includes/left_sidepanel.html" %}
 {% endblock %}
 
 {% block right_panel %}
-  {% include "content/includes/sidepanel.html" %}
+  {% include "includes/sidepanel.html" %}
 {% endblock %}

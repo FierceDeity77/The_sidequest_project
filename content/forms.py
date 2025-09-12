@@ -6,7 +6,7 @@ from .models import Guide, Review, Topic, Game, Comments, Community
 class GameForm(forms.ModelForm):
     class Meta:
         model = Game
-        fields = ['title', 'platforms', 'genre', 'description', 'release_date', 'game_icon', 'cover_image']
+        fields = ['title', 'platforms', 'genre', 'description', 'release_date', 'cover_image']
         widgets = {
             'release_date': SelectDateWidget(years=range(1980, 2101)), # best practice to store in the db in this format yyyy-mm-dd
         }
@@ -18,7 +18,6 @@ class GameForm(forms.ModelForm):
         self.fields['genre'].label = "Genre"
         self.fields['description'].label = "Description"
         self.fields['release_date'].label = "Release Date"
-        self.fields['game_icon'].label = "Game Icon"
         self.fields['cover_image'].label = "Cover Image"
 
 
@@ -61,8 +60,22 @@ class CommunityForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['name'].label = "Community Name"
         self.fields['description'].label = "Description"
-        self.fields['banner'].label = "Banner Image"
         self.fields['icon'].label = "Icon Image"
+        self.fields['banner'].label = "Banner Image"
+
+
+class SubCommunityForm(forms.ModelForm): # added this form for creating sub-communities we can use the community form as well but to keep things clear we create a separate form
+    class Meta:
+        model = Community
+        fields = ['name', 'description', 'icon', 'banner']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].label = "Community Name"
+        self.fields['description'].label = "Description"
+        self.fields['icon'].label = "Icon Image"
+        self.fields['banner'].label = "Banner Image"
+        
 
 
 class BaseForm(forms.ModelForm):

@@ -1,0 +1,56 @@
+{% load widget_tweaks %}
+{% load static %}
+
+<!-- Add Game Modal -->
+<div class="modal fade" id="addGameModal" tabindex="-1" aria-labelledby="addGameModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="addGameModalLabel">Add Game</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body with Form -->
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" id="addGameForm" action="{% url 'content:add-game' %}">
+          {% csrf_token %}
+          
+          <!-- Loop for all fields -->
+          {% for field in game_form %}
+            <div class="mb-3">
+              <label class="form-label">{{ field.label }} {{ field.help_text }}</label>
+              
+              {% if field.name == "cover_image" %}
+                {% render_field field class="form-control" data-preview-target="coverPreview" %}
+                <img id="coverPreview" data-default-src="{% static 'default_images/default-cover.png' %}" 
+                     src="{% static 'default_images/default-cover.png' %}" 
+                     alt="Cover Preview" class="img-fluid mt-2 rounded" style="max-height: 200px;">
+              
+              {% elif field.name == "game_icon" %}
+                {% render_field field class="form-control" data-preview-target="iconPreview" %}
+                <img id="iconPreview" data-default-src="{% static 'default_images/default-community-icon.png' %}" 
+                     src="{% static 'default_images/default-community-icon.png' %}" 
+                     alt="Icon Preview" class="img-thumbnail mt-2" style="max-height: 100px;">
+
+              {% else %}
+                {% render_field field class="form-control" %}
+              {% endif %}
+
+              <div class="text-danger small">{{ field.errors }}</div>
+            </div>
+          {% endfor %}
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" form="addGameForm" class="btn btn-primary">Submit</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+

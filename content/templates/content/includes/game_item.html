@@ -1,22 +1,43 @@
-<li class="d-flex align-items-center py-3 border-bottom">
-  <!-- Numbering can be dynamic in loop or 'NEW' when via AJAX -->
-  {% if forloop %}
-    <span class="fw-bold me-3 text-primary">{{ forloop.counter }}.</span>
-  {% else %}
-    <span class="fw-bold me-3 text-primary">NEW</span>
-  {% endif %}
-
-  {% if game.game_icon %}
-    <img src="{{ game.game_icon.url }}" alt="{{ game.name }}" 
-         class="rounded me-3" width="40" height="40">
-  {% else %}
-    <div class="rounded bg-secondary me-3" style="width:40px; height:40px;"></div>
-  {% endif %}
-
-  <div class="flex-grow-1">
-    <span class="fw-bold d-block">{{ game.name }}</span>
-    {% if game.description %}
-      <p class="text-muted small mb-0">{{ game.description|truncatechars:80 }}</p>
-    {% endif %}
+<li class="d-flex border-bottom py-2 hover-bg-light" style="cursor: pointer;">
+  
+  <!-- Vote Section -->
+  <div class="d-flex flex-column align-items-center me-3">
+    <button class="btn btn-light p-0 mb-1" style="border: none;">
+      <i class="bi bi-arrow-up fs-5 text-secondary"></i>
+    </button>
+    <span class="fw-bold text-secondary small">0</span>
+    <button class="btn btn-light p-0 mt-1" style="border: none;">
+      <i class="bi bi-arrow-down fs-5 text-secondary"></i>
+    </button>
   </div>
+
+  <!-- Game Icon -->
+  {% if game.cover_image %}
+    <img src="{{ game.cover_image.url }}" alt="{{ game.name }}"
+         class="rounded me-3 border" width="50" height="50">
+  {% else %}
+    <div class="rounded bg-secondary me-3 border"
+         style="width:50px; height:50px;"></div>
+  {% endif %}
+
+  <!-- Game Info -->
+  <div class="flex-grow-1">
+    <a href="{% url 'content:game-detail' slug=game.slug %}" 
+       class="fw-bold text-dark fs-5 text-decoration-none d-block mb-1">
+      {{ game.title }}
+    </a>
+    {% if game.description %}
+      <p class="text-muted small mb-1">{{ game.description|truncatechars:100 }}</p>
+    {% endif %}
+    <div class="text-muted small">
+      Created by {{ game.author.username }} • {{ game.created_at|timesince }} ago
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="ms-3 d-flex align-items-center">
+    <a href="#" 
+       class="btn btn-sm btn-outline-primary">View</a>
+  </div>
+
 </li>

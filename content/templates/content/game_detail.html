@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}{{ game.title }} | The Sidequest{% endblock %}
+
+{% block content %}
+<div class="game-detail my-4">
+
+  <!-- Game Header -->
+  <div class="row mb-4">
+    <!-- Game Cover -->
+    <div class="col-md-4 text-center">
+      {% if game.cover_image %}
+        <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="img-fluid rounded border shadow-sm">
+      {% else %}
+        <div class="bg-light border rounded d-flex align-items-center justify-content-center"
+             style="width: 100%; height: 250px;">
+          <span class="text-muted">No Cover</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Game Info -->
+<div class="col-md-8">
+  <div class="d-flex justify-content-between align-items-start">
+    <h1 class="fw-bold mb-2">{{ game.title }}</h1>
+    <form method="post" action="#">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary btn-sm rounded-pill">
+        Follow
+      </button>
+    </form>
+  </div>
+
+  <!-- Platforms -->
+  <p class="mb-1 small">
+    <strong>Platforms:</strong>
+    {% for platform in game.platforms.all %}
+      <span class="badge bg-secondary">{{ platform.name }}</span>
+    {% empty %}
+      <span class="text-muted">No platforms listed</span>
+    {% endfor %}
+  </p>
+
+  <!-- Release Date -->
+  {% if game.release_date %}
+    <p class="mb-1 small"><strong>Release Date:</strong> {{ game.release_date }}</p>
+  {% endif %}
+
+  <!-- Average Rating -->
+  <p class="mb-2 small">
+    <strong>Average Rating:</strong>
+    {{ game.average_rating|default:"N/A" }}
+  </p>
+
+  <!-- Description -->
+  <p class="text-muted small">{{ game.description }}</p>
+</div>
+
+  <!-- Tabs Section -->
+  <ul class="nav nav-tabs" id="gameTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="feed-tab" data-bs-toggle="tab" href="#feed" role="tab">Feed</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="community-tab" data-bs-toggle="tab" href="#community" role="tab">Community</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="guides-tab" data-bs-toggle="tab" href="#guides" role="tab">Guides</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="reviews-tab" data-bs-toggle="tab" href="#reviews" role="tab">Reviews</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="news-tab" data-bs-toggle="tab" href="#news" role="tab">News</a>
+    </li>
+  </ul>
+
+  <div class="tab-content border border-top-0 p-3 rounded-bottom bg-white shadow-sm" id="gameTabsContent">
+    <!-- Feed -->
+    <div class="tab-pane fade show active" id="feed" role="tabpanel">
+      <p class="text-muted small">Latest activity and updates related to {{ game.title }}.</p>
+    </div>
+
+    
+<!-- Community -->
+<div class="tab-pane fade" id="community" role="tabpanel">
+  {% if game.communities.all %}
+    <!-- Main Communities -->
+    <h6 class="fw-bold text-uppercase small text-muted mb-2">Main Communities</h6>
+    <ul class="list-group list-group-flush mb-3">
+      {% for community in game.communities.all %}
+        {% if not community.parent %}
+          <li class="list-group-item">
+            <div class="d-flex align-items-center mb-1">
+              <!-- Community Icon -->
+              {% if community.icon %}
+                <img src="{{ community.icon.url }}" alt="{{ community.name }}"
+                     class="rounded-circle me-2" width="40" height="40">
+              {% else %}
+                <div class="rounded-circle bg-secondary me-2"
+                     style="width:40px; height:40px;"></div>
+              {% endif %}
+
+              <!-- Community Name -->
+              <div>
+                <a href="{% url 'content:community-detail' community.slug %}" class="fw-bold small">
+                  {{ community.name }}
+                </a>
+                <div class="text-muted small">
+                  👤 Creator: {{ community.created_by.username }} · 
+                  👥 Members: {{ community.members.count }}
+                </div>
+              </div>
+            </div>
+          </li>
+        {% endif %}
+      {% empty %}
+        <li class="list-group-item text-muted small">No main communities yet.</li>
+      {% endfor %}
+    </ul>
+
+    <!-- Sub-Communities -->
+    <h6 class="fw-bold text-uppercase small text-muted mb-2">Sub-Communities</h6>
+    <ul class="list-group list-group-flush">
+      {% for community in game.communities.all %}
+        {% if community.parent %}
+          <li class="list-group-item">
+            <div class="d-flex align-items-center mb-1">
+              {% if community.icon %}
+                <img src="{{ community.icon.url }}" alt="{{ community.name }}"
+                     class="rounded-circle me-2" width="32" height="32">
+              {% else %}
+                <div class="rounded-circle bg-secondary me-2"
+                     style="width:32px; height:32px;"></div>
+              {% endif %}
+
+              <div>
+                <a href="{% url 'content:community-detail' community.slug %}" class="small">
+                  {{ community.name }}
+                </a>
+                <div class="text-muted small">
+                  👤 Creator: {{ community.created_by.username }} · 
+                  👥 Members: {{ community.members.count }}
+                </div>
+              </div>
+            </div>
+          </li>
+        {% endif %}
+      {% empty %}
+        <li class="list-group-item text-muted small">No sub-communities yet.</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted small">No communities linked to this game yet.</p>
+  {% endif %}
+</div>
+    <!-- Guides -->
+    <div class="tab-pane fade" id="guides" role="tabpanel">
+      <p class="text-muted small">Guides for {{ game.title }}.</p>
+    </div>
+
+    <!-- Reviews -->
+    <div class="tab-pane fade" id="reviews" role="tabpanel">
+      <p class="text-muted small">User reviews will appear here.</p>
+    </div>
+
+    <!-- News -->
+    <div class="tab-pane fade" id="news" role="tabpanel">
+      <p class="text-muted small">Latest news and announcements about {{ game.title }}.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+

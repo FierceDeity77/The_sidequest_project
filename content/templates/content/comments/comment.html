@@ -1,20 +1,40 @@
 {% load comments_tags %}
+{% load static %}
 
 {% comment %} the recursive part, this render the comment itself {% endcomment %}
 {% comment %} checks if it has children if yes then calls the same tag again {% endcomment %}
 <div class="comment d-flex mb-2 ms-{{ comment.parent|yesno:'4,0' }}">
   <div class="comment-avatar">
-    <img src="{{ comment.author.avatar }}" alt="avatar" 
-         class="rounded-circle" width="28" height="28">
+    {% if comment.author and comment.author.avatar %}
+      <img src="{{ comment.author.avatar.url }}" alt="avatar" 
+           class="rounded-circle" width="28" height="28">
+    {% else %}
+      <img src="{% static 'default_images/default-avatar.jpg' %}" alt="avatar" 
+           class="rounded-circle" width="28" height="28">
+    {% endif %}
   </div>
 
   <div class="comment-body ms-2">
-    <span class="fw-bold">{{ comment.author.username }}</span>
-    <span class="text-muted small">{{ comment.created_at|timesince }} ago</span>
-    <p class="mb-0">{{ comment.text }}</p>
+    <span class="fw-bold small text-muted me-2">
+      {{ comment.author.username }}
+    </span>
+    <span class="text-muted small">
+      {{ comment.created_at|timesince }} ago
+    </span>
 
+    <p class="mb-1">{{ comment.text }}</p>
+
+    <!-- Voting section -->
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <span class="text-success">▲ {{ comment.upvote_count }}</span>
+      <span class="text-danger">▼ {{ comment.downvote_count }}</span>
+      <span class="text-muted small">{{ comment.replies.count }} replies</span>
+    </div>
+
+    <!-- Reply button / form -->
     {% include "content/includes/reply.html" %}
 
+    <!-- Recursive replies -->
     {% if comment.replies.all %}
       <div class="comment-replies mt-2">
         {% for reply in comment.replies.all %}

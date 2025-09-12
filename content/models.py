@@ -30,16 +30,11 @@ class Game(models.Model):
     release_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     average_rating = models.FloatField(default=0.0)
-    game_icon = models.ImageField(upload_to="game_icons/", blank=True, null=True)
     cover_image = models.ImageField(upload_to="game_covers/", blank=True, null=True)
     content_type = models.CharField(max_length=20, null=True) # for querying (Game, Review, Guide)
-    slug = models.SlugField(unique=True)
-
-
-    class Meta:
-        unique_together = ("title", "slug")
-
-
+    slug = models.SlugField(unique=True, default=None) # will be generated from title and author id to ensure uniqueness
+     # Members/followers
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through="GameFollowers", related_name="joined_games")
 
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # references your custom User model
@@ -50,9 +45,18 @@ class Game(models.Model):
 
 
     def save(self, *args, **kwargs):
-            if not self.slug:  # Only generate if slug is not already set
-                self.slug = slugify(f"{self.author.id}-{self.title}") # add value into slug field using title and id of the author
-            super().save(*args, **kwargs)
+        # import traceback
+        # print("Saving Game:", self.title, "slug:", self.slug)
+        # traceback.print_stack(limit=5)  # shows where save() is called
+        if not self.slug: # Only generate if slug is not already set
+            base_slug = slugify(f"{self.author.id}-{self.title}")
+            slug = base_slug
+            counter = 1
+            while Game.objects.filter(slug=slug).exists(): # ensure uniqueness
+                slug = f"{base_slug}-{counter}" # add counter if slug exists
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
 
     def update_average_rating(self):
@@ -67,6 +71,15 @@ class Game(models.Model):
     def __str__(self):
         return self.title
     
+class GameFollowers(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    joined_at = models.DateTimeField(auto_now_add=True)
+    is_moderator = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ("user", "game")  # prevent duplicate joins
+    
 
 class Community(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="communities")
@@ -80,7 +93,8 @@ class Community(models.Model):
     slug = models.SlugField(unique=True, default=None)
     is_main = models.BooleanField(default=False)  # True for the game's main community, False for sub-communities
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="sub_communities")
-
+     # Members/followers
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through="CommunityMembership", related_name="joined_communities")
 
     class Meta:
         unique_together = ("game", "name", "parent")  # Prevent duplicates inside same game
@@ -107,11 +121,19 @@ def create_main_community(sender, instance, created, **kwargs):
             name=instance.title,
             is_main=True,
             content_type="Community",
-            icon=instance.game_icon, # use game_icon for now
-            banner=instance.cover_image,  # use game's cover image as banner
             description=f"The main community for {instance.title}",
             created_by=instance.author  # always set from the game's author this comes from author field from game model
         )
+
+
+class CommunityMembership(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    joined_at = models.DateTimeField(auto_now_add=True)
+    is_moderator = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ("user", "community")  # prevent duplicate joins
     
 
 class Topic(models.Model):
@@ -123,6 +145,9 @@ class Topic(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.SlugField(unique=True, default=None)
     comments = GenericRelation("Comments", related_name="topic_comments") # for querying comments from generic relation
+
+    upvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="topic_upvotes", blank=True)
+    downvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="topic_downvotes", blank=True)
 
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -214,6 +239,9 @@ class Comments(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now_add=True)
 
+    upvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="comment_upvotes", blank=True)
+    downvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="comment_downvotes", blank=True)
+
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -233,3 +261,6 @@ class Comments(models.Model):
         on_delete=models.CASCADE,
         related_name="replies"
     )
+
+    class Meta:
+        ordering = ['-created_at']  # to set the default ordering of comments by newest first

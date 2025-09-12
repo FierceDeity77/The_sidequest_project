@@ -15,7 +15,7 @@
          alt="{{ community.name }} banner" 
          class="banner-img w-100">
   {% else %}
-    <img src="{% static 'banners/ResidentEvil2.jpg' %}" 
+    <img src="{% static 'default_images/default-cover.png' %}" 
          alt="Default banner" 
          class="banner-img w-100">
   {% endif %}
@@ -30,7 +30,7 @@
            class="rounded-circle border me-3"
            width="60" height="60">
     {% else %}
-      <img src="{% static 'icons/re2icon.png' %}" 
+      <img src="{% static 'default_images/default-community-icon.png' %}" 
            alt="Default community icon"
            class="rounded-circle border me-3"
            width="60" height="60">
@@ -45,11 +45,24 @@
         <span class="me-3">👤 <strong>{{ community.created_by.username }}</strong></span>
         <span class="me-3">📅 {{ community.created_at|timesince }} ago</span>
         {% if community.parent %}
-          <span class="me-3">🏛 
-            <a href="{% url 'content:community-detail' community.parent.slug %}">
-              <strong>{{ community.parent.name }}</strong>
+          <div class="d-flex align-items-center mb-2">
+            <!-- Parent Community Icon -->
+            {% if community.parent.icon %}
+              <img src="{{ community.parent.icon.url }}" 
+                  alt="{{ community.parent.name }}" 
+                  class="rounded me-2 border" 
+                  width="32" height="32">
+            {% else %}
+              <div class="rounded bg-secondary me-2 border" 
+                  style="width:20px; height:20px;"></div>
+            {% endif %}
+
+            <!-- Parent Community Link -->
+            <a href="{% url 'content:community-detail' community.parent.slug %}" 
+              class="sub-link small fw-semibold">
+              {{ community.parent.name }}
             </a>
-          </span>
+          </div>
         {% endif %}
         {% if community.content_type == "Community" %}
           <span class="me-3">
@@ -68,7 +81,7 @@
 
 <!-- Action Buttons -->
 <div class="d-flex justify-content-between mb-3">
-  <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createTopicModal">
+  <a href="#" class="btn create-topic-btn" data-bs-toggle="modal" data-bs-target="#createTopicModal">
     ➕ Create Topic
   </a>
 </div>
@@ -83,7 +96,7 @@
         <!-- Author + timestamp -->
         <div class="d-flex align-items-center mb-2">
           {% if topic.author.avatar %}
-            <img src="{{ topic.author.avatar }}" 
+            <img src="{{ topic.author.avatar.url }}" 
                  alt="{{ topic.author.username }}'s avatar" 
                  class="rounded-circle me-2"
                  width="24" height="24">
@@ -102,22 +115,35 @@
         <!-- Title -->
         <div class="fs-5 fw-bold">{{ topic.title }}</div>
       </a>
+
+      <!-- Footer: votes + comments -->
+      <div class="d-flex justify-content-between align-items-center px-3 pb-2">
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-success">▲ {{ topic.upvote_count }}</span>
+          <span class="text-danger">▼ {{ topic.downvote_count }}</span>
+        </div>
+        <div>
+          <span class="text-muted">{{ topic.comment_count }} comments</span>
+        </div>
+      </div>
     </div>
   {% empty %}
     <div class="text-muted">No topics available.</div>
   {% endfor %}
 </div>
 <!-- Include Create Topic Modal -->
-{% include "content/create_topic.html" %}
+{% include "content/create_topic_modal.html" %}
 <!-- Include Edit Community Modal -->
-{% include "content/edit_community.html" %}
+{% include "content/edit_community_modal.html" %}
+<!-- Include Create Sub-community Modal -->
+{% include "content/create_sub-community_modal.html" %}
 
 {% endblock %}
 
 {% block left_panel %}
-  {% include "content/includes/left_sidepanel.html" %}
+  {% include "includes/left_sidepanel.html" %}
 {% endblock %}
 
 {% block right_panel %}
-  {% include "content/includes/sidepanel.html" %}
+  {% include "includes/sidepanel.html" %}
 {% endblock %}

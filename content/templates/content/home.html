@@ -1,21 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
-{% block page_title %} <h1> meow </h1> {% endblock %}
 
-{% csrf_token %}
+{% block page_title %} Home {% endblock %}
 
 {% block content %}
-
-{% for news in article%}
-     
+  <div class="row g-3">
+    {% for news in article %}
+      <div class="col-12">
         <div class="card h-100 shadow-sm position-relative overflow-hidden">
+          <!-- News Image -->
           <img src="{% static news.image %}" class="card-img-top" alt="News Image">
-            <div class="card-img-overlay d-flex align-items-end p-3">
-              <h5 class="card-title mb-0">{{ news.title }}</h5>
-            </div>
-              <a href="{{ news.href }}" target="_blank" class="stretched-link"></a>
+
+          <!-- Overlay Title -->
+          <div class="card-img-overlay d-flex align-items-end p-3 bg-dark bg-opacity-25">
+            <h5 class="card-title text-white mb-0">{{ news.title }}</h5>
+          </div>
+
+          <!-- Clickable Area -->
+          <a href="{{ news.href }}" target="_blank" class="stretched-link"></a>
         </div>
-     
-  {% endfor %}
-  
+      </div>
+    {% empty %}
+      <p class="text-muted">No news available.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block right_panel %}
+  <!-- Example: Trending / Popular section -->
+  <div class="card shadow-sm mb-3">
+    <div class="card-header fw-bold small">Trending Games</div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item small">Elden Ring</li>
+      <li class="list-group-item small">Resident Evil 4 Remake</li>
+      <li class="list-group-item small">Final Fantasy XVI</li>
+    </ul>
+  </div>
 {% endblock %}

@@ -21,4 +21,16 @@ class RegisterForm(UserCreationForm): # inherited from django usercreation form 
         self.fields['password1'].help_text = "Must be at least 8 characters"
         self.fields['username'].label = "Username"
         # self.fields['avatar'].label = "Avatar"
-        
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ["username", "email", "avatar", "about"]  # Include any other fields you want to edit
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].label = "Email"
+        self.fields['avatar'].help_text = "Upload a profile picture"
+        self.fields['username'].label = "Username"
+        self.fields['about'].label = "About Me"
