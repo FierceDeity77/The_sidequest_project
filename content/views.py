@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator # can require login to cbv functions
 from django.db.models import Count
+from django.apps import apps
 from .news import article  # import the article data from news.py
 
 
@@ -80,7 +81,7 @@ class CommunityDetail(View):
                 comment_count=Count("comments", distinct=True),
                 upvote_count=Count("upvotes", distinct=True),
                 downvote_count=Count("downvotes", distinct=True),
-            ).order_by('-created_at')  # newest first
+            ).order_by('-created_at')  # newest first, annotate calculates something per row and add it a extra fields to each topic object
         return render(request, "content/community_detail.html", {"community": community, 
                                                                  "topics": topics,
                                                                  "topic_form": topic_form,
@@ -88,8 +89,8 @@ class CommunityDetail(View):
                                                                  "community_form": community_form,
                                                                  "subcommunity_form": subcommunity_form}) # pass id to check if creating sub-community
 
-
-    @method_decorator(login_required(login_url='login')) # method decorator adapts decorators like login required to work with cbv's
+class EditCommunity(LoginRequiredMixin, View):
+    # @method_decorator(login_required(login_url='login')) # method decorator adapts decorators like login required to work with cbv's
     def post(self, request, slug): # edit community detail goes to this post request
         community = Community.objects.get(slug=slug) # instance in post ensures you edit the same object instead of creating a new one
         community_form = CommunityForm(request.POST, request.FILES, instance=community) # for modal edit community
@@ -139,6 +140,10 @@ class TopicDetail(View):
                                                              "community": community, # to pass community data to topics detail so that the right panel can render the info
                                                              "comment_form": comment_form,
                                                              "comment_list": comment_list})
+    
+class TopicUpvote(View):
+    def post(self, request):
+        pass
 
     
 class AddComment(LoginRequiredMixin, View):
@@ -164,6 +169,63 @@ class AddComment(LoginRequiredMixin, View):
             messages.success(request, "Reply added successfully!")
         return redirect("content:topic-detail", slug=slug)
     
+
+class GenericVote(View):
+    @method_decorator(login_required)
+    def post(self, request, model, id):
+        # Dynamically get model: "topic" -> Topic, "comment" -> Comments
+        # this makes the vote view reusable for both topics and comments
+        Model = apps.get_model("content", model.capitalize()) # gets the model class from the string name and capitalize the first letter to match the class name
+        obj = get_object_or_404(Model, id=id)
+
+        action = request.POST.get("action")
+
+        if action == "upvote":
+            if request.user in obj.upvotes.all():
+                obj.upvotes.remove(request.user)
+            else:
+                obj.upvotes.add(request.user)
+                obj.downvotes.remove(request.user)
+
+        elif action == "downvote":
+            if request.user in obj.downvotes.all():
+                obj.downvotes.remove(request.user)
+            else:
+                obj.downvotes.add(request.user)
+                obj.upvotes.remove(request.user)
+
+        return JsonResponse({
+            "upvotes": obj.upvotes.count(),
+            "downvotes": obj.downvotes.count(),
+        })
+    
+
+# class CommentVote(View):
+#     @method_decorator(login_required(login_url='login'))
+#     def post(self, request, id):
+#         comment = get_object_or_404(Comments, id=id)
+#         action = request.POST.get("action") # get the action from the button clicked in the template
+#         # Remove user from both upvotes and downvotes to toggle the vote
+#         if action == "upvote":
+#             if request.user in comment.upvotes.all(): # checks if user already upvoted
+#                 comment.upvotes.remove(request.user)
+#             else:
+#                 comment.upvotes.add(request.user)
+#                 comment.downvotes.remove(request.user)
+#         elif action == "downvote":
+#             if request.user in comment.downvotes.all(): # checks if user already downvoted
+#                 comment.downvotes.remove(request.user)
+#             else:
+#                 comment.downvotes.add(request.user)
+#                 comment.upvotes.remove(request.user)
+
+#                 # for AJAX
+#         return JsonResponse({
+#             "upvotes": comment.upvotes.count(),
+#             "downvotes": comment.downvotes.count(),
+#         })
+        #return redirect("content:topic-detail", slug=comment.content_object.slug) # slug of the topic the comment belongs to reverse relation from generic foreign key
+
 
     
 

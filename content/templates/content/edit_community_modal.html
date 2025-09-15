@@ -14,7 +14,7 @@
 
       <!-- Modal Body -->
       <div class="modal-body">
-        <form method="post" enctype="multipart/form-data" id="editCommunityForm" action="{% url 'content:community-detail' community.slug %}">
+        <form method="post" enctype="multipart/form-data" id="editCommunityForm" action="{% url 'content:edit-community' community.slug %}">
           {% csrf_token %}
           
           {% for field in community_form %}

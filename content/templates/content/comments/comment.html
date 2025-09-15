@@ -26,8 +26,24 @@
 
     <!-- Voting section -->
     <div class="d-flex align-items-center gap-2 mb-1">
-      <span class="text-success">▲ {{ comment.upvote_count }}</span>
-      <span class="text-danger">▼ {{ comment.downvote_count }}</span>
+      <button class="btn btn-sm btn-outline-success vote-btn" 
+              data-id="{{ comment.id }}" 
+              data-type="post" 
+              data-model="comments"  {% comment %} this passes the model string "comments" and urls.py path <str:model> which will then pass to the view to identify the model {% endcomment %}
+              data-action="upvote" 
+              data-csrf="{{ csrf_token }}"> <!-- csrf injected every button carries it's own csrf-->
+        ▲ <span id="upvotes-{{ comment.id }}">{{ comment.upvotes.count }}</span>
+      </button>
+
+      <button class="btn btn-sm btn-outline-danger vote-btn" 
+              data-id="{{ comment.id }}" 
+              data-type="post" 
+              data-model="comments"
+              data-action="downvote" 
+              data-csrf="{{ csrf_token }}">
+        ▼ <span id="downvotes-{{ comment.id }}">{{ comment.downvotes.count }}</span>
+      </button>
+
       <span class="text-muted small">{{ comment.replies.count }} replies</span>
     </div>
 

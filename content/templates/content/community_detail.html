@@ -118,15 +118,29 @@
 
       <!-- Footer: votes + comments -->
       <div class="d-flex justify-content-between align-items-center px-3 pb-2">
-        <div class="d-flex align-items-center gap-2">
-          <span class="text-success">▲ {{ topic.upvote_count }}</span>
-          <span class="text-danger">▼ {{ topic.downvote_count }}</span>
-        </div>
-        <div>
-          <span class="text-muted">{{ topic.comment_count }} comments</span>
-        </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-sm btn-outline-success vote-btn" 
+                data-id="{{ topic.id }}" 
+                data-type="post" 
+                data-model="topic"  {% comment %} this passes the model string "topic" and urls.py path <str:model> which will then pass to the view to identify the model {% endcomment %}
+                data-action="upvote"
+                data-csrf="{{ csrf_token }}"> <!-- csrf injected every button carries it's own csrf-->
+          ▲ <span id="upvotes-{{ topic.id }}">{{ topic.upvote_count }}</span>
+        </button>
+        <button class="btn btn-sm btn-outline-danger vote-btn" 
+                data-id="{{ topic.id }}" 
+                data-type="post" 
+                data-model="topic"
+                data-action="downvote"
+                data-csrf="{{ csrf_token }}"> 
+          ▼ <span id="downvotes-{{ topic.id }}">{{ topic.downvote_count }}</span>
+        </button>
+      </div>
+      <div>
+        <span class="text-muted">{{ topic.comment_count }} comments</span>
       </div>
     </div>
+  </div> 
   {% empty %}
     <div class="text-muted">No topics available.</div>
   {% endfor %}

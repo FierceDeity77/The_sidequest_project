@@ -105,3 +105,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+
+
+// AJAX for comment and post Voting
+document.querySelectorAll(".vote-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    const voteId = this.dataset.id;
+    const action = this.dataset.action;
+    const csrfToken = this.dataset.csrf; // ✅ read token from HTML
+
+    fetch(`/vote/${this.dataset.model}/${this.dataset.id}/`, { // gets the model and id from data attributes
+      method: "POST",
+      headers: {
+        "X-CSRFToken": this.dataset.csrf,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: `action=${this.dataset.action}`
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Network error");
+      return res.json();
+    })
+    .then(data => {
+      document.getElementById(`upvotes-${voteId}`).innerText = data.upvotes;
+      document.getElementById(`downvotes-${voteId}`).innerText = data.downvotes;
+    })
+    .catch(err => console.error("Vote failed:", err));
+  });
+});
