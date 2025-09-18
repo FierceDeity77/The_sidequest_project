@@ -10992,3 +10992,54 @@ textarea.form-control-lg {
 .list-group-item a.sub-link:hover {
   text-decoration: underline;
 }
+
+/* topic list hover effect */
+.topics-list .card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+  }
+
+.topics-list .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    background-color: #f8f9fa; /* subtle background highlight */
+ }
+
+/* game list hover effect */
+.game-list-section li {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.game-list-section li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  background-color: #f8f9fa; /* subtle highlight */
+}
+
+.game-list-section li a.fw-bold:hover {
+  color: #0d6efd; /* bootstrap primary blue */
+  text-decoration: underline;
+}
+
+/* upvote/downvote buttons hover effect */
+.vote-btn {
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  cursor: pointer; /* makes it feel clickable */
+  transition: color 0.2s ease-in-out;
+}
+
+.vote-btn:focus {
+  outline: none; /* remove blue highlight */
+}
+
+.vote-btn.text-danger:hover {
+  color: #a71d2a; /* darker red on hover */
+}
+
+/* community title */
+.community-title {
+  text-shadow: none !important;
+}

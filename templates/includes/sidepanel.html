@@ -27,16 +27,27 @@
       <p class="small text-muted">{{ community.description|truncatechars:120 }}</p>
     {% endif %}
 
-    <!-- Join Button -->
-    <div class="d-grid gap-2 mb-3">
-      <a href="#" 
-         class="btn btn-primary btn-sm fw-bold">
-        Join
-      </a>
+    <!-- Member Count -->
+    <div class="mb-3">
+      <span class="fw-bold d-block" id="followers-{{ community.id }}">
+        {{ community.member_count }}
+      </span>
+      <small class="text-muted">Members</small>
     </div>
 
-    <!-- Edit community info  -->
-     
+    <!-- Follow Button -->
+    <div class="d-grid gap-2 mb-3">
+      <button class="btn btn-sm btn-outline-success follow-btn" 
+              data-id="{{ community.id }}" 
+              data-model="community"
+              data-action="follow"
+              data-csrf="{{ csrf_token }}">
+       {% if request.user in community.members.all %} Unfollow
+       {% else %} Follow {% endif %}
+      </button>
+    </div>
+
+    <!-- Edit community info -->
     <div class="mb-3">
       <a href="#" 
          class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#editCommunityModal">
@@ -45,7 +56,6 @@
     </div>
 
     <!-- Create Sub-community -->
-     
     <div class="mb-3">
       {% if community.content_type == "Community" %}
       <a href="#" 
@@ -59,22 +69,12 @@
     <h6 class="fw-bold">Moderators</h6>
     <ul class="list-unstyled small mb-3">
       <li class="text-muted">No moderators yet.</li>
-      {% comment %}{% for mod in community.moderators.all %}
-        <li>@{{ mod.username }}</li>
-      {% empty %}
-        <li class="text-muted">No moderators yet.</li>
-      {% endfor %}{% endcomment %}
     </ul>
 
     <!-- Rules -->
     <h6 class="fw-bold">Rules</h6>
     <ul class="small ps-3">
       <li class="text-muted">No rules added yet.</li>
-      {% comment %} {% for rule in community.rules.all %}
-        <li>{{ rule.text }}</li>
-      {% empty %}
-        <li class="text-muted">No rules added yet.</li>
-      {% endfor %} {% endcomment %}
     </ul>
   </div>
 </div>

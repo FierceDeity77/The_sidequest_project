@@ -26,13 +26,24 @@
 
           <!-- Name + description -->
           <div>
+            <!-- Community title (smaller but bold) -->
             <a href="{% url 'content:community-detail' community.slug %}" 
-               class="fw-bold text-decoration-none text-dark d-block">
+              class="fw-bold text-decoration-none text-dark d-block"
+              style="font-size: 0.9rem;">
               {{ community.name }}
             </a>
+
+            <!-- Description (tiny muted) -->
             {% if community.description %}
-              <p class="text-muted small mb-0">{{ community.description|truncatechars:60 }}</p>
+              <p class="text-muted mb-0" style="font-size: 0.75rem;">
+                {{ community.description|truncatechars:60 }}
+              </p>
             {% endif %}
+
+            <!-- Followers count (extra tiny) -->
+            <span class="text-muted d-block" style="font-size: 0.7rem;">
+              {{ community.member_count }} follower{{ community.member_count|pluralize }}
+            </span>
           </div>
         </li>
       </div>

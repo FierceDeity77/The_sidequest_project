@@ -6,6 +6,7 @@
 // This file is intentionally blank
 // Use this file to add JavaScript to your project
 
+
 function toggleReplyForm(commentId) {
     // Close all other reply forms
     const allForms = document.querySelectorAll('.reply-form');
@@ -24,7 +25,8 @@ function toggleReplyForm(commentId) {
     }
 }
 
-// for AJAX add game
+
+// for AJAX adding game
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("addGameForm");
 
@@ -51,12 +53,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const data = await response.json();
 
         if (data.success) {
-          // ✅ Close modal
+          // Close modal
           const modalEl = document.getElementById("addGameModal");
           const modal = bootstrap.Modal.getInstance(modalEl);
           modal.hide();
 
-          // ✅ Optionally append new game to list
+          // Optionally append new game to list
           const gameList = document.querySelector(".game-list-section ol");
           if (gameList) {
             gameList.insertAdjacentHTML("beforeend", data.new_game_html);
@@ -77,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// Avatar Preview Script
+// Upload Avatar/Image/Banner Preview Script
 document.addEventListener("DOMContentLoaded", function () {
   const fileInputs = document.querySelectorAll('input[type="file"][data-preview-target]');
 
@@ -113,7 +115,7 @@ document.querySelectorAll(".vote-btn").forEach(btn => {
   btn.addEventListener("click", function () {
     const voteId = this.dataset.id;
     const action = this.dataset.action;
-    const csrfToken = this.dataset.csrf; // ✅ read token from HTML
+    const csrfToken = this.dataset.csrf; // read token from HTML
 
     fetch(`/vote/${this.dataset.model}/${this.dataset.id}/`, { // gets the model and id from data attributes
       method: "POST",
@@ -134,3 +136,38 @@ document.querySelectorAll(".vote-btn").forEach(btn => {
     .catch(err => console.error("Vote failed:", err));
   });
 });
+
+
+// AJAX for follow/joining games and topics
+document.querySelectorAll(".follow-btn").forEach(btn => {
+  btn.addEventListener("click", function (e) {
+    e.preventDefault(); // stop form submission if inside <form>
+
+    const followId = this.dataset.id;
+    const csrfToken = this.dataset.csrf;
+
+    fetch(`/follow/${this.dataset.model}/${this.dataset.id}/`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfToken,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: `action=${this.dataset.action}`
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Network error");
+      return res.json();
+    })
+    .then(data => {
+      // update follower count separately
+      document.getElementById(`followers-${followId}`).innerText = data.member_count;
+
+      // toggle button text
+      this.innerText = data.is_following ? "Unfollow" : "Follow";
+    })
+    .catch(err => console.error("Follow failed:", err));
+  });
+});
+
+
+    

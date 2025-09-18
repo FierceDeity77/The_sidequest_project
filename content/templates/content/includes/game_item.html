@@ -22,22 +22,33 @@
 
   <!-- Game Info -->
   <div class="flex-grow-1">
+    <!-- Title -->
     <a href="{% url 'content:game-detail' slug=game.slug %}" 
-       class="fw-bold text-dark fs-5 text-decoration-none d-block mb-1">
+       class="fw-bold text-dark d-block mb-1" style="font-size: 0.95rem;">
       {{ game.title }}
     </a>
+
+    <!-- Description -->
     {% if game.description %}
-      <p class="text-muted small mb-1">{{ game.description|truncatechars:100 }}</p>
+      <p class="text-muted mb-1" style="font-size: 0.8rem;">
+        {{ game.description|truncatechars:100 }}
+      </p>
     {% endif %}
-    <div class="text-muted small">
+
+    <!-- Followers count -->
+    <span class="text-muted d-block" style="font-size: 0.75rem;">
+      {{ game.member_count }} follower{{ game.member_count|pluralize }}
+    </span>
+
+    <!-- Meta -->
+    <div class="text-muted" style="font-size: 0.75rem;">
       Created by {{ game.author.username }} • {{ game.created_at|timesince }} ago
     </div>
   </div>
 
   <!-- Action Buttons -->
   <div class="ms-3 d-flex align-items-center">
-    <a href="#" 
-       class="btn btn-sm btn-outline-primary">View</a>
+    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
   </div>
 
 </li>
