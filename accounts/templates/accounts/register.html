@@ -1,27 +1,40 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
-<h2>Register</h2>
-<div class="form-container">
-{% block content %}
-<div class="container mt-5 mb-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <h2 class="mb-4 text-center">Register</h2>
-      <form method="post" class="p-4 border rounded shadow-sm bg-light">
-        {% csrf_token %}
-        {% for field in reg_form %}
-          <div class="mb-3">
-            <label class="form-label">{{ field.label }}</label>
-            {% render_field field class="form-control" %}
-            <div class="text-danger small">{{ field.errors }}</div>
-          </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-      </form>
+
+{% block page_title %}Register - The Sidequest{% endblock %}
+
+{% block layout %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h2 class="mb-4 text-center fw-bold">Register</h2>
+        <form method="post">
+          {% csrf_token %}
+          {% for field in reg_form %}
+            <div class="mb-3">
+              <label class="form-label">{{ field.label }}</label>
+              {% render_field field class="form-control" %}
+              {% if field.errors %}
+                <div class="text-danger small">{{ field.errors }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+        </form>
+
+        <!-- Already have an account? -->
+        <div class="text-center mt-3 small">
+          Already have an account? 
+          <a href="{% url 'login' %}">Log in</a>
+        </div>
+      </div>
     </div>
+
+    <!-- Messages -->
+    {% for message in messages %}
+      <p class="text-center mt-2 text-danger small">{{ message }}</p>
+    {% endfor %}
   </div>
 </div>
-{% for message in messages %}
-  <p style="color: red;">{{ message }}</p>
-{% endfor %}
 {% endblock %}

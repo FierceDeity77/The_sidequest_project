@@ -15,9 +15,10 @@
   </div>
 
   <div class="comment-body ms-2">
-    <span class="fw-bold small text-muted me-2">
-      {{ comment.author.username }}
-    </span>
+    <a href="{% url 'user-profile' comment.author.id %}" 
+    class="comment-author-link fw-bold small text-muted me-2">
+        {{ comment.author.username }}
+    </a>
     <span class="text-muted small">
       {{ comment.created_at|timesince }} ago
     </span>

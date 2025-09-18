@@ -21,55 +21,34 @@
     </div>
 
     <!-- Game Info -->
-<div class="col-md-8">
-  <div class="d-flex justify-content-between align-items-start">
-    <div>
+    <div class="col-md-8">
       <h1 class="fw-bold mb-2">{{ game.title }}</h1>
 
-      <!-- Followers count -->
-      <div class="mb-2">
-        <span class="fw-bold d-block" id="followers-{{ game.id }}">
-          {{ game.member_count }}
-        </span>
-        <small class="text-muted">Followers</small>
-      </div>
+      <!-- Platforms -->
+      <p class="mb-1 small">
+        <strong>Platforms:</strong>
+        {% for platform in game.platforms.all %}
+          <span class="badge bg-secondary">{{ platform.name }}</span>
+        {% empty %}
+          <span class="text-muted">No platforms listed</span>
+        {% endfor %}
+      </p>
+
+      <!-- Release Date -->
+      {% if game.release_date %}
+        <p class="mb-1 small"><strong>Release Date:</strong> {{ game.release_date }}</p>
+      {% endif %}
+
+      <!-- Average Rating -->
+      <p class="mb-2 small">
+        <strong>Average Rating:</strong>
+        {{ game.average_rating|default:"N/A" }}
+      </p>
+
+      <!-- Description -->
+      <p class="text-muted small">{{ game.description }}</p>
     </div>
-
-    <!-- Follow Button -->
-    <button class="btn btn-sm btn-outline-success follow-btn" 
-            data-id="{{ game.id }}" 
-            data-model="game"
-            data-action="follow"
-            data-csrf="{{ csrf_token }}">
-     {% if request.user in game.members.all %} Unfollow
-     {% else %} Follow {% endif %}
-    </button>
   </div>
-
-  <!-- Platforms -->
-  <p class="mb-1 small">
-    <strong>Platforms:</strong>
-    {% for platform in game.platforms.all %}
-      <span class="badge bg-secondary">{{ platform.name }}</span>
-    {% empty %}
-      <span class="text-muted">No platforms listed</span>
-    {% endfor %}
-  </p>
-
-  <!-- Release Date -->
-  {% if game.release_date %}
-    <p class="mb-1 small"><strong>Release Date:</strong> {{ game.release_date }}</p>
-  {% endif %}
-
-  <!-- Average Rating -->
-  <p class="mb-2 small">
-    <strong>Average Rating:</strong>
-    {{ game.average_rating|default:"N/A" }}
-  </p>
-
-  <!-- Description -->
-  <p class="text-muted small">{{ game.description }}</p>
-</div>
 
   <!-- Tabs Section -->
   <ul class="nav nav-tabs" id="gameTabs" role="tablist">
@@ -96,79 +75,77 @@
       <p class="text-muted small">Latest activity and updates related to {{ game.title }}.</p>
     </div>
 
-    
-<!-- Community -->
-<div class="tab-pane fade" id="community" role="tabpanel">
-  {% if game.communities.all %}
-    <!-- Main Communities -->
-    <h6 class="fw-bold text-uppercase small text-muted mb-2">Main Communities</h6>
-    <ul class="list-group list-group-flush mb-3">
-      {% for community in game.communities.all %}
-        {% if not community.parent %}
-          <li class="list-group-item">
-            <div class="d-flex align-items-center mb-1">
-              <!-- Community Icon -->
-              {% if community.icon %}
-                <img src="{{ community.icon.url }}" alt="{{ community.name }}"
-                     class="rounded-circle me-2" width="40" height="40">
-              {% else %}
-                <div class="rounded-circle bg-secondary me-2"
-                     style="width:40px; height:40px;"></div>
-              {% endif %}
+    <!-- Community -->
+    <div class="tab-pane fade" id="community" role="tabpanel">
+      {% if game.communities.all %}
+        <!-- Main Communities -->
+        <h6 class="fw-bold text-uppercase small text-muted mb-2">Main Communities</h6>
+        <ul class="list-group list-group-flush mb-3">
+          {% for community in game.communities.all %}
+            {% if not community.parent %}
+              <li class="list-group-item">
+                <div class="d-flex align-items-center mb-1">
+                  {% if community.icon %}
+                    <img src="{{ community.icon.url }}" alt="{{ community.name }}"
+                         class="rounded-circle me-2" width="40" height="40">
+                  {% else %}
+                    <div class="rounded-circle bg-secondary me-2"
+                         style="width:40px; height:40px;"></div>
+                  {% endif %}
 
-              <!-- Community Name -->
-              <div>
-                <a href="{% url 'content:community-detail' community.slug %}" class="fw-bold small">
-                  {{ community.name }}
-                </a>
-                <div class="text-muted small">
-                  👤 Creator: {{ community.created_by.username }} · 
-                  👥 Members: {{ community.members.count }}
+                  <div>
+                    <a href="{% url 'content:community-detail' community.slug %}" class="fw-bold small link-dark text-decoration-none hover-underline">
+                      {{ community.name }}
+                    </a>
+                    <div class="text-muted small">
+                      👤 Creator: {{ community.created_by.username }} · 
+                      👥 Members: {{ community.members.count }}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </li>
-        {% endif %}
-      {% empty %}
-        <li class="list-group-item text-muted small">No main communities yet.</li>
-      {% endfor %}
-    </ul>
+              </li>
+            {% endif %}
+          {% empty %}
+            <li class="list-group-item text-muted small">No main communities yet.</li>
+          {% endfor %}
+        </ul>
 
-    <!-- Sub-Communities -->
-    <h6 class="fw-bold text-uppercase small text-muted mb-2">Sub-Communities</h6>
-    <ul class="list-group list-group-flush">
-      {% for community in game.communities.all %}
-        {% if community.parent %}
-          <li class="list-group-item">
-            <div class="d-flex align-items-center mb-1">
-              {% if community.icon %}
-                <img src="{{ community.icon.url }}" alt="{{ community.name }}"
-                     class="rounded-circle me-2" width="32" height="32">
-              {% else %}
-                <div class="rounded-circle bg-secondary me-2"
-                     style="width:32px; height:32px;"></div>
-              {% endif %}
+        <!-- Sub-Communities -->
+        <h6 class="fw-bold text-uppercase small text-muted mb-2">Sub-Communities</h6>
+        <ul class="list-group list-group-flush">
+          {% for community in game.communities.all %}
+            {% if community.parent %}
+              <li class="list-group-item">
+                <div class="d-flex align-items-center mb-1">
+                  {% if community.icon %}
+                    <img src="{{ community.icon.url }}" alt="{{ community.name }}"
+                         class="rounded-circle me-2" width="32" height="32">
+                  {% else %}
+                    <div class="rounded-circle bg-secondary me-2"
+                         style="width:32px; height:32px;"></div>
+                  {% endif %}
 
-              <div>
-                <a href="{% url 'content:community-detail' community.slug %}" class="small">
-                  {{ community.name }}
-                </a>
-                <div class="text-muted small">
-                  👤 Creator: {{ community.created_by.username }} · 
-                  👥 Members: {{ community.members.count }}
+                  <div>
+                    <a href="{% url 'content:community-detail' community.slug %}" class="small link-dark text-decoration-none hover-underline">
+                      {{ community.name }}
+                    </a>
+                    <div class="text-muted small">
+                      👤 Creator: {{ community.created_by.username }} · 
+                      👥 Members: {{ community.members.count }}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </li>
-        {% endif %}
-      {% empty %}
-        <li class="list-group-item text-muted small">No sub-communities yet.</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted small">No communities linked to this game yet.</p>
-  {% endif %}
-</div>
+              </li>
+            {% endif %}
+          {% empty %}
+            <li class="list-group-item text-muted small">No sub-communities yet.</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted small">No communities linked to this game yet.</p>
+      {% endif %}
+    </div>
+
     <!-- Guides -->
     <div class="tab-pane fade" id="guides" role="tabpanel">
       <p class="text-muted small">Guides for {{ game.title }}.</p>
@@ -187,6 +164,37 @@
 </div>
 {% endblock %}
 
+{% block right_panel %}
+  <!-- Game Actions -->
+  <div class="card shadow-sm mb-3">
+    <div class="card-body text-center">
+      <h6 class="fw-bold">Game Actions</h6>
+      <!-- Followers count -->
+      <div class="mb-2">
+        <span class="fw-bold d-block" id="followers-{{ game.id }}">
+          {{ game.member_count }}
+        </span>
+        <small class="text-muted">Followers</small>
+      </div>
+      <!-- Follow Button -->
+      <button class="btn btn-sm btn-outline-success follow-btn w-100"
+              data-id="{{ game.id }}"
+              data-model="game"
+              data-action="follow"
+              data-csrf="{{ csrf_token }}">
+        {% if request.user in game.members.all %} Unfollow
+        {% else %} Follow {% endif %}
+      </button>
+    </div>
+  </div>
 
-
-
+  <!-- Example: Trending Games -->
+  <div class="card shadow-sm mb-3">
+    <div class="card-header fw-bold small">Trending Games</div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item small">Elden Ring</li>
+      <li class="list-group-item small">Resident Evil 4 Remake</li>
+      <li class="list-group-item small">Final Fantasy XVI</li>
+    </ul>
+  </div>
+{% endblock %}

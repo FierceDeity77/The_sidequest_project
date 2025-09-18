@@ -54,7 +54,10 @@ class CommentForm(forms.ModelForm):
 class CommunityForm(forms.ModelForm):
     class Meta:
         model = Community
-        fields = ['name', 'description', 'icon', 'banner']
+        fields = ['name', 'description', 'icon', 'banner', 'moderators', 'rules']
+        widgets = {
+            "moderators": forms.SelectMultiple(attrs={"class": "form-control"}),  # optional styling
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -62,12 +65,16 @@ class CommunityForm(forms.ModelForm):
         self.fields['description'].label = "Description"
         self.fields['icon'].label = "Icon Image"
         self.fields['banner'].label = "Banner Image"
+        self.fields['moderators'].label = "Appoint moderators for this community"
 
 
 class SubCommunityForm(forms.ModelForm): # added this form for creating sub-communities we can use the community form as well but to keep things clear we create a separate form
     class Meta:
         model = Community
-        fields = ['name', 'description', 'icon', 'banner']
+        fields = ['name', 'description', 'icon', 'banner', 'moderators', 'rules']
+        widgets = {
+            "moderators": forms.SelectMultiple(attrs={"class": "form-control"}),  # optional styling
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -75,6 +82,7 @@ class SubCommunityForm(forms.ModelForm): # added this form for creating sub-comm
         self.fields['description'].label = "Description"
         self.fields['icon'].label = "Icon Image"
         self.fields['banner'].label = "Banner Image"
+        self.fields['moderators'].label = "Appoint moderators for this community"
         
 
 

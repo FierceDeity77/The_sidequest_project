@@ -25,7 +25,9 @@
       <div class="d-flex align-items-center mb-2">
         <img src="{{ topic.author.avatar.url }}" alt="avatar" 
              class="rounded-circle me-2" width="32" height="32">
-        <span class="small text-muted me-2">{{ topic.author.username }}</span>
+        <a href="{% url 'user-profile' topic.author.id %}" class="author-name-link small text-muted me-2">
+          {{ topic.author.username }}
+        </a>
         <span class="text-muted small">{{ topic.created_at|timesince }} ago</span>
       </div>
       <h5 class="mb-2">{{ topic.title }}</h5>

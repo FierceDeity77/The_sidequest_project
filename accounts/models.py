@@ -37,6 +37,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin): # no need to add password 
     about = models.CharField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     role = models.CharField(max_length=50, choices=[("admin", "Admin"), ("moderator", "Moderator"), ("user", "User")], default="user")
+    karma = models.IntegerField(default=0)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     
@@ -60,6 +61,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin): # no need to add password 
         if self.avatar:
             return self.avatar.url
         return static("default_images/default-avatar.jpg") # returns default avatar if user has not uploaded one
+    
     
 class UserFollow(models.Model):
     follower = models.ForeignKey("CustomUser", related_name="following_rel", on_delete=models.CASCADE)

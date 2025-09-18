@@ -42,7 +42,9 @@
 
       <!-- Meta Info -->
       <div class="d-flex flex-wrap text-muted small mt-2">
-        <span class="me-3">👤 <strong>{{ community.created_by.username }}</strong></span>
+        <a href="{% url 'user-profile' community.created_by.id %}" class="creator-link me-3">
+            👤 <strong>{{ community.created_by.username }}</strong>
+        </a>
         <span class="me-3">📅 {{ community.created_at|timesince }} ago</span>
         {% if community.parent %}
           <div class="d-flex align-items-center mb-2">

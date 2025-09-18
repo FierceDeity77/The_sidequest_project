@@ -11043,3 +11043,188 @@ textarea.form-control-lg {
 .community-title {
   text-shadow: none !important;
 }
+
+
+/* Communities List Hover + Active Highlight */
+.communities-list .community-link {
+  padding: 6px 10px;
+  border-radius: 6px;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.communities-list .community-link:hover {
+  background-color: #f8f9fa; /* light hover */
+}
+
+/* Sidepanel Base */
+.leftsidepanel {
+  background-color: #fff;
+  border-right: 1px solid #e9ecef;
+  height: 100%;
+}
+
+/* Navigation */
+.side-nav .nav-link-side {
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #495057;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.side-nav .nav-link-side:hover {
+  background-color: #f8f9fa;
+  color: #0d6efd;
+}
+
+.side-nav .nav-link-side.active {
+  background-color: #e9f2ff;
+  font-weight: 600;
+  color: #0d6efd;
+}
+
+/* Communities Section */
+.communities-section {
+  border-top: 1px solid #e9ecef;
+  padding-top: 10px;
+}
+
+.communities-list .community-link {
+  padding: 6px 10px;
+  border-radius: 6px;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.communities-list .community-link:hover {
+  background-color: #f8f9fa;
+}
+
+/* Active community highlight bar */
+.communities-list .community-link.active {
+  font-weight: 600;
+  background-color: #f1f3f5;
+}
+
+.communities-list .community-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 3px;
+  background-color: #0d6efd;
+}
+
+/* Moderator List right panel */
+/* Moderators Section */
+.moderators-section .moderator-link {
+  font-size: 0.9rem;
+  color: #212529; /* bootstrap text-dark default */
+  text-decoration: none;
+  transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+.moderators-section .moderator-link:hover {
+  color: #0d6efd; /* Bootstrap primary blue */
+  font-weight: 600;
+}
+
+.moderators-section li {
+  transition: background-color 0.2s ease;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.moderators-section li:hover {
+  background-color: #f8f9fa; /* light gray background highlight */
+}
+
+/* user profile links */
+.custom-link {
+    color: #212529; /* Bootstrap text-dark */
+    text-decoration: none; /* remove underline */
+    transition: all 0.2s ease-in-out;
+  }
+  .custom-link:hover {
+    color: #000; /* slightly darker on hover */
+    text-decoration: underline;
+  }
+
+  /* Scoped only to About section */
+.about-card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  box-shadow: none;
+}
+
+.about-card .about-title {
+  font-size: 0.9rem;     /* smaller than h5 */
+  color: #6c757d;        /* Bootstrap muted gray */
+  text-shadow: none;
+  margin-bottom: 0.5rem;
+}
+
+.about-card .about-text {
+  color: #212529;        /* normal dark text */
+  text-shadow: none;
+  font-size: 0.95rem;    /* slightly smaller for balance */
+}
+
+
+/* user profile Community links: darker text, underline only on hover */
+.community-link {
+  color: #212529;           /* dark gray/black */
+  text-decoration: none;    /* remove underline */
+}
+
+.community-link:hover {
+  color: #000;              /* darker on hover */
+  text-decoration: underline;
+}
+
+/* user profile Game links: darker text, underline only on hover */
+.game-link {
+  color: #212529;          /* dark gray */
+  text-decoration: none;   /* remove underline */
+}
+
+.game-link:hover {
+  color: #000;             /* darker on hover */
+  text-decoration: underline;
+}
+
+/* communitydetail Community creator link */
+.creator-link {
+  color: #212529;          /* dark font */
+  text-decoration: none;   /* no underline */
+}
+
+.creator-link:hover {
+  color: #000;             /* darker on hover */
+  text-decoration: underline;
+}
+
+/* topicdetail Author name link */
+.author-name-link {
+  color: #212529;       /* dark font */
+  text-decoration: none;
+}
+
+.author-name-link:hover {
+  color: #000;          /* darker on hover */
+  text-decoration: underline;
+}
+
+/* comment.html Comment author link */
+.comment-author-link {
+  color: #212529;       /* dark font */
+  text-decoration: none;
+}
+
+.comment-author-link:hover {
+  color: #000;          /* darker on hover */
+  text-decoration: underline;
+}

@@ -1,51 +1,67 @@
 {% load static %}
 
-<!-- Left Panel: User Info -->
-    
-      
-        
-<div class="p-2">
+<!-- Left Panel -->
+<div class="p-3 leftsidepanel">
 
   <!-- Navigation -->
-  
-  <ul class="nav flex-column mb-3">
+  <ul class="nav flex-column mb-4 side-nav">
     <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'home' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:home' %}">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
+         href="{% url 'content:home' %}">
         <i class="bi bi-house-door me-2"></i> Home
       </a>
     </li>
     <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'games' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:game-list' %}">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'games' %}active{% endif %}" 
+         href="{% url 'content:game-list' %}">
         <i class="bi bi-compass me-2"></i> Games
       </a>
     </li>
     <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'community' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:communities' %}">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'community' %}active{% endif %}" 
+         href="{% url 'content:communities' %}">
         <i class="bi bi-people me-2"></i> Communities
       </a>
     </li>
     <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'news' %}fw-bold text-primary{% else %}text-dark{% endif %}" href="{% url 'content:communities' %}">
+      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'news' %}active{% endif %}" 
+         href="{% url 'content:communities' %}">
         <i class="bi bi-chat-dots me-2"></i> News
       </a>
     </li>
   </ul>
 
-  <!-- Communities Followed -->
-  <h6 class="text-uppercase text-muted small mb-2">Your Communities</h6>
-  <ul class="nav flex-column">
-    <li class="nav-item text-muted small">You don’t follow any yet.</li>
-    {% comment %} {% for c in user.followed_communities.all %}
-      <li class="nav-item mb-1">
-        <a class="nav-link d-flex align-items-center text-dark" href="{% url 'content:community-detail' c.slug %}">
-          <i class="bi bi-circle me-2"></i> {{ c.name }}
+  <!-- Communities Section -->
+<div class="communities-section mt-3">
+  <h6 class="text-uppercase text-muted small mb-2 px-2">Your Communities</h6>
+  <ul class="list-group list-group-flush communities-list">
+    {% for com in request.user.joined_communities.all %}
+      <li class="list-group-item px-2 py-2 border-0">
+        <a href="{% url 'content:community-detail' com.slug %}" 
+           class="d-flex align-items-center text-decoration-none community-link {% if request.resolver_match.kwargs.slug == com.slug %}active{% else %}text-dark{% endif %}">
+           
+          <!-- Community Icon -->
+          {% if com.icon %}
+            <img src="{{ com.icon.url }}" 
+                 alt="{{ com.name }} icon" 
+                 class="rounded-circle border me-2" 
+                 width="24" height="24">
+          {% else %}
+            <img src="{% static 'default_images/default-community-icon.png' %}" 
+                 alt="Default community icon" 
+                 class="rounded-circle border me-2" 
+                 width="24" height="24">
+          {% endif %}
+
+          <!-- Name -->
+          <span class="small {% if request.resolver_match.kwargs.slug == com.slug %}fw-bold text-primary{% else %}text-muted{% endif %}">
+            {{ com.name }}
+          </span>
         </a>
       </li>
     {% empty %}
-      <li class="nav-item text-muted small">You don’t follow any yet.</li>
-    {% endfor %}{% endcomment %}
+      <li class="list-group-item text-muted small border-0">You don’t follow any yet.</li>
+    {% endfor %}
   </ul>
-
 </div>
-      
-    
+</div>

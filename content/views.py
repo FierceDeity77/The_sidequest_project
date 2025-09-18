@@ -9,10 +9,35 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator # can require login to cbv functions
-from django.db.models import Count, Q
+from django.db.models import Count
 from django.apps import apps
+from django.http import HttpResponseForbidden
 from .news import article  # import the article data from news.py
 
+
+class RoleRequiredMixin:
+    """
+    Restricts access to users with specific global roles 
+    OR who are moderators of the given community.
+    """
+    allowed_roles = []
+    community_field = "community"  # default attr to check moderators against
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object() # get_object could be a community, topic, etc.
+         # Get the community instance to check moderators against
+        community = getattr(obj, self.community_field, obj)
+
+       # If role is allowed, pass
+        if request.user.role in self.allowed_roles:
+            return super().dispatch(request, *args, **kwargs)
+
+        # If user is a moderator of this community, also pass
+        if request.user in community.moderators.all():
+            return super().dispatch(request, *args, **kwargs)
+
+        # Otherwise block
+        return HttpResponseForbidden("You don’t have permission to perform this action.")
 
 
 class Home(View):
@@ -24,7 +49,7 @@ class Games(View):
     def get(self, request): # renders the game list page and passes the form to add game form's modal
         game_form = GameForm()
         all_games = Game.objects.annotate(member_count=Count('members', distinct=True)
-                                            ).order_by('-created_at')  # newest first
+                                          ).order_by('-created_at')  # newest first
         return render(request, "content/game_list.html", {"games": all_games, "game_form": game_form})
     
 
@@ -32,11 +57,11 @@ class CommunityList(View):
     def get(self, request):
         # Annotate each community with the count of its members
         list_of_communities = (Community.objects.filter(is_main=True)
-                                .annotate(member_count=Count("members"))
-        )
+                                .annotate(member_count=Count("members")))
+        
         list_of_subs = (Community.objects.filter(is_main=False)
-                            .annotate(member_count=Count("members"))
-        )
+                            .annotate(member_count=Count("members")))
+        
         return render(request, "content/community.html", {"communities": list_of_communities, 
                                                           "sub_communities": list_of_subs})
 
@@ -45,19 +70,14 @@ class GameDetail(View):
     def get(self, request, slug):
         game_info = get_object_or_404(
             Game.objects.annotate(
-                member_count=Count("members", distinct=True),
-                ),
-         slug=slug
-        )
+                member_count=Count("members", distinct=True),), slug=slug)
         return render(request, "content/game_detail.html", {"game": game_info})
     
 
 class CommunityDetail(View):
     def get(self, request, slug):
         community = get_object_or_404(
-            Community.objects.annotate(member_count=Count("members")),
-            slug=slug
-        )
+            Community.objects.annotate(member_count=Count("members")), slug=slug)
         community_form = CommunityForm(instance=community) # for modal edit community, instance in get prepopulates form fields with current model data.
         subcommunity_form = SubCommunityForm() # for modal create sub-community and returns a clear form
         topic_form = TopicForm()
@@ -118,21 +138,32 @@ class CreateSubCommunity(LoginRequiredMixin, View):
             sub_community.parent = parent_community
             sub_community.is_main = False
             sub_community.game = parent_community.game  # inherit the game from the parent community
-            sub_community.content_type = "Community"
+            sub_community.content_type = "Sub-community"
             sub_community.created_by = request.user
             sub_community.save()
+            # make the creator a moderator of the new sub-community
+            sub_community.moderators.add(request.user)  
             messages.success(request, "Sub-community created successfully!")
             return redirect("content:community-detail", slug=slug)
         return render(request, "content/community_detail.html", {"subcommunity_form": subcommunity_form})
 
 
-class EditCommunity(LoginRequiredMixin, View):
-    # @method_decorator(login_required(login_url='login')) # method decorator adapts decorators like login required to work with cbv's
+class EditCommunity(LoginRequiredMixin, RoleRequiredMixin, View):
+    allowed_roles = ["admin", "moderator"]
+
+
+    def get_object(self): # required for RoleRequiredMixin
+        return Community.objects.get(slug=self.kwargs["slug"])
+    
+
     def post(self, request, slug): # edit community detail goes to this post request
-        community = Community.objects.get(slug=slug) # instance in post ensures you edit the same object instead of creating a new one
+        # community = Community.objects.get(slug=slug) # instance in post ensures you edit the same object instead of creating a new one
+        community = self.get_object()
         community_form = CommunityForm(request.POST, request.FILES, instance=community) # for modal edit community
         if community_form.is_valid():
-            community_form.save()
+            community = community_form.save(commit=False)
+            community.save()
+            community_form.save_m2m()
             return redirect("content:community-detail", slug=slug) 
         return render(request, "content/community_detail.html", {"community_form": community_form})
     
@@ -210,6 +241,9 @@ class GenericVote(View): # reusable vote view for both topics and comments to ke
                 obj.upvotes.remove(request.user)
             else:
                 obj.upvotes.add(request.user)
+                obj.author.karma += 1  # Increase karma when adding an upvote
+                obj.author.save()
+                 # If user upvotes, remove downvote if exists
                 obj.downvotes.remove(request.user)
 
         elif action == "downvote":
@@ -217,6 +251,8 @@ class GenericVote(View): # reusable vote view for both topics and comments to ke
                 obj.downvotes.remove(request.user)
             else:
                 obj.downvotes.add(request.user)
+                obj.author.karma -= 1  # Decrease karma when removing an upvote
+                obj.author.save()
                 obj.upvotes.remove(request.user)
 
         return JsonResponse({

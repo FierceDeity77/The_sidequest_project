@@ -11,41 +11,199 @@
     <!-- Avatar + Info -->
     <div class="d-flex align-items-center">
       {% if user_profile.avatar %}
-      <img src="{{ user_profile.avatar.url|default:'/static/avatars/default-avatar.jpg' }}" 
+      <img src="{{ user_profile.avatar.url|default:'/default_images/default-avatar.jpg' }}" 
            alt="{{ user_profile.username }}" 
            class="rounded-circle me-3" width="64" height="64">
       {% else %}
-      <img src="{% static 'avatars/default-avatar.jpg' %}" 
+      <img src="{% static 'default_images/default-avatar.jpg' %}" 
            alt="Default Avatar" 
            class="rounded-circle me-3" width="64" height="64">
       {% endif %}
       <div>
         <h3 class="mb-0">{{ user_profile.username }}</h3>
         <small class="text-muted">Joined {{ user_profile.created_at|date:"F Y" }}</small><br>
-        <small class="text-muted">Points: 0</small>
+        <small class="text-muted">karma: {{ user_profile.karma }} </small>
       </div>
     </div>
 
-    <!-- Edit Profile Button (only if it's their own profile) -->
-    {% if user_profile == request.user %}
-    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-      Edit Profile
-    </button>
-    {% endif %}
+    <!-- Right side buttons -->
+    <div>
+      {% if user_profile == request.user %}
+        <!-- Edit Profile Button -->
+        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+          Edit Profile
+        </button>
+      
+        <!-- Add Friend Button -->
+        <form method="post" action="#">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-outline-success">Add Friend</button>
+        </form>
+      {% endif %}
+    </div>
   </div>
 </div>
 
+<!-- About Section -->
+{% if user_profile.about %}
+<div class="card mb-4 about-card">
+  <div class="card-body">
+    <h6 class="card-title about-title">About</h6>
+    <p class="card-text about-text">{{ user_profile.about }}</p>
+  </div>
+</div>
+{% endif %}
 <!-- Tabs -->
-<ul class="nav nav-tabs mb-3">
+<ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link {% if tab == 'posts' %}active{% endif %}" href="?tab=posts">Posts</a>
+    <a class="nav-link active" id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab">Posts</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link {% if tab == 'comments' %}active{% endif %}" href="?tab=comments">Comments</a>
+    <a class="nav-link {% if tab == 'comments' %}active{% endif %}" id="comments-tab" data-bs-toggle="tab" href="#comments" role="tab">Comments</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if tab == 'communities' %}active{% endif %}" id="communities-tab" data-bs-toggle="tab" href="#communities" role="tab">Communities</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if tab == 'games' %}active{% endif %}" id="games-tab" data-bs-toggle="tab" href="#games" role="tab">Games</a>
   </li>
 </ul>
+
+<div class="tab-content">
+  <!-- Posts -->
+<div class="tab-pane fade show active" id="posts" role="tabpanel">
+  {% if list_of_posts %}
+    <ul class="list-group list-group-flush mb-3">
+      {% for user_post in list_of_posts %}
+        <li class="list-group-item d-flex align-items-center">
+          
+          <!-- Community Icon -->
+          {% if user_post.community.icon %}
+            <img src="{{ user_post.community.icon.url }}" alt="{{ user_post.community.name }}" 
+                 class="rounded me-2" width="32" height="32">
+          {% else %}
+            <img src="{% static 'default_images/default-community-icon.png' %}" alt="Default Community" 
+                 class="rounded me-2" width="32" height="32">
+          {% endif %}
+
+          <!-- Post Info -->
+          <div>
+            <!-- Post Title -->
+            <a href="{% url 'content:topic-detail' user_post.slug %}" 
+               class="fw-bold d-block custom-link">
+              {{ user_post.title }}
+            </a>
+            <!-- Community Name -->
+            <small class="text-muted">
+              in <a href="{% url 'content:community-detail' user_post.community.slug %}" class="custom-link">
+                {{ user_post.community.name }}
+              </a>
+            </small>
+          </div>
+
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted small">No posts yet.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+
+  <!-- Comments -->
+<div class="tab-pane fade {% if tab == 'comments' %}show active{% endif %}" id="comments" role="tabpanel">
+  {% if list_of_comments %}
+    <ul class="list-group list-group-flush mb-3">
+      {% for user_comment in list_of_comments %}
+        <li class="list-group-item">
+          <!-- Comment text -->
+          <a href="{% url 'content:topic-detail' user_comment.content_object.slug %}#comment-{{ user_comment.id }}"
+             class="fw-bold small custom-link d-block">
+            {{ user_comment.text|truncatewords:12 }}
+          </a>
+
+          <!-- Metadata -->
+          <small class="text-muted">
+            {% if user_comment.parent %}
+              Reply to 
+              <a href="{% url 'user-profile' user_comment.parent.author.id %}" class="custom-link">
+              {{ user_comment.parent.author.username  }}
+            </a>
+            {% else %}
+              Commented on
+              <a href="{% url 'content:topic-detail' user_comment.content_object.slug %}" class="custom-link">
+              {{ user_comment.content_object.title }}
+            </a>
+            {% endif %}
+            
+            
+          </small>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted small">No comments yet.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+
+  <!-- Communities -->
+<div class="tab-pane fade {% if tab == 'communities' %}show active{% endif %}" id="communities" role="tabpanel">
+  {% if list_of_communities %}
+    <ul class="list-group list-group-flush mb-3">
+      {% for community in list_of_communities %}
+        <li class="list-group-item d-flex align-items-center">
+          
+          <!-- Community Icon -->
+          {% if community.icon %}
+            <img src="{{ community.icon.url }}" alt="{{ community.name }}" 
+                 class="rounded me-2" width="32" height="32">
+          {% else %}
+            <img src="{% static 'default_images/default-community-icon.png' %}" alt="Default Community" 
+                 class="rounded me-2" width="32" height="32">
+          {% endif %}
+
+          <!-- Community Name -->
+          <a href="{% url 'content:community-detail' community.slug %}" 
+             class="community-link fw-bold small">
+            {{ community.name }}
+          </a>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted small">No followed communities yet.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+
+  
+<!-- Games -->
+<div class="tab-pane fade {% if tab == 'games' %}show active{% endif %}" id="games" role="tabpanel">
+  {% if list_of_games %}
+    <ul class="list-group list-group-flush mb-3">
+      {% for game in list_of_games %}
+        <li class="list-group-item d-flex align-items-center">
+
+          <!-- Game Icon -->
+          {% if game.cover_image %}
+            <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" 
+                 class="rounded me-2" width="32" height="32">
+          {% else %}
+            <img src="{% static 'default_images/default-cover.png' %}" alt="Default Game" 
+                 class="rounded me-2" width="32" height="32">
+          {% endif %}
+
+          <!-- Game Title -->
+          <a href="{% url 'content:game-detail' game.slug %}" 
+             class="game-link fw-bold small">
+            {{ game.title }}
+          </a>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted small">No followed games yet.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+</div>
+
 {% include "accounts/edit_profile_modal.html" %}
 {% endblock %}
-
-
-

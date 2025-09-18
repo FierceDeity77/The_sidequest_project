@@ -85,16 +85,22 @@ class Community(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="communities")
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
+    # creator/author of the community
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     icon = models.ImageField(upload_to="community_icons/", blank=True, null=True)
     banner = models.ImageField(upload_to="community_banners/", blank=True, null=True)
     content_type = models.CharField(max_length=20, null=True)
+    rules = models.TextField(null=True)
     slug = models.SlugField(unique=True, default=None)
     is_main = models.BooleanField(default=False)  # True for the game's main community, False for sub-communities
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="sub_communities")
+    
      # Members/followers
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through="CommunityMembership", related_name="joined_communities")
+    # Community-specific moderators
+    moderators = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="moderated_communities", blank=True)
 
     class Meta:
         unique_together = ("game", "name", "parent")  # Prevent duplicates inside same game
@@ -116,15 +122,16 @@ class Community(models.Model):
 @receiver(post_save, sender=Game)
 def create_main_community(sender, instance, created, **kwargs):
     if created:
-        Community.objects.create(
+        community = Community.objects.create(
             game=instance,
             name=instance.title,
             is_main=True,
             content_type="Community",
             description=f"The main community for {instance.title}",
-            created_by=instance.author  # always set from the game's author this comes from author field from game model
+            created_by=instance.author,  # always set from the game's author this comes from author field from game model
         )
-
+        # Then add the game's author as moderator after creating the community
+        community.moderators.add(instance.author)
 
 class CommunityMembership(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -252,6 +259,7 @@ class Comments(models.Model):
     content_type = models.ForeignKey(ContentType, null=True,on_delete=models.CASCADE)  # tells Django what model
     object_id = models.PositiveIntegerField(null=True)  # stores the ID of that object
     content_object = GenericForeignKey("content_type", "object_id")  # links to the object
+    # use "content_object" related_name for reverse relation 
 
      # This allows a comment to be a reply to another comment, relationship to itself
     parent = models.ForeignKey(

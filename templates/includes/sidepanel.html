@@ -49,10 +49,13 @@
 
     <!-- Edit community info -->
     <div class="mb-3">
+      <!-- show button to admin and local moderators -->
+      {% if request.user.role == "admin" or request.user in community.moderators.all %} 
       <a href="#" 
          class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#editCommunityModal">
         Edit Community Info
       </a>
+      {% endif %}
     </div>
 
     <!-- Create Sub-community -->
@@ -65,16 +68,45 @@
       {% endif %}
     </div>
 
-    <!-- Mods -->
-    <h6 class="fw-bold">Moderators</h6>
-    <ul class="list-unstyled small mb-3">
+    <!-- Moderators Section -->
+<div class="moderators-section mt-3">
+  <h6 class="fw-bold mb-2">Moderators</h6>
+  <ul class="list-unstyled small mb-3">
+    {% for mod in community.moderators.all %}
+      <li class="d-flex align-items-center mb-2">
+        <!-- Avatar -->
+        {% if mod.avatar %}
+          <img src="{{ mod.avatar.url }}" 
+               alt="{{ mod.username }} avatar" 
+               class="rounded-circle me-2 border" 
+               width="28" height="28">
+        {% else %}
+          <img src="{% static 'default_images/default-avatar.jpg' %}" 
+               alt="Default avatar" 
+               class="rounded-circle me-2 border" 
+               width="28" height="28">
+        {% endif %}
+
+        <!-- Name -->
+        <a href="{% url 'user-profile' mod.id %}" 
+           class="text-dark text-decoration-none moderator-link">
+          {{ mod.username }}
+        </a>
+      </li>
+    {% empty %}
       <li class="text-muted">No moderators yet.</li>
-    </ul>
+    {% endfor %}
+  </ul>
+</div>
 
     <!-- Rules -->
     <h6 class="fw-bold">Rules</h6>
     <ul class="small ps-3">
-      <li class="text-muted">No rules added yet.</li>
+      {% for rules in community.rules %}
+        {{ rules }}
+      {% empty %}
+        <li class="text-muted">No rules added yet.</li>
+      {% endfor %}
     </ul>
   </div>
 </div>
