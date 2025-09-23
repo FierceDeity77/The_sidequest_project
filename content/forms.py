@@ -1,6 +1,11 @@
 from django import forms
 from django.forms.widgets import SelectDateWidget
-from .models import Guide, Review, Topic, Game, Comments, Community
+from reviews.models import Review
+from guides.models import Guide
+from content.models.game_model import Game
+from content.models.topic_model import Topic
+from content.models.community_model import Community
+from content.models.comment_model import Comments
 
 
 class GameForm(forms.ModelForm):

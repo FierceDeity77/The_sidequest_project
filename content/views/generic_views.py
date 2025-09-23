@@ -1,0 +1,63 @@
+from django.shortcuts import get_object_or_404
+from django.views import View
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator # can require login to cbv functions
+from django.apps import apps
+
+
+class GenericFollow(View): # reusable follow view for both communities and games to keep DRY
+    @method_decorator(login_required(login_url='login'))
+    def post(self, request, model, id):
+        # Dynamically get model: "community" -> Community, "game" -> Game
+        # this makes the follow view reusable for both communities and games
+        Model = apps.get_model("content", model.capitalize()) # gets the model class from the string name and capitalize the first letter to match the class name
+        obj = get_object_or_404(Model, id=id)
+
+        if request.user in obj.members.all():
+            obj.members.remove(request.user)
+            is_following = False
+        else:
+            obj.members.add(request.user)
+            is_following = True
+
+        return JsonResponse({
+            "is_following": is_following,
+            "member_count": obj.members.count(),
+        })
+    
+
+class GenericVote(View): # reusable vote view for both topics and comments to keep DRY
+    @method_decorator(login_required(login_url='login'))
+    def post(self, request, model, id):
+        # Dynamically get model: "topic" -> Topic, "comment" -> Comments
+        # this makes the vote view reusable for both topics and comments
+        Model = apps.get_model("content", model.capitalize()) # gets the model class from the string name and capitalize the first letter to match the class name
+        obj = get_object_or_404(Model, id=id)
+
+        action = request.POST.get("action")
+
+        if action == "upvote":
+            if request.user in obj.upvotes.all():
+                obj.upvotes.remove(request.user)
+            else:
+                obj.upvotes.add(request.user)
+                obj.author.karma += 1  # Increase karma when adding an upvote
+                obj.author.save()
+                 # If user upvotes, remove downvote if exists
+                obj.downvotes.remove(request.user)
+
+        elif action == "downvote":
+            if request.user in obj.downvotes.all():
+                obj.downvotes.remove(request.user)
+            else:
+                obj.downvotes.add(request.user)
+                obj.author.karma -= 1  # Decrease karma when removing an upvote
+                obj.author.save()
+                obj.upvotes.remove(request.user)
+
+        return JsonResponse({
+            "upvotes": obj.upvotes.count(),
+            "downvotes": obj.downvotes.count(),
+        })
+    
