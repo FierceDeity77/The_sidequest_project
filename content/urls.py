@@ -20,6 +20,11 @@ urlpatterns = [
     path("topic/<slug:slug>/comment/", views.AddComment.as_view(), name="add-comment"), # set to same url but changed the views for post
     path("topic/<slug:slug>/comment/<int:parent_id>/", views.AddComment.as_view(), name="add-comment"), # comment for community that has a parent (sub-community)
     #path("comment/<int:id>/vote/", views.CommentVote.as_view(), name="comment-vote"),
+    path("topic-delete/<slug:slug>/", views.DeleteTopic.as_view(), name="delete-topic"),
+    path("topic-edit/<slug:slug>/", views.EditTopic.as_view(), name="edit-topic"),
+
+    path("comment-delete/<int:id>/", views.DeleteComment.as_view(), name="delete-comment"),
+    path("comment-edit/<int:id>/", views.EditComment.as_view(), name="edit-comment"),
     
     path("vote/<str:model>/<int:id>/", views.GenericVote.as_view(), name="generic-vote"), # str:model can be "topic" or "comment" gets the model to vote on and pass it to the view
     path("follow/<str:model>/<int:id>/", views.GenericFollow.as_view(), name="generic-follow"), # str:model can be "topic" or "comment" gets the model to follow and pass it to the view

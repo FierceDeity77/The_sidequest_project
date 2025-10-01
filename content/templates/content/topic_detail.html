@@ -4,7 +4,6 @@
 {% load comments_tags %}
 {% load widget_tweaks %}
 
-
 {% block page_title %} Topic Detail {% endblock %}
 
 {% block content %}
@@ -28,33 +27,53 @@
         <a href="{% url 'user-profile' topic.author.id %}" class="author-name-link small text-muted me-2">
           {{ topic.author.username }}
         </a>
-        <span class="text-muted small">{{ topic.created_at|timesince }} ago</span>
+        <span class="text-muted small me-2">{{ topic.created_at|timesince }} ago</span>
+
+        <!-- Edit/Delete only visible to author -->
+        {% if request.user == topic.author %}
+          <div class="d-flex gap-2 ms-auto">
+            <form method="post" action="{% url 'content:edit-topic' topic.slug %}" class="d-inline">
+              {% csrf_token %}
+              <button type="button" 
+                      class="btn btn-link btn-sm text-primary p-0 small" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#editTopicModal">
+                Edit
+              </button>
+            </form>
+            <form method="post" action="{% url 'content:delete-topic' topic.slug %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-link btn-sm text-danger p-0 small">Delete</button>
+            </form>
+          </div>
+        {% endif %}
       </div>
+
       <h5 class="mb-2">{{ topic.title }}</h5>
       <p>{{ topic.content }}</p>
 
       <!-- Vote Section -->
-        <div class="d-flex align-items-center gap-2 me-3">
-          <!-- Upvote -->
-          <button class="btn btn-sm btn-outline-success vote-btn"
-                  data-id="{{ topic.id }}"
-                  data-type="post"
-                  data-model="topic"
-                  data-action="upvote"
-                  data-csrf="{{ csrf_token }}">
-            ▲ <span id="upvotes-{{ topic.id }}">{{ topic.upvote_count }}</span>
-          </button>
+      <div class="d-flex align-items-center gap-2 me-3">
+        <!-- Upvote -->
+        <button class="btn btn-sm btn-outline-success vote-btn"
+                data-id="{{ topic.id }}"
+                data-type="post"
+                data-model="topic"
+                data-action="upvote"
+                data-csrf="{{ csrf_token }}">
+          ▲ <span id="upvotes-{{ topic.id }}">{{ topic.upvote_count }}</span>
+        </button>
 
-          <!-- Downvote -->
-          <button class="btn btn-sm btn-outline-danger vote-btn"
-                  data-id="{{ topic.id }}"
-                  data-type="post"
-                  data-model="topic"
-                  data-action="downvote"
-                  data-csrf="{{ csrf_token }}">
-            ▼ <span id="downvotes-{{ topic.id }}">{{ topic.downvote_count }}</span>
-          </button>
-        </div>
+        <!-- Downvote -->
+        <button class="btn btn-sm btn-outline-danger vote-btn"
+                data-id="{{ topic.id }}"
+                data-type="post"
+                data-model="topic"
+                data-action="downvote"
+                data-csrf="{{ csrf_token }}">
+          ▼ <span id="downvotes-{{ topic.id }}">{{ topic.downvote_count }}</span>
+        </button>
+      </div>
 
       <!-- Comments Section -->
       <div class="mt-3 border-top pt-3">
@@ -64,8 +83,19 @@
         <form method="post" action="{% url 'content:add-comment' topic.slug %}" class="mb-3">
           {% csrf_token %}
           <div class="d-flex align-items-start">
-            <img src="{{ request.user.avatar.url }}" alt="avatar" 
-                 class="rounded-circle me-2" width="32" height="32">
+            {% if request.user.is_authenticated and request.user.avatar %}
+              <img src="{{ request.user.avatar.url }}"
+                  alt="avatar"
+                  class="rounded-circle me-2"
+                  width="32" height="32"
+                  onerror="this.onerror=null;this.src='{% static 'default_images/default-avatar.jpg' %}';">
+            {% else %}
+              <img src="{% static 'default_images/default-avatar.jpg' %}"
+                  alt="avatar"
+                  class="rounded-circle me-2"
+                  width="32" height="32">
+            {% endif %}
+
             <div class="flex-grow-1">
               {{ comment_form.text|add_class:"form-control border rounded-3 p-2" }}
               <div class="d-flex justify-content-end mt-2">
@@ -85,6 +115,8 @@
     </div>
   </div>
 </div>
+<!-- Include Edit Topic Modal -->
+{% include "content/edit_topic_modal.html" %}
 {% endblock %}
 
 {% block left_panel %}
@@ -94,3 +126,4 @@
 {% block right_panel %}
   {% include "includes/sidepanel.html" %}
 {% endblock %}
+

@@ -169,5 +169,25 @@ document.querySelectorAll(".follow-btn").forEach(btn => {
   });
 });
 
+// Comment Edit Toggle
+document.addEventListener("DOMContentLoaded", () => {
+  // Handle edit button click
+  document.querySelectorAll(".edit-comment-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.commentId;
+      document.getElementById(`comment-text-${id}`).style.display = "none";
+      document.getElementById(`edit-form-${id}`).style.display = "block";
+    });
+  });
+
+  // Handle cancel button click
+  document.querySelectorAll(".cancel-edit-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.commentId;
+      document.getElementById(`comment-text-${id}`).style.display = "block";
+      document.getElementById(`edit-form-${id}`).style.display = "none";
+    });
+  });
+});
 
     

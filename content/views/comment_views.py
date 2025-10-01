@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.utils import timezone
@@ -30,3 +30,35 @@ class AddComment(LoginRequiredMixin, View):
 
             messages.success(request, "Reply added successfully!")
         return redirect("content:topic-detail", slug=slug)
+    
+    
+class DeleteComment(LoginRequiredMixin, View):
+    def post(self, request, id):
+        comment = get_object_or_404(Comments, id=id)
+
+        # Only the author or a topic/community moderator can delete the comment
+        if request.user != comment.author and request.user not in comment.content_object.community.moderators.all():
+            messages.error(request, "You don't have permission to delete this comment.")
+            return redirect("content:topic-detail", slug=comment.content_object.slug)
+
+        comment.delete()
+        messages.success(request, "Comment deleted successfully!")
+        return redirect("content:topic-detail", slug=comment.content_object.slug)
+    
+    
+class EditComment(LoginRequiredMixin, View):
+    def post(self, request, id):
+        comment = get_object_or_404(Comments, id=id)
+
+        # Only the author can edit the comment
+        if request.user != comment.author:
+            messages.error(request, "You don't have permission to edit this comment.")
+            return redirect("content:topic-detail", slug=comment.content_object.slug)
+
+        comment_form = CommentForm(request.POST, instance=comment)
+        if comment_form.is_valid():
+            comment_form.save()
+            messages.success(request, "Comment updated successfully!")
+            return redirect("content:topic-detail", slug=comment.content_object.slug)
+        
+        return render(request, "content/edit_comment.html", {"comment_form": comment_form, "comment": comment})
