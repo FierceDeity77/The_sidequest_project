@@ -5,6 +5,8 @@ from django.utils import timezone
 from django.contrib import messages
 from content.models.topic_model import Topic
 from content.models.comment_model import Comments
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 from content.forms import CommentForm
 
 
@@ -23,25 +25,53 @@ class AddComment(LoginRequiredMixin, View):
             if parent_id: # check if it has parent then if yes then it's a reply
                 parent_comment = get_object_or_404(Comments, id=parent_id) # use this if the object must exist
                 comment_data['parent'] = parent_comment # set parent comment and updates inside the dict
-                Comments.objects.create(**comment_data) # set the dict as kwargs
-
-            else: # no parent means it's a top-level comment
-                Comments.objects.create(**comment_data)
+                
+            new_comment = Comments.objects.create(**comment_data) # set the dict as kwargs
+            
+            # Render the new comment HTML using your template tag
+            # If AJAX request, return JSON instead of redirect
+            # render_to_string to render the comment template to a string
+            # and pass it back in the JSON response
+            # because with AJAX we don't want to reload the whole page
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                comment_html = render_to_string(
+                    "content/comments/comment.html",
+                    {"comment": new_comment, "topic": topic, "request": request},
+                    request=request,
+                )
+                return JsonResponse({
+                    "success": True,
+                    "comment_html": comment_html,
+                    "parent_id": parent_id,
+                })
 
             messages.success(request, "Reply added successfully!")
+            return redirect("content:topic-detail", slug=slug)
+
+        # Handle invalid form
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"success": False, "errors": comment_form.errors})
         return redirect("content:topic-detail", slug=slug)
-    
+             
     
 class DeleteComment(LoginRequiredMixin, View):
     def post(self, request, id):
         comment = get_object_or_404(Comments, id=id)
 
-        # Only the author or a topic/community moderator can delete the comment
-        if request.user != comment.author and request.user not in comment.content_object.community.moderators.all():
+        # Only the author, admin or a topic/community moderator can delete the comment
+        if request.user != comment.author and request.user not in comment.content_object.community.moderators.all() and not request.user.is_staff:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"error": "You don't have permission to delete this comment."}, status=403)
+            
             messages.error(request, "You don't have permission to delete this comment.")
             return redirect("content:topic-detail", slug=comment.content_object.slug)
 
         comment.delete()
+
+         # AJAX response
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"success": True, "message": "Comment deleted successfully!", "comment_id": id})
+        
         messages.success(request, "Comment deleted successfully!")
         return redirect("content:topic-detail", slug=comment.content_object.slug)
     
@@ -50,15 +80,34 @@ class EditComment(LoginRequiredMixin, View):
     def post(self, request, id):
         comment = get_object_or_404(Comments, id=id)
 
-        # Only the author can edit the comment
-        if request.user != comment.author:
+        # Only the author and the admin can edit the comment
+        if request.user != comment.author and not request.user.is_staff:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"error": "You don't have permission to edit this comment."}, status=403)
             messages.error(request, "You don't have permission to edit this comment.")
             return redirect("content:topic-detail", slug=comment.content_object.slug)
 
         comment_form = CommentForm(request.POST, instance=comment)
         if comment_form.is_valid():
             comment_form.save()
+
+            # Handle AJAX request
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "comment_id": comment.id,
+                    "new_text": comment.text
+                })
+
+            # Handle normal request (page reload)
             messages.success(request, "Comment updated successfully!")
             return redirect("content:topic-detail", slug=comment.content_object.slug)
-        
-        return render(request, "content/edit_comment.html", {"comment_form": comment_form, "comment": comment})
+
+        # Form errors
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"error": comment_form.errors}, status=400)
+
+        return render(request, "content/edit_comment.html", {
+            "comment_form": comment_form,
+            "comment": comment
+        })

@@ -177,6 +177,7 @@
         <small class="text-muted">Followers</small>
       </div>
       <!-- Follow Button -->
+       {% if request.user.is_authenticated %}
       <button class="btn btn-sm btn-outline-success follow-btn w-100"
               data-id="{{ game.id }}"
               data-model="game"
@@ -185,6 +186,7 @@
         {% if request.user in game.members.all %} Unfollow
         {% else %} Follow {% endif %}
       </button>
+      {% endif %}
     </div>
   </div>
 

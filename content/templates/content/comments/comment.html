@@ -1,7 +1,7 @@
 {% load comments_tags %}
 {% load static %}
 
-<div class="comment d-flex mb-2 ms-{{ comment.parent|yesno:'4,0' }}">
+<div id="comment-{{ comment.id }}" class="comment d-flex mb-2 ms-{{ comment.parent|yesno:'1,0' }}">
   <div class="comment-avatar">
     {% if comment.author and comment.author.avatar %}
       <img src="{{ comment.author.avatar.url }}" alt="avatar" 
@@ -21,21 +21,6 @@
       <span class="text-muted small me-2">
         {{ comment.created_at|timesince }} ago
       </span>
-
-      <!-- Edit/Delete visible only to comment author -->
-      {% if request.user.id == comment.author.id %}
-        <div class="d-flex gap-2 ms-auto">
-          <button type="button" 
-                  class="btn btn-link btn-sm text-primary p-0 small edit-comment-btn" 
-                  data-comment-id="{{ comment.id }}">
-            Edit
-          </button>
-          <form method="post" action="{% url 'content:delete-comment' comment.id %}" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-link btn-sm text-danger p-0 small">Delete</button>
-          </form>
-        </div>
-      {% endif %}
     </div>
 
     <!-- Comment text (shown by default) -->
@@ -46,6 +31,7 @@
           action="{% url 'content:edit-comment' comment.id %}" 
           class="edit-comment-form" 
           id="edit-form-{{ comment.id }}" 
+          data-comment-id="{{ comment.id }}"
           style="display: none;">
       {% csrf_token %}
       <div class="d-flex flex-column gap-2">
@@ -61,16 +47,16 @@
 
     <!-- Voting section -->
     <div class="d-flex align-items-center gap-2 mb-1">
-      <button class="btn btn-sm btn-outline-success vote-btn" 
-              data-id="{{ comment.id }}" 
-              data-type="post" 
-              data-model="comments"
-              data-action="upvote" 
-              data-csrf="{{ csrf_token }}">
+      <button class="vote-btn {% if request.user in comment.upvotes.all %}upvote-active{% endif %}" 
+        data-id="{{ comment.id }}" 
+        data-type="post" 
+        data-model="comments"
+        data-action="upvote" 
+        data-csrf="{{ csrf_token }}">
         ▲ <span id="upvotes-{{ comment.id }}">{{ comment.upvotes.count }}</span>
       </button>
 
-      <button class="btn btn-sm btn-outline-danger vote-btn" 
+      <button class="vote-btn {% if request.user in comment.downvotes.all %}downvote-active{% endif %}" 
               data-id="{{ comment.id }}" 
               data-type="post" 
               data-model="comments"
@@ -79,19 +65,31 @@
         ▼ <span id="downvotes-{{ comment.id }}">{{ comment.downvotes.count }}</span>
       </button>
 
+      <!-- Reply button / form -->
+      {% include "content/includes/reply_form.html" %}
+
+      <div class="d-flex align-items-center gap-2">
       <span class="text-muted small">{{ comment.replies.count }} replies</span>
+      
+      <!-- Comment options dropdown -->
+      {% include "content/includes/comment_options.html" %}
+
+  </div>
     </div>
-
-    <!-- Reply button / form -->
-    {% include "content/includes/reply_form.html" %}
-
+    <!-- Replies Section -->
     <!-- Recursive replies -->
-    {% if comment.replies.all %}
-      <div class="comment-replies mt-2">
-        {% for reply in comment.replies.all %}
+    <div class="comment-replies ms-1 mt-2">
+      {% for reply in comment.replies.all %}
+        <div class="reply-item">
           {% render_comment reply topic %}
-        {% endfor %}
-      </div>
+        </div>
+      {% endfor %}
+    </div>
+    <!-- Show more replies button -->
+      {% if comment.replies.count > 1 %}
+      <button class="show-more-replies btn btn-link btn-sm p-0 mt-1">
+        more replies
+      </button>
     {% endif %}
   </div>
 </div>

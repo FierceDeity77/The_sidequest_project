@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <title>{% block page_title %}Blog Home{% endblock %}</title>
+  <title>{% block page_title %}The Sidequest Home{% endblock %}</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="{% static 'assets/willow.ico' %}" />
@@ -23,8 +23,8 @@
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'content:home' %}">The Sidequest</a>
+    <div class="container-fluid">
+      <a class="navbar-brand ms-2" href="{% url 'content:home' %}">The Sidequest</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
               data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
               aria-expanded="false" aria-label="Toggle navigation">
@@ -39,34 +39,50 @@
                  aria-label="Search" name="q">
         </form>
 
-        <!-- Right side: User info -->
-        <ul class="navbar-nav ms-auto align-items-center">
-          {% if user.is_authenticated %}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" 
-                 id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {% if user.avatar %}
-                  <img src="{{ user.avatar.url }}" alt="avatar" 
-                       class="rounded-circle me-2" width="32" height="32">
-                {% else %}
-                  <img src="{% static 'default_images/default-avatar.jpg' %}" alt="default avatar" 
-                       class="rounded-circle me-2" width="32" height="32">
-                {% endif %}
-                <span class="fw-bold">{{ user.username }}</span>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="{% url 'user-profile' user.id %}">View Profile</a></li>
-                <li><a class="dropdown-item" href="#">Achievements</a></li>
-                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-              </ul>
-            </li>
+      {% if user.is_authenticated %}
+      <!-- Notification Bell -->
+      <li class="nav-item dropdown me-3">
+        <a class="nav-link position-relative text-light" 
+          href="#" id="notifDropdown"
+          role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-bell fs-5 text-light"></i>
+          <!-- Optional red dot indicator
+          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+            <span class="visually-hidden">New alerts</span>
+          </span> -->
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown">
+          <li><span class="dropdown-item-text text-muted">No notifications yet</span></li>
+        </ul>
+      </li>
+
+      <!-- User Profile -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center text-light" 
+          href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="avatar"
+                class="rounded-circle me-2" width="32" height="32">
           {% else %}
-            <li class="nav-item">
-              <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" 
-                 href="{% url 'login' %}">Log In</a>
-            </li>
+            <img src="{% static 'default_images/default-avatar.jpg' %}" alt="default avatar"
+                class="rounded-circle me-2" width="32" height="32">
           {% endif %}
+          <span class="text-light">{{ user.username }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <li><a class="dropdown-item" href="{% url 'user-profile' user.id %}">View Profile</a></li>
+          <li><a class="dropdown-item" href="#">Achievements</a></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+        </ul>
+      </li>
+    {% else %}
+      <!-- Login Link -->
+      <li class="nav-item">
+        <a class="nav-link text-light {% if request.resolver_match.url_name == 'login' %}active{% endif %}" 
+          href="{% url 'login' %}">Log In</a>
+      </li>
+    {% endif %}
         </ul>
       </div>
     </div>

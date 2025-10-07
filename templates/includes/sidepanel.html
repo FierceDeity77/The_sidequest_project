@@ -36,6 +36,7 @@
     </div>
 
     <!-- Follow Button -->
+     {% if request.user.is_authenticated %}
     <div class="d-grid gap-2 mb-3">
       <button class="btn btn-sm btn-outline-success follow-btn" 
               data-id="{{ community.id }}" 
@@ -46,6 +47,7 @@
        {% else %} Follow {% endif %}
       </button>
     </div>
+    {% endif %}
 
     <!-- Edit community info -->
     <div class="mb-3">
@@ -59,6 +61,7 @@
     </div>
 
     <!-- Create Sub-community -->
+     {% if request.user.is_authenticated %}
     <div class="mb-3">
       {% if community.content_type == "Community" %}
       <a href="#" 
@@ -67,6 +70,7 @@
       </a>
       {% endif %}
     </div>
+    {% endif %}
 
     <!-- Moderators Section -->
 <div class="moderators-section mt-3">

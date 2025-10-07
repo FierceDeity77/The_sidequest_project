@@ -10902,6 +10902,7 @@ textarea.form-control-lg {
 }
 
 
+
 /* Banner wrapper */
 .banner-wrapper {
   width: 100%;
@@ -10932,40 +10933,18 @@ textarea.form-control-lg {
   text-decoration: none;
 }
 
-
-/* Base comment container */
-.comment {
-  position: relative;
-  align-items: flex-start;
+/* Highlight hover effect for navbar items */
+.navbar .nav-link {
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-radius: 8px; /* rounded corners for smoother hover */
+  padding: 6px 10px; /* adds clickable space */
 }
 
-.comment-avatar {
-  position: relative;
-  flex-shrink: 0;
+.navbar .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15); /* semi-transparent white */
+  color: #fff !important; /* make sure text/icons stay light */
 }
 
-/* Connector line (parent → replies) */
-.comment-avatar::after {
-  content: "";
-  position: absolute;
-  top: 28px; /* bottom of avatar */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 2px;
-  background-color: #ccc;
-  display: none; /* default hidden */
-}
-
-/* Only show connector if replies exist */
-.comment:has(.comment-replies) > .comment-avatar::after {
-  display: block;
-  bottom: 0; /* stretch until last reply */
-}
-
-/* Stop the line at the last reply’s avatar */
-.comment-replies > .comment:last-child .comment-avatar::after {
-  height: 28px; /* only inside avatar height */
-}
 
 .add-game-btn, .create-topic-btn {
   background-color: transparent;       /* transparent background */
@@ -10995,24 +10974,15 @@ textarea.form-control-lg {
 
 /* topic list hover effect */
 .topics-list .card {
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
     cursor: pointer;
   }
 
 .topics-list .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     background-color: #f8f9fa; /* subtle background highlight */
  }
 
 /* game list hover effect */
-.game-list-section li {
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-}
-
 .game-list-section li:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
   background-color: #f8f9fa; /* subtle highlight */
 }
 
@@ -11039,11 +11009,47 @@ textarea.form-control-lg {
   color: #a71d2a; /* darker red on hover */
 }
 
+/* Upvote/Downvote Buttons with smart hover and active state  (in comment and topic views) */
+/* Reset all Bootstrap/built-in styles */
+.vote-btn {
+  all: unset;
+  cursor: pointer;
+  color: #6c757d; /* muted gray */
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  transition: color 0.2s ease;
+}
+
+/* Hover color hint (soft green/red) */
+.vote-btn[data-action="upvote"]:hover {
+  color: #20c997; /* bright green */
+}
+
+.vote-btn[data-action="downvote"]:hover {
+  color: #bb2d3b; /* slightly darker red */
+}
+
+/* Active (voted) colors */
+.vote-btn[data-action="upvote"].upvote-active {
+  color: #20c997 !important; /* Bootstrap success green */
+}
+
+.vote-btn[data-action="downvote"].downvote-active {
+  color: #dc3545 !important; /* Bootstrap danger red */
+}
+
+/* Optional: remove focus outline */
+.vote-btn:focus {
+  outline: none;
+}
+
+
 /* community title */
 .community-title {
   text-shadow: none !important;
 }
-
 
 /* Communities List Hover + Active Highlight */
 .communities-list .community-link {
@@ -11124,16 +11130,14 @@ textarea.form-control-lg {
   font-size: 0.9rem;
   color: #212529; /* bootstrap text-dark default */
   text-decoration: none;
-  transition: color 0.2s ease, font-weight 0.2s ease;
 }
 
 .moderators-section .moderator-link:hover {
   color: #0d6efd; /* Bootstrap primary blue */
-  font-weight: 600;
+  font-weight: normal; /* no bold effect */
 }
 
 .moderators-section li {
-  transition: background-color 0.2s ease;
   padding: 4px 6px;
   border-radius: 6px;
 }
@@ -11227,4 +11231,233 @@ textarea.form-control-lg {
 .comment-author-link:hover {
   color: #000;          /* darker on hover */
   text-decoration: underline;
+}
+
+
+/* --- Comment container --- */
+.comment {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* --- Avatar setup --- */
+.comment-avatar {
+  position: relative;
+  margin-right: 10px;
+  z-index: 1; /* ensures avatar is above connector lines */
+  width: 28px;
+  height: 28px;
+}
+
+/* --- Vertical connector from parent avatar to replies --- */
+.comment:has(.comment-replies)::before {
+  content: "";
+  position: absolute;
+  left: 14px; /* centers with 28px avatar */
+  top: 34px; /* starts just below avatar */
+  bottom: 6px; /* stops before last reply */
+  width: 1px; /* thinner line */
+  background-color: #e0e0e0;
+  z-index: 0;
+}
+
+/* --- Replies indentation --- */
+.comment-replies {
+  margin-left: 42px; /* indent for nested replies */
+  position: relative;
+  padding-left: 8px;
+}
+
+/* --- Horizontal connector (parent → reply avatar) --- */
+.comment-replies .comment-avatar::before {
+  content: "";
+  position: absolute;
+  left: -20px; /* connects from vertical line to reply avatar */
+  top: 14px; /* aligns with avatar vertical center */
+  width: 20px;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+/* --- Clean cutoff for last reply --- */
+.comment-replies > .comment:last-child::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  bottom: 0;
+  width: 1.5px;
+  height: 12px;
+  background-color: #fff; /* matches background to hide line end */
+}
+
+
+
+
+/* --- Comment body --- */
+.comment-body {
+  flex-grow: 1;
+  font-size: 0.8125rem; /* even smaller text inside */
+}
+
+/* Author link */
+.comment-author-link {
+  color: #212529;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.8125rem;
+}
+
+.comment-author-link:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* Metadata (time, votes, replies count) */
+.comment-body .text-muted {
+  font-size: 0.75rem;
+}
+
+/* Comment text */
+.comment-text {
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+}
+
+/* Buttons (edit, delete, reply, votes) */
+.comment-body button {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.4rem;
+}
+
+/* Replies container */
+.comment-replies {
+  margin-left: 1rem;  /* indent replies */
+  border-left: none !important; /* remove default border/line */
+  padding-left: 0.75rem;
+}
+
+/* Add more space between main (top-level) comments */
+.comment-item {
+  margin-bottom: 1.50rem; /* ~20px spacing */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* smooth show/hide */
+}
+
+/* Keep replies tighter */
+.comment-item .comment {
+  margin-bottom: 0.5rem; /* keep nested replies closer */
+}
+
+/* comment toggle */
+.hidden {
+  display: none;
+}
+
+/* Reply item animation */
+.reply-item {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Reply form styling */
+.reply-form textarea {
+  font-size: 0.85rem;
+  resize: none;
+}
+
+.reply-form .btn {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.75rem;
+}
+
+/* Default reply link */
+.reply-link {
+  cursor: pointer;
+  color: #6c757d; /* Bootstrap muted gray */
+  text-decoration: none;
+  border-radius: 4px;
+  padding: 2px 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Hover effect — soft gray background + darker text */
+.reply-link:hover {
+  background-color: #f1f3f5; /* light gray highlight */
+  color: #495057; /* darker gray text */
+  text-decoration: none;
+}
+
+/* Show more comments button */
+.show-more-comments, .show-more-replies {
+  background: transparent;
+  color: #0d6efd; /* Bootstrap primary color */
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* Remove underline from show replies button */
+.show-more-replies, .show-more-comments {
+  text-decoration: none !important;
+}
+
+/* Hover effect — soft gray highlight */
+.show-more-comments:hover, .show-more-replies:hover {
+  background-color: #f1f3f5; /* light gray highlight */
+  color: #0a58ca; /* slightly darker blue */
+}
+
+/* Comment "..." Dropdown menu links */
+.dropdown .btn-link {
+  color: #6c757d; /* muted gray */
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.dropdown .btn-link:hover {
+  color: #0d6efd; /* Bootstrap primary */
+  background-color: #f1f3f5; /* light gray hover background */
+  transform: scale(1.1);
+}
+
+.dropdown-menu {
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+}
+
+/* Create Topic Button */
+.create-topic-btn {
+  background-color: #f8f9fa; /* light gray background */
+  color: #495057; /* dark gray text */
+  border: 1px solid #dee2e6;
+  box-shadow: none;
+  transition: none; /* remove animations */
+}
+
+.create-topic-btn:hover {
+  background-color: #e9ecef; /* slightly darker gray on hover */
+  color: #212529; /* darker text */
+  text-decoration: none;
+}
+
+/* Submit Comment Button with gradient and hover effects */
+.btn-submit-comment {
+  background: linear-gradient(135deg, #6c63ff, #4834d4);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 6px 16px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  transition: all 0.25s ease-in-out;
+}
+
+.btn-submit-comment:hover {
+  background: linear-gradient(135deg, #7d5fff, #5f27cd);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.btn-submit-comment:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }

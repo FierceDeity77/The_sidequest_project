@@ -4,13 +4,15 @@ from django.db.models import Count
 from django.contrib import messages
 from content.models.community_model import Community
 from content.models.topic_model import Topic
-from content.forms import CommentForm, TopicForm
+from content.forms import CommentForm, TopicForm, CommunityForm, SubCommunityForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class TopicDetail(View):
     def get(self, request, slug):
-        community = get_object_or_404(Community, topics__slug=slug) # (reverse relation) ensure the topic belongs to a community
+         # (reverse relation) ensure the topic belongs to a community, and annotate the community with member count
+        community = get_object_or_404(
+            Community.objects.annotate(member_count=Count("members")), topics__slug=slug)
         topic = (Topic.objects
                     .annotate(
                         upvote_count=Count("upvotes", distinct=True),
@@ -18,14 +20,23 @@ class TopicDetail(View):
                     )
                     .get(slug=slug)
                 )
-        comment_list = topic.comments.all().order_by('-created_at')  # newest first
+        # comment_list = topic.comments.all().order_by('-created_at')  # newest first
+        # filter to get only top-level comments (parent is null) and order by newest first
+        # this way only top level comments are fetched initially, replies are handled in the template
+        # instead of fetching all comments and filtering in template using {% if not %} which is inefficient
+        comment_list = topic.comments.filter(parent__isnull=True).order_by('-created_at')
+        community_form = CommunityForm(instance=community) # for modal edit community, instance in get prepopulates form fields with current model data.
+        subcommunity_form = SubCommunityForm() # for modal create sub-community and returns a clear form
         comment_form = CommentForm()
         topic_form = TopicForm(instance=topic)  # pass form with existing topic data for editing
         return render(request, "content/topic_detail.html", {"topic": topic,
                                                              "community": community, # to pass community data to topics detail so that the right panel can render the info
                                                              "comment_form": comment_form,
                                                              "comment_list": comment_list,
-                                                             "topic_form": topic_form})
+                                                             "topic_form": topic_form,
+                                                             "community_form": community_form,
+                                                             "subcommunity_form": subcommunity_form,
+                                                             })
 
 
 class CreateTopic(LoginRequiredMixin, View):
@@ -46,7 +57,7 @@ class EditTopic(LoginRequiredMixin, View):
         topic = get_object_or_404(Topic, slug=slug)
         
         # Only the author can edit the topic
-        if request.user != topic.author:
+        if request.user != topic.author and not request.user.is_staff:
             messages.error(request, "You don't have permission to edit this topic.")
             return redirect("content:topic-detail", slug=slug)
         
@@ -62,9 +73,9 @@ class DeleteTopic(LoginRequiredMixin, View):
     def post(self, request, slug):
         topic = get_object_or_404(Topic, slug=slug)
         
-            # Only the author or a community moderator can delete the topic
+            # Only the author, admin or a community moderator can delete the topic
             # checks if both conditions are false then no permission
-        if request.user != topic.author and request.user not in topic.community.moderators.all():
+        if request.user != topic.author and request.user not in topic.community.moderators.all() and not request.user.is_staff:
             messages.error(request, "You don't have permission to delete this topic.")
             return redirect("content:topic-detail", slug=slug)
         

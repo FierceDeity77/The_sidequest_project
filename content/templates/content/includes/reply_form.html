@@ -2,37 +2,42 @@
 
 
 <!-- Reply link -->
-        <a href="javascript:void(0);" class="text-decoration-none small" 
-          onclick="toggleReplyForm({{ comment.id }})">Reply</a>
+<a href="javascript:void(0);" 
+   class="reply-link text-muted small d-inline-flex align-items-center gap-1"
+   onclick="toggleReplyForm({{ comment.id }})">
+  <i class="bi bi-chat-left-text"></i> Reply
+</a>
 
-       <!-- Hidden reply form -->
-        <div id="reply-form-{{ comment.id }}" class="mt-2 reply-form" style="display:none;">
-          <form method="post" action="{% url 'content:add-comment' topic.slug comment.id %}">
-            {% csrf_token %}
-            <div class="d-flex align-items-start">
-              {% if request.user.is_authenticated and request.user.avatar %}
-                <img src="{{ request.user.avatar.url }}"
-                    alt="avatar"
-                    class="rounded-circle me-2"
-                    width="32" height="32"
-                    onerror="this.onerror=null;this.src='{% static 'default_images/default-avatar.jpg' %}';">
-              {% else %}
-                <img src="{% static 'default_images/default-avatar.jpg' %}"
-                    alt="avatar"
-                    class="rounded-circle me-2"
-                    width="32" height="32">
-              {% endif %}
-              
-              <div class="flex-grow-1">
-                <textarea name="text" class="form-control border rounded-3 p-2"
-                          placeholder="Write a reply..." required></textarea>
-                
-                <div class="d-flex justify-content-end mt-2">
-                  <button type="submit" class="btn btn-primary btn-sm px-3">
-                    Reply
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
+<!-- Hidden reply form -->
+<div id="reply-form-{{ comment.id }}" class="reply-form mt-2" style="display:none;">
+  <form method="post" action="{% url 'content:add-comment' topic.slug comment.id %}" class="comment-form">
+    {% csrf_token %}
+    <div class="d-flex align-items-start gap-2">
+      {% if request.user.is_authenticated and request.user.avatar %}
+        <img src="{{ request.user.avatar.url }}"
+             alt="avatar"
+             class="rounded-circle"
+             width="28" height="28"
+             onerror="this.onerror=null;this.src='{% static 'default_images/default-avatar.jpg' %}';">
+      {% else %}
+        <img src="{% static 'default_images/default-avatar.jpg' %}"
+             alt="avatar"
+             class="rounded-circle"
+             width="28" height="28">
+      {% endif %}
+
+      <div class="flex-grow-1">
+        <textarea name="text" 
+                  class="form-control form-control-sm border rounded-3 p-2"
+                  rows="2"
+                  placeholder="Write a reply..." 
+                  required></textarea>
+        <div class="d-flex justify-content-end mt-1">
+          <button type="submit" class="btn btn-sm btn-secondary">
+            Reply
+          </button>
         </div>
+      </div>
+    </div>
+  </form>
+</div>

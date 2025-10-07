@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load static %}
 {% load comments_tags %}
 {% load widget_tweaks %}
@@ -9,16 +8,7 @@
 {% block content %}
 <div class="card shadow-sm p-3 mb-3">
   <div class="d-flex">
-    <!-- Vote Section -->
-    <div class="d-flex flex-column align-items-center me-3">
-      <button class="btn btn-light p-0 mb-1">
-        <i class="bi bi-arrow-up-circle-fill text-secondary fs-4"></i>
-      </button>
-      <button class="btn btn-light p-0 mt-1">
-        <i class="bi bi-arrow-down-circle-fill text-secondary fs-4"></i>
-      </button>
-    </div>
-
+    
     <!-- Post Content -->
     <div class="flex-grow-1">
       <div class="d-flex align-items-center mb-2">
@@ -30,23 +20,31 @@
         <span class="text-muted small me-2">{{ topic.created_at|timesince }} ago</span>
 
         <!-- Edit/Delete only visible to author -->
-        {% if request.user == topic.author %}
-          <div class="d-flex gap-2 ms-auto">
-            <form method="post" action="{% url 'content:edit-topic' topic.slug %}" class="d-inline">
-              {% csrf_token %}
-              <button type="button" 
-                      class="btn btn-link btn-sm text-primary p-0 small" 
-                      data-bs-toggle="modal" 
-                      data-bs-target="#editTopicModal">
-                Edit
-              </button>
-            </form>
-            <form method="post" action="{% url 'content:delete-topic' topic.slug %}" class="d-inline">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-link btn-sm text-danger p-0 small">Delete</button>
-            </form>
-          </div>
-        {% endif %}
+        {% if request.user == topic.author or request.user.is_staff %}
+  <div class="dropdown ms-auto">
+    <button class="btn btn-link btn-sm text-muted p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-three-dots"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+      <li>
+        <button type="button" 
+                class="dropdown-item text-primary"
+                data-bs-toggle="modal" 
+                data-bs-target="#editTopicModal">
+          <i class="bi bi-pencil"></i> Edit
+        </button>
+      </li>
+      <li>
+        <form method="post" action="{% url 'content:delete-topic' topic.slug %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="dropdown-item text-danger">
+            <i class="bi bi-trash"></i> Delete
+          </button>
+        </form>
+      </li>
+    </ul>
+  </div>
+{% endif %}
       </div>
 
       <h5 class="mb-2">{{ topic.title }}</h5>
@@ -55,7 +53,8 @@
       <!-- Vote Section -->
       <div class="d-flex align-items-center gap-2 me-3">
         <!-- Upvote -->
-        <button class="btn btn-sm btn-outline-success vote-btn"
+        <button class="vote-btn {% if request.user in topic.upvotes.all %}upvote-active{% endif %}"
+                {% if not request.user.is_authenticated %}disabled{% endif %}
                 data-id="{{ topic.id }}"
                 data-type="post"
                 data-model="topic"
@@ -65,7 +64,8 @@
         </button>
 
         <!-- Downvote -->
-        <button class="btn btn-sm btn-outline-danger vote-btn"
+        <button class="vote-btn {% if request.user in topic.downvotes.all %}downvote-active{% endif %}"
+                {% if not request.user.is_authenticated %}disabled{% endif %}
                 data-id="{{ topic.id }}"
                 data-type="post"
                 data-model="topic"
@@ -80,7 +80,7 @@
         <h6 class="fw-bold mb-3">Comments</h6>
 
         <!-- Comment Form -->
-        <form method="post" action="{% url 'content:add-comment' topic.slug %}" class="mb-3">
+        <form method="post" action="{% url 'content:add-comment' topic.slug %}" class="mb-3 comment-form" id="comment-form">
           {% csrf_token %}
           <div class="d-flex align-items-start">
             {% if request.user.is_authenticated and request.user.avatar %}
@@ -99,24 +99,40 @@
             <div class="flex-grow-1">
               {{ comment_form.text|add_class:"form-control border rounded-3 p-2" }}
               <div class="d-flex justify-content-end mt-2">
-                <button type="submit" class="btn btn-primary btn-sm px-3">Comment</button>
+                <button type="submit" class="btn btn-submit-comment btn-sm">Comment</button>
               </div>
             </div>
           </div>
         </form>
 
-        <!-- Comment List -->
+        <!-- Comment List  -->
+         <div id="comments-section">  
         {% for comment in comment_list %}
-          {% if not comment.parent %}
+            <div class="comment-item">
             {% render_comment comment topic %}
-          {% endif %}
+            </div>
         {% endfor %}
+         </div>
+        
+         {% if comment_list|length > 3 %} {% comment %} .count will work only on a query set in this case it is already evaluated in the view so length filter is used {% endcomment %}
+         <button class="show-more-comments btn btn-sm btn-link mt-2 ">
+            more comments
+         </button>
+         {% endif %}
+
       </div>
     </div>
   </div>
 </div>
 <!-- Include Edit Topic Modal -->
 {% include "content/edit_topic_modal.html" %}
+
+<!-- Include Edit Community Modal -->
+{% include "content/edit_community_modal.html" %}
+
+<!-- Include Create Sub-Community Modal -->
+{% include "content/create_sub-community_modal.html" %}
+
 {% endblock %}
 
 {% block left_panel %}
