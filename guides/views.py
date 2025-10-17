@@ -3,7 +3,7 @@ from django.views import View
 
 class Guides(View):
     def get(self, request):
-        return render(request, "content/guides.html")
+        return render(request, "guides/guides.html")
 
 
     def post(self, request):

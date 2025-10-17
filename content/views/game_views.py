@@ -3,24 +3,50 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-from django.db.models import Count
+from django.db.models import Count, FloatField, IntegerField, ExpressionWrapper
 from content.forms import GameForm
+from content.views.mixins import PaginationMixin
 from content.models.game_model import Game # . only works if in the current folder this tells django to look into content app folder then models.py
 
 
-class Games(View):
+class Games(View, PaginationMixin):
     def get(self, request): # renders the game list page and passes the form to add game form's modal
         game_form = GameForm()
-        all_games = Game.objects.annotate(member_count=Count('members', distinct=True)
-                                          ).order_by('-created_at')  # newest first
+        query_games = Game.objects.annotate(
+            member_count=Count('members', distinct=True),
+            upvote_count=Count('upvotes', distinct=True),
+            downvote_count=Count('downvotes', distinct=True),
+            # calculate net votes and output as IntegerField
+            # net votes gets the difference between upvotes and downvotes
+            net_votes=ExpressionWrapper(
+                Count("upvotes", distinct=True) - Count("downvotes", distinct=True),
+                output_field=IntegerField()
+            ),
+            # calculate approval percentage and output as FloatField
+            # and sort by it
+            percentage=ExpressionWrapper(
+            100.0 * Count('upvotes', distinct=True) /
+            (Count('upvotes', distinct=True) + Count('downvotes', distinct=True)),
+            output_field=FloatField(),
+            )
+        ).order_by('-percentage') # highest approval percentage first
+
+        all_games = self.paginate_queryset(query_games, per_page=10, page_param="games_page")
+
         return render(request, "content/game_list.html", {"games": all_games, "game_form": game_form})
     
 
 class GameDetail(View):
     def get(self, request, slug):
-        game_info = get_object_or_404(
-            Game.objects.annotate(
-                member_count=Count("members", distinct=True),), slug=slug)
+        game_info = Game.objects.annotate(
+            member_count=Count("members", distinct=True),
+            upvote_count=Count('upvotes', distinct=True),
+            downvote_count=Count('downvotes', distinct=True),
+            net_votes=ExpressionWrapper(
+                Count("upvotes", distinct=True) - Count("downvotes", distinct=True),
+                output_field=IntegerField()
+            
+        ) ).get(slug=slug)
         return render(request, "content/game_detail.html", {"game": game_info})
     
 

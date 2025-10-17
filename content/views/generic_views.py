@@ -37,25 +37,35 @@ class GenericVote(View): # reusable vote view for both topics and comments to ke
 
         action = request.POST.get("action")
 
+         # Check if the user already voted
+        already_upvoted = obj.upvotes.filter(id=request.user.id).exists()
+        already_downvoted = obj.downvotes.filter(id=request.user.id).exists()
+
         if action == "upvote":
-            if request.user in obj.upvotes.all():
+            if already_upvoted:
                 obj.upvotes.remove(request.user)
             else:
                 obj.upvotes.add(request.user)
-                obj.author.karma += 1  # Increase karma when adding an upvote
-                obj.author.save()
-                 # If user upvotes, remove downvote if exists
+                # If user upvotes, remove downvote if exists
                 obj.downvotes.remove(request.user)
 
+                # checks to see if the model being voted on is Topic or Comments to adjust user's karma accordingly
+                if Model.__name__ in ["Topic", "Comments"]:
+                    obj.author.karma += 1
+                    obj.author.save()
+                 
         elif action == "downvote":
-            if request.user in obj.downvotes.all():
+            if already_downvoted:
                 obj.downvotes.remove(request.user)
             else:
                 obj.downvotes.add(request.user)
-                obj.author.karma -= 1  # Decrease karma when removing an upvote
-                obj.author.save()
                 obj.upvotes.remove(request.user)
 
+                # checks to see if the model being voted on is Topic or Comments to adjust user's karma accordingly
+                if Model.__name__ in ["Topic", "Comments"]:
+                    obj.author.karma -= 1
+                    obj.author.save()
+    
         return JsonResponse({
             "upvotes": obj.upvotes.count(),
             "downvotes": obj.downvotes.count(),

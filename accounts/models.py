@@ -38,6 +38,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin): # no need to add password 
     created_at = models.DateTimeField(default=timezone.now)
     role = models.CharField(max_length=50, choices=[("admin", "Admin"), ("moderator", "Moderator"), ("user", "User")], default="user")
     karma = models.IntegerField(default=0)
+    content_type = models.CharField(max_length=20, null=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     

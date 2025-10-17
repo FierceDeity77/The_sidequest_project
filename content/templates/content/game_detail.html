@@ -168,24 +168,44 @@
   <!-- Game Actions -->
   <div class="card shadow-sm mb-3">
     <div class="card-body text-center">
-      <h6 class="fw-bold">Game Actions</h6>
+
+      <!-- Rating Section -->
+      <div class="mb-3">
+        <div class="d-flex justify-content-center align-items-center {{ game.rating_color }}">
+          <span class="fw-bold text-warning fs-5 me-1">⭐</span>
+          <span class="fw-bold" style="font-size: 1.1rem;">
+            {{ game.approval_percentage|default:"N/A" }}
+          </span>
+        </div>
+        <small class="text-muted">Average Rating</small>
+      </div>
+
+      <!-- Upvote / Downvote -->
+      <div class="d-flex justify-content-center align-items-center mb-3">
+        {% include "content/includes/game_vote_buttons.html" %}
+      </div>
+
       <!-- Followers count -->
       <div class="mb-2">
-        <span class="fw-bold d-block" id="followers-{{ game.id }}">
+        <span class="fw-bold d-block fs-5" id="followers-{{ game.id }}">
           {{ game.member_count }}
         </span>
         <small class="text-muted">Followers</small>
       </div>
+
       <!-- Follow Button -->
-       {% if request.user.is_authenticated %}
-      <button class="btn btn-sm btn-outline-success follow-btn w-100"
-              data-id="{{ game.id }}"
-              data-model="game"
-              data-action="follow"
-              data-csrf="{{ csrf_token }}">
-        {% if request.user in game.members.all %} Unfollow
-        {% else %} Follow {% endif %}
-      </button>
+      {% if request.user.is_authenticated %}
+        <button class="btn btn-sm btn-outline-success follow-btn w-100"
+                data-id="{{ game.id }}"
+                data-model="game"
+                data-action="follow"
+                data-csrf="{{ csrf_token }}">
+          {% if request.user in game.members.all %}
+            Unfollow
+          {% else %}
+            Follow
+          {% endif %}
+        </button>
       {% endif %}
     </div>
   </div>

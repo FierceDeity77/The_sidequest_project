@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Search Results for "{{ query }}"</h2>
+    <hr>
+    {% if search_results %}
+      <ul class="list-group">
+        {% for result in search_results %}
+          <li class="list-group-item">
+            {% if result.content_type == "Topic" %}
+              <a href="{% url 'content:topic-detail' result.slug %}">{{ result.title }}</a> (Topic)
+            {% elif result.content_type == "Community" %}
+              <a href="{% url 'content:community-detail' result.slug %}">{{ result.name }}</a> (Community)
+            {% elif result.content_type == "Sub-community" %}
+              <a href="{% url 'content:community-detail' result.slug %}">{{ result.name }}</a> (Sub-Community)
+            {% elif result.content_type == "Game" %}
+              <a href="{% url 'content:game-detail' result.slug %}">{{ result.title }}</a> (Game)
+            {% elif result.content_type == "User" %}
+              <a href="{% url 'user-profile' result.id %}">{{ result.username }}</a> (User Profile)
+            {% endif %}
+          </li>
+        {% empty %}
+            <p>No results found for "{{ query }}".</p>
+        {% endfor %}
+      </ul>
+    
+    {% endif %}
+  </div>
+{% endblock %}

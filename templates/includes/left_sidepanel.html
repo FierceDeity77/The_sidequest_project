@@ -5,48 +5,48 @@
 
   <!-- Navigation -->
   <ul class="nav flex-column mb-4 side-nav">
-    <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
-         href="{% url 'content:home' %}">
-        <i class="bi bi-house-door-fill me-2"></i> Home
-      </a>
-    </li>
+  <li class="nav-item mb-1">
+    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
+       href="{% url 'content:home' %}">
+      <i class="fa-solid fa-house-chimney me-2"></i> Home
+    </a>
+  </li>
 
-    <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'games' %}active{% endif %}" 
-         href="{% url 'content:game-list' %}">
-        <i class="bi bi-controller me-2"></i> Games
-      </a>
-    </li>
+  <li class="nav-item mb-1">
+    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'game-list' %}active{% endif %}" 
+       href="{% url 'content:game-list' %}">
+      <i class="fa-solid fa-gamepad me-2"></i> Games
+    </a>
+  </li>
 
-    <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'community' %}active{% endif %}" 
-         href="{% url 'content:communities' %}">
-        <i class="bi bi-people-fill me-2"></i> Communities
-      </a>
-    </li>
+  <li class="nav-item mb-1">
+    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'communities' %}active{% endif %}" 
+       href="{% url 'content:communities' %}">
+      <i class="fa-solid fa-users-gear me-2"></i> Communities
+    </a>
+  </li>
 
-    <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'guides' %}active{% endif %}" 
-         href="{% url 'guides:guides' %}">
-        <i class="bi bi-book-half me-2"></i> Guides / Walkthroughs
-      </a>
-    </li>
+  <li class="nav-item mb-1">
+    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'guides' %}active{% endif %}" 
+       href="{% url 'guides:guides' %}">
+      <i class="fa-solid fa-scroll me-2"></i> Guides / Walkthroughs
+    </a>
+  </li>
 
-    <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'reviews' %}active{% endif %}" 
-         href="{% url 'reviews:reviews' %}">
-        <i class="bi bi-star-fill me-2"></i> Game Reviews
-      </a>
-    </li>
+  <li class="nav-item mb-1">
+    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'reviews' %}active{% endif %}" 
+       href="{% url 'reviews:reviews' %}">
+      <i class="fa-solid fa-ranking-star me-2"></i> Game Reviews
+    </a>
+  </li>
 
-    <li class="nav-item mb-1">
-      <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'news' %}active{% endif %}" 
-         href="{% url 'content:home' %}">
-        <i class="bi bi-newspaper me-2"></i> News
-      </a>
-    </li>
-  </ul>
+  <li class="nav-item mb-1">
+    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'news' %}active{% endif %}" 
+       href="{% url 'content:news' %}">
+      <i class="fa-solid fa-newspaper me-2"></i> News
+    </a>
+  </li>
+</ul>
 
   <!-- Communities Section -->
 <div class="communities-section mt-3">

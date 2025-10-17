@@ -22,7 +22,7 @@
       <div>
         <h3 class="mb-0">{{ user_profile.username }}</h3>
         <small class="text-muted">Joined {{ user_profile.created_at|date:"F Y" }}</small><br>
-        <small class="text-muted">karma: {{ user_profile.karma }} </small>
+        <small class="text-muted">Sidequest XP: {{ user_profile.karma }} </small>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
 <!-- Tabs -->
 <ul class="nav nav-tabs mb-3" id="profileTabs" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab">Posts</a>
+    <a class="nav-link {% if tab == 'posts' %}active{% endif %}" id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab">Posts</a>
   </li>
   <li class="nav-item">
     <a class="nav-link {% if tab == 'comments' %}active{% endif %}" id="comments-tab" data-bs-toggle="tab" href="#comments" role="tab">Comments</a>
@@ -71,7 +71,7 @@
 
 <div class="tab-content">
   <!-- Posts -->
-<div class="tab-pane fade show active" id="posts" role="tabpanel">
+<div class="tab-pane fade {% if tab == 'posts' %}show active{% endif %}" id="posts" role="tabpanel">
   {% if list_of_posts %}
     <ul class="list-group list-group-flush mb-3">
       {% for user_post in list_of_posts %}
@@ -107,7 +107,11 @@
       {% endfor %}
     </ul>
   {% endif %}
+   <!-- Pagination Controls -->
+     <!-- Call partial template and passes this query's page variable -->
+    {% include "includes/pagination.html" with page_obj=list_of_posts page_param="posts_page" %}
 </div>
+ 
 
   <!-- Comments -->
 <div class="tab-pane fade {% if tab == 'comments' %}show active{% endif %}" id="comments" role="tabpanel">
@@ -143,6 +147,9 @@
       {% endfor %}
     </ul>
   {% endif %}
+   <!-- Pagination Controls -->
+     <!-- Call partial template and passes this query's page variable -->
+    {% include "includes/pagination.html" with page_obj=list_of_comments page_param="comments_page" %}
 </div>
 
   <!-- Communities -->
@@ -172,6 +179,9 @@
       {% endfor %}
     </ul>
   {% endif %}
+   <!-- Pagination Controls -->
+     <!-- Call partial template and passes this query's page variable -->
+    {% include "includes/pagination.html" with page_obj=list_of_communities page_param="communities_page" %}
 </div>
 
   
@@ -202,6 +212,9 @@
       {% endfor %}
     </ul>
   {% endif %}
+   <!-- Pagination Controls -->
+     <!-- Call partial template and passes this query's page variable and page param link -->
+    {% include "includes/pagination.html" with page_obj=list_of_games page_param="games_page" %}
 </div>
 </div>
 

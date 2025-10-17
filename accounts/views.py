@@ -5,6 +5,8 @@ from .models import CustomUser
 from django.contrib import messages
 from django.views import View
 from django.views.generic import RedirectView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from content.views.mixins import PaginationMixin
 from django.urls import reverse_lazy
 
 
@@ -41,6 +43,7 @@ class register(View):
             user = reg_form.save(commit=False) # commit false doesn't save it yet this allows you to modify fields before saving
             # Force all new signups to be normal users
             user.role = "user" # assign custom role field
+            user.content_type = "User" # assign content type field
             user.save() # saves into the database the assign role
             login(request, user)  # Auto login after registration
 
@@ -50,21 +53,26 @@ class register(View):
         return render(request, "accounts/register.html", {"reg_form": reg_form})
     
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View, PaginationMixin):
     def get(self, request, id):
         view_user = get_object_or_404(CustomUser, pk=id)
         profile_form = ProfileForm(instance=view_user)
-        list_of_posts = view_user.user_topics.all().order_by("-created_at")
-        list_of_comments = view_user.comments.all().order_by("-created_at")
-        list_of_communites = view_user.joined_communities.all().order_by("-created_at")
-        list_of_games = view_user.joined_games.all().order_by("-created_at")
-
+        # Paginate user posts
+        # Call paginate_queryset from PaginationMixin and pass the querysets
+        list_of_posts = self.paginate_queryset(view_user.user_topics.all().order_by("-created_at"), per_page=5, page_param="posts_page")
+        list_of_comments = self.paginate_queryset(view_user.comments.all().order_by("-created_at"), per_page=5, page_param="comments_page")
+        list_of_communites = self.paginate_queryset(view_user.joined_communities.all().order_by("-created_at"), per_page=5, page_param="communities_page")
+        list_of_games = self.paginate_queryset(view_user.joined_games.all().order_by("-created_at"), per_page=5, page_param="games_page")
+        tab = request.GET.get("tab", "posts") # default to posts tab if no tab is specified
+        # Pass the tab variable to the template to maintain the active tab state
+        # Page links will include ?tab=comments or ?tab=communities etc
         return render(request, "accounts/user_profile.html", {"user_profile": view_user,
                                                               "profile_form": profile_form,
                                                               "list_of_posts": list_of_posts,
                                                               "list_of_comments": list_of_comments,
                                                               "list_of_communities": list_of_communites,
-                                                              "list_of_games": list_of_games
+                                                              "list_of_games": list_of_games,
+                                                              "tab": tab
                                                               })
     
 

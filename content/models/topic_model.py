@@ -9,9 +9,10 @@ from django.contrib.contenttypes.fields import GenericRelation
 class Topic(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name="topics")
     title = models.CharField(max_length=255)
-    content = models.TextField()
+    text = models.TextField()
     spoiler = models.BooleanField(default=False) 
     created_at = models.DateTimeField(default=timezone.now)
+    content_type = models.CharField(max_length=20, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.SlugField(unique=True, default=None)
     comments = GenericRelation("Comments", related_name="topic_comments") # for querying comments from generic relation

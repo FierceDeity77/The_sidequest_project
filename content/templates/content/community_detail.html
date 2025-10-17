@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% block page_title %} Detail {% endblock %}
+{% block page_title %} Community Overview {% endblock %}
 
 {% block header %} Detail {% endblock %}
 
@@ -28,12 +28,12 @@
       <img src="{{ community.icon.url }}" 
            alt="{{ community.name }} icon"
            class="rounded-circle border me-3"
-           width="60" height="60">
+           width="96" height="96">
     {% else %}
       <img src="{% static 'default_images/default-community-icon.png' %}" 
            alt="Default community icon"
            class="rounded-circle border me-3"
-           width="60" height="60">
+           width="96" height="96">
     {% endif %}
 
     <div>
@@ -127,24 +127,7 @@
       <!-- Footer: votes + comments -->
       <div class="d-flex justify-content-between align-items-center px-3 pb-2">
       <div class="d-flex align-items-center gap-2">
-        <button class="vote-btn {% if request.user in topic.upvotes.all %}upvote-active{% endif %}" 
-                {% if not request.user.is_authenticated %}disabled{% endif %}
-                data-id="{{ topic.id }}" 
-                data-type="post" 
-                data-model="topic"  {% comment %} this passes the model string "topic" and urls.py path <str:model> which will then pass to the view to identify the model {% endcomment %}
-                data-action="upvote"
-                data-csrf="{{ csrf_token }}"> <!-- csrf injected every button carries it's own csrf-->
-          ▲ <span id="upvotes-{{ topic.id }}">{{ topic.upvote_count }}</span>
-        </button>
-        <button class="vote-btn {% if request.user in topic.downvotes.all %}downvote-active{% endif %}"
-                {% if not request.user.is_authenticated %}disabled{% endif %}
-                data-id="{{ topic.id }}" 
-                data-type="post" 
-                data-model="topic"
-                data-action="downvote"
-                data-csrf="{{ csrf_token }}"> 
-          ▼ <span id="downvotes-{{ topic.id }}">{{ topic.downvote_count }}</span>
-        </button>
+        {% include "content/includes/topic_vote_buttons.html" %}
       </div>
       <div>
         <span class="text-muted">{{ topic.comment_count }} comments</span>
@@ -155,12 +138,13 @@
     <div class="text-muted">No topics available.</div>
   {% endfor %}
 </div>
+
 <!-- Include Create Topic Modal -->
-{% include "content/create_topic_modal.html" %}
+{% include "content/add_topic_modal.html" %}
 <!-- Include Edit Community Modal -->
 {% include "content/edit_community_modal.html" %}
 <!-- Include Create Sub-community Modal -->
-{% include "content/create_sub-community_modal.html" %}
+{% include "content/add_sub-community_modal.html" %}
 
 {% endblock %}
 

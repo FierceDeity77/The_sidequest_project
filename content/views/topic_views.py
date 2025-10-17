@@ -39,12 +39,13 @@ class TopicDetail(View):
                                                              })
 
 
-class CreateTopic(LoginRequiredMixin, View):
+class AddTopic(LoginRequiredMixin, View):
     def post(self, request, slug):
         topic_form = TopicForm(request.POST)
         if topic_form.is_valid():
             topic = topic_form.save(commit=False)
             topic.community = Community.objects.get(slug=slug)
+            topic.content_type = "Topic"
             topic.author = request.user
             topic.save()
             messages.success(request, "Topic created successfully!")

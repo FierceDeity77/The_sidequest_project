@@ -42,7 +42,7 @@ class CommunityDetail(View):
                                                                  "subcommunity_form": subcommunity_form}) # pass id to check if creating sub-community
     
 
-class CreateSubCommunity(LoginRequiredMixin, View):
+class AddSubCommunity(LoginRequiredMixin, View):
     def post(self, request, slug):
         parent_community = Community.objects.get(slug=slug)
         subcommunity_form = SubCommunityForm(request.POST, request.FILES) # for modal create sub-community

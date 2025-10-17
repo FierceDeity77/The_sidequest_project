@@ -3,7 +3,7 @@ from django.views import View
 
 class Reviews(View):
     def get(self, request):
-        return render(request, "content/reviews.html")
+        return render(request, "reviews/reviews.html")
 
 
     def post(self, request):

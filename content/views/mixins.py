@@ -1,4 +1,6 @@
 from django.http import HttpResponseForbidden
+from django.core.paginator import Paginator
+
 
 class RoleRequiredMixin:
     """
@@ -23,3 +25,17 @@ class RoleRequiredMixin:
 
         # Otherwise block
         return HttpResponseForbidden("You don’t have permission to perform this action.")
+    
+
+class PaginationMixin:
+    def paginate_queryset(self, queryset, per_page=5, page_param="page"):
+        paginator = Paginator(queryset, per_page)
+        page_number = self.request.GET.get(page_param) # this is used to get different url paginations on the same page for example ?posts_page=2
+        return paginator.get_page(page_number)
+    """
+    Generic paginator helper.
+    - request: the current request object
+    - queryset: any queryset to paginate
+    - per_page: number of items per page (default 5)
+    - page_param: the name of the GET parameter to use (default "page")
+    """

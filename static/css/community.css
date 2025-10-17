@@ -1,0 +1,27 @@
+/* community title */
+.community-title {
+  text-shadow: none !important;
+}
+
+/* Communities List Hover + Active Highlight */
+.communities-list .community-link {
+  padding: 6px 10px;
+  border-radius: 6px;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.communities-list .community-link:hover {
+  background-color: #f8f9fa; /* light hover */
+}
+
+/* communitydetail Community creator link */
+.creator-link {
+  color: #212529;          /* dark font */
+  text-decoration: none;   /* no underline */
+}
+
+.creator-link:hover {
+  color: #000;             /* darker on hover */
+  text-decoration: underline;
+}

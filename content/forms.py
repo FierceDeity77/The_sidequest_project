@@ -35,7 +35,7 @@ class TopicForm(forms.ModelForm):
 
     class Meta:
         model = Topic
-        fields = ['title', 'content', "spoiler"]
+        fields = ['title', 'text', "spoiler"]
 
 
     def __init__(self, *args, **kwargs):

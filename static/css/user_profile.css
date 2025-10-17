@@ -1,0 +1,53 @@
+/* user profile links */
+.custom-link {
+    color: #212529; /* Bootstrap text-dark */
+    text-decoration: none; /* remove underline */
+    transition: all 0.2s ease-in-out;
+  }
+  .custom-link:hover {
+    color: #000; /* slightly darker on hover */
+    text-decoration: underline;
+  }
+
+  /* Scoped only to About section */
+.about-card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  box-shadow: none;
+}
+
+.about-card .about-title {
+  font-size: 0.9rem;     /* smaller than h5 */
+  color: #6c757d;        /* Bootstrap muted gray */
+  text-shadow: none;
+  margin-bottom: 0.5rem;
+}
+
+.about-card .about-text {
+  color: #212529;        /* normal dark text */
+  text-shadow: none;
+  font-size: 0.95rem;    /* slightly smaller for balance */
+}
+
+
+/* user profile Community links: darker text, underline only on hover */
+.community-link {
+  color: #212529;           /* dark gray/black */
+  text-decoration: none;    /* remove underline */
+}
+
+.community-link:hover {
+  color: #000;              /* darker on hover */
+  text-decoration: underline;
+}
+
+/* user profile Game links: darker text, underline only on hover */
+.game-link {
+  color: #212529;          /* dark gray */
+  text-decoration: none;   /* remove underline */
+}
+
+.game-link:hover {
+  color: #000;             /* darker on hover */
+  text-decoration: underline;
+}

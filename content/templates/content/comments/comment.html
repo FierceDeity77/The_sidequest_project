@@ -46,24 +46,7 @@
     </form>
 
     <!-- Voting section -->
-    <div class="d-flex align-items-center gap-2 mb-1">
-      <button class="vote-btn {% if request.user in comment.upvotes.all %}upvote-active{% endif %}" 
-        data-id="{{ comment.id }}" 
-        data-type="post" 
-        data-model="comments"
-        data-action="upvote" 
-        data-csrf="{{ csrf_token }}">
-        ▲ <span id="upvotes-{{ comment.id }}">{{ comment.upvotes.count }}</span>
-      </button>
-
-      <button class="vote-btn {% if request.user in comment.downvotes.all %}downvote-active{% endif %}" 
-              data-id="{{ comment.id }}" 
-              data-type="post" 
-              data-model="comments"
-              data-action="downvote" 
-              data-csrf="{{ csrf_token }}">
-        ▼ <span id="downvotes-{{ comment.id }}">{{ comment.downvotes.count }}</span>
-      </button>
+    {% include "content/includes/comment_vote_buttons.html" %}
 
       <!-- Reply button / form -->
       {% include "content/includes/reply_form.html" %}

@@ -21,58 +21,38 @@
 
         <!-- Edit/Delete only visible to author -->
         {% if request.user == topic.author or request.user.is_staff %}
-  <div class="dropdown ms-auto">
-    <button class="btn btn-link btn-sm text-muted p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      <i class="bi bi-three-dots"></i>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-      <li>
-        <button type="button" 
-                class="dropdown-item text-primary"
-                data-bs-toggle="modal" 
-                data-bs-target="#editTopicModal">
-          <i class="bi bi-pencil"></i> Edit
-        </button>
-      </li>
-      <li>
-        <form method="post" action="{% url 'content:delete-topic' topic.slug %}" class="d-inline">
-          {% csrf_token %}
-          <button type="submit" class="dropdown-item text-danger">
-            <i class="bi bi-trash"></i> Delete
-          </button>
-        </form>
-      </li>
-    </ul>
-  </div>
-{% endif %}
+          <div class="dropdown ms-auto">
+            <button class="btn btn-link btn-sm text-muted p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+              <li>
+                <button type="button" 
+                        class="dropdown-item text-primary"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#editTopicModal">
+                  <i class="bi bi-pencil"></i> Edit
+                </button>
+              </li>
+              <li>
+                <form method="post" action="{% url 'content:delete-topic' topic.slug %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item text-danger">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        {% endif %}
       </div>
 
       <h5 class="mb-2">{{ topic.title }}</h5>
-      <p>{{ topic.content }}</p>
+      <p>{{ topic.text }}</p>
 
       <!-- Vote Section -->
       <div class="d-flex align-items-center gap-2 me-3">
-        <!-- Upvote -->
-        <button class="vote-btn {% if request.user in topic.upvotes.all %}upvote-active{% endif %}"
-                {% if not request.user.is_authenticated %}disabled{% endif %}
-                data-id="{{ topic.id }}"
-                data-type="post"
-                data-model="topic"
-                data-action="upvote"
-                data-csrf="{{ csrf_token }}">
-          ▲ <span id="upvotes-{{ topic.id }}">{{ topic.upvote_count }}</span>
-        </button>
-
-        <!-- Downvote -->
-        <button class="vote-btn {% if request.user in topic.downvotes.all %}downvote-active{% endif %}"
-                {% if not request.user.is_authenticated %}disabled{% endif %}
-                data-id="{{ topic.id }}"
-                data-type="post"
-                data-model="topic"
-                data-action="downvote"
-                data-csrf="{{ csrf_token }}">
-          ▼ <span id="downvotes-{{ topic.id }}">{{ topic.downvote_count }}</span>
-        </button>
+        {% include "content/includes/topic_vote_buttons.html" %}
       </div>
 
       <!-- Comments Section -->
@@ -131,7 +111,7 @@
 {% include "content/edit_community_modal.html" %}
 
 <!-- Include Create Sub-Community Modal -->
-{% include "content/create_sub-community_modal.html" %}
+{% include "content/add_sub-community_modal.html" %}
 
 {% endblock %}
 

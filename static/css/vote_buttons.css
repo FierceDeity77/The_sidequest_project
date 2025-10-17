@@ -1,0 +1,90 @@
+/* Vote Buttons Stylesheet */
+
+.vote-btn:focus {
+  outline: none; /* remove blue highlight */
+}
+
+.vote-btn.text-danger:hover {
+  color: #a71d2a; /* darker red on hover */
+}
+
+/* Upvote/Downvote Buttons with smart hover and active state  (in comment and topic views) */
+/* Reset all Bootstrap/built-in styles */
+.vote-btn {
+  all: unset;
+  cursor: pointer;
+  color: #6c757d; /* muted gray */
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  transition: color 0.2s ease;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  cursor: pointer; /* makes it feel clickable */
+  transition: color 0.2s ease-in-out;
+}
+
+/* Hover color hint (soft green/red) */
+.vote-btn[data-action="upvote"]:hover {
+  color: #20c997; /* bright green */
+}
+
+.vote-btn[data-action="downvote"]:hover {
+  color: #bb2d3b; /* slightly darker red */
+}
+
+/* Active (voted) colors */
+.vote-btn[data-action="upvote"].upvote-active {
+  color: #20c997 !important; /* Bootstrap success green */
+}
+
+.vote-btn[data-action="downvote"].downvote-active {
+  color: #dc3545 !important; /* Bootstrap danger red */
+}
+
+/* Optional: remove focus outline */
+.vote-btn:focus {
+  outline: none;
+}
+
+/*-----------------------------------------*/
+/* Effects for game vote buttons */
+
+.vote-btn i {
+  color: #6c757d; /* muted gray */
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+/* Hover color + motion (subtle pop) */
+.vote-btn[data-action="upvote"]:hover i {
+  color: #20c997; /* bright green */
+  transform: translateY(-2px) scale(1.1); /* small lift */
+}
+
+.vote-btn[data-action="downvote"]:hover i {
+  color: #bb2d3b; /* red */
+  transform: translateY(2px) scale(1.1); /* small dip */
+}
+
+/* Active/voted colors */
+.vote-btn[data-action="upvote"].upvote-active i {
+  color: #20c997 !important;
+  transform: scale(1.15);
+}
+
+.vote-btn[data-action="downvote"].downvote-active i {
+  color: #dc3545 !important;
+  transform: scale(1.15);
+}
+
+/* Vote count styling */
+.game-vote-count {
+  font-size: 0.85rem;       /* smaller text */
+  color: #6c757d;           /* muted gray */
+  font-weight: 600;         /* semi-bold for emphasis */
+  margin: 0 4px;            /* small spacing between arrows */
+  user-select: none;        /* prevent accidental text highlighting */
+}

@@ -1,45 +1,33 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block page_title %} Home {% endblock %}
+{% block page_title %} News {% endblock %}
 
 {% block content %}
-  <!-- News Feed -->
-  {% for topic in topics %}
-    {% if topic.author.avatar %}
-    <div class="card shadow-sm mb-3">
-      <div class="card-body">
-        <div class="d-flex align-items-center mb-2">
-          <img src="{{ topic.author.avatar.url }}" 
-               class="rounded-circle me-2" 
-               width="40" height="40" 
-               alt="{{ topic.author.username }}">
-          <div>
-            <h6 class="mb-0 fw-semibold">{{ topic.author.username }}</h6>
-            <small class="text-muted">
-              Posted {{ topic.created_at|timesince }} ago in {{ topic.community.name }} 
-              <span class="text-primary">{{ topic.game.title }}</span>
-            </small>
-          </div>
-        </div>
-        <p class="mb-2">{{ topic.title }}</p>
+  <div class="row g-3">
+    {% for news in article %}
+      <div class="col-12">
+        <div class="card h-100 shadow-sm position-relative overflow-hidden">
+          <!-- News Image -->
+          <img src="{% static news.image %}" class="card-img-top" alt="News Image">
 
-        <div class="d-flex justify-content-between text-muted small">
-          <span><i class="fa-regular fa-thumbs-up me-1"></i> Likes</span>
-          <span><i class="fa-regular fa-comment me-1"></i> {{ topic.comment_count }} Comments</span>
-          <span><i class="fa-solid fa-share me-1"></i> Share</span>
+          <!-- Overlay Title -->
+          <div class="card-img-overlay d-flex align-items-end p-3 bg-dark bg-opacity-25">
+            <h5 class="card-title text-white mb-0">{{ news.title }}</h5>
+          </div>
+
+          <!-- Clickable Area -->
+          <a href="{{ news.href }}" target="_blank" class="stretched-link"></a>
         </div>
       </div>
-    </div>
-    {% endif %}
-  {% empty %}
-    <p class="text-muted text-center">No posts yet. Be the first to post!</p>
-  {% endfor %}
+    {% empty %}
+      <p class="text-muted">No news available.</p>
+    {% endfor %}
+  </div>
 {% endblock %}
 
-
 {% block right_panel %}
-  <!-- Trending / Popular sections remain the same -->
+  <!-- Example: Trending / Popular section -->
   <div class="card shadow-sm mb-3">
     <div class="card-header fw-bold small">Trending Games</div>
     <ul class="list-group list-group-flush">
@@ -49,6 +37,7 @@
     </ul>
   </div>
 
+  <!-- Example: Trending / Popular section -->
   <div class="card shadow-sm mb-3">
     <div class="card-header fw-bold small">Top Contributors</div>
     <ul class="list-group list-group-flush">
@@ -60,6 +49,7 @@
     </ul>
   </div>
 
+  <!-- Example: Trending / Popular section -->
   <div class="card shadow-sm mb-3">
     <div class="card-header fw-bold small">Popular News</div>
     <ul class="list-group list-group-flush">

@@ -1,8 +1,31 @@
 from django.views import View
 from django.shortcuts import render
-from content.news import article  # import the article data from news.py
+from django.db.models import Count
+from content.models.topic_model import Topic
 
 
 class Home(View):
     def get(self, request):    
-        return render(request, "content/home.html", {"user": request.user, "article": article}) # request.user django built-in func to get current user
+        if request.user.is_authenticated:
+            topics = (
+                    Topic.objects.filter(community__members=request.user) # filter topics based on communities the user is a member of
+                    .annotate(
+                        upvote_count=Count("upvotes", distinct=True),
+                        downvote_count=Count("downvotes", distinct=True),
+                        comment_count=Count("comments", distinct=True),
+                    )
+                    .order_by("-created_at")
+                    )
+        else:
+            topics = (
+                    Topic.objects.all()
+                    .annotate(
+                        upvote_count=Count("upvotes", distinct=True),
+                        downvote_count=Count("downvotes", distinct=True),
+                        comment_count=Count("comments", distinct=True),
+                    )
+                    .order_by("-created_at")
+                    )
+        
+        return render(request, "content/home.html", {"user": request.user,
+                                                      "topics": topics,})

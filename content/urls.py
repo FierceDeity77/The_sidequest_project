@@ -9,17 +9,16 @@ urlpatterns = [
     path("community-list/", views.CommunityList.as_view(), name="communities"),
     path("view-community/<slug:slug>/", views.CommunityDetail.as_view(), name="community-detail"),
     path("edit-community/<slug:slug>/", views.EditCommunity.as_view(), name="edit-community"),
-    path("create-subcommunity/<slug:slug>/", views.CreateSubCommunity.as_view(), name="create-subcommunity"),
+    path("create-subcommunity/<slug:slug>/", views.AddSubCommunity.as_view(), name="create-subcommunity"),
 
     path("games/", views.Games.as_view(), name="game-list"),
     path("add-game/", views.AddGame.as_view(), name="add-game"),
     path("game-detail/<slug:slug>/", views.GameDetail.as_view(), name="game-detail"),
     
-    path("create-topic/<slug:slug>/", views.CreateTopic.as_view(), name="create-topic"),
+    path("create-topic/<slug:slug>/", views.AddTopic.as_view(), name="create-topic"),
     path("topic/<slug:slug>/", views.TopicDetail.as_view(), name="topic-detail"),
     path("topic/<slug:slug>/comment/", views.AddComment.as_view(), name="add-comment"), # set to same url but changed the views for post
     path("topic/<slug:slug>/comment/<int:parent_id>/", views.AddComment.as_view(), name="add-comment"), # comment for community that has a parent (sub-community)
-    #path("comment/<int:id>/vote/", views.CommentVote.as_view(), name="comment-vote"),
     path("topic-delete/<slug:slug>/", views.DeleteTopic.as_view(), name="delete-topic"),
     path("topic-edit/<slug:slug>/", views.EditTopic.as_view(), name="edit-topic"),
 
@@ -28,4 +27,8 @@ urlpatterns = [
     
     path("vote/<str:model>/<int:id>/", views.GenericVote.as_view(), name="generic-vote"), # str:model can be "topic" or "comment" gets the model to vote on and pass it to the view
     path("follow/<str:model>/<int:id>/", views.GenericFollow.as_view(), name="generic-follow"), # str:model can be "topic" or "comment" gets the model to follow and pass it to the view
+
+    path("search/", views.SearchView.as_view(), name="search"),
+
+    path("news/", views.NewsView.as_view(), name="news"),  # News page
 ]

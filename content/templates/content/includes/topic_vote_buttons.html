@@ -1,0 +1,23 @@
+
+<!-- Upvote -->
+<button class="vote-btn {% if request.user in topic.upvotes.all %}upvote-active{% endif %}"
+        {% if not request.user.is_authenticated %}disabled{% endif %}
+        data-id="{{ topic.id }}"
+        data-type="post"
+        data-model="topic"
+        data-action="upvote"
+        data-csrf="{{ csrf_token }}">
+    ▲ <span id="upvotes-{{ topic.id }}">{{ topic.upvote_count }}</span>
+</button>
+
+<!-- Downvote -->
+<button class="vote-btn {% if request.user in topic.downvotes.all %}downvote-active{% endif %}"
+        {% if not request.user.is_authenticated %}disabled{% endif %}
+        data-id="{{ topic.id }}"
+        data-type="post"
+        data-model="topic"
+        data-action="downvote"
+        data-csrf="{{ csrf_token }}">
+    ▼ <span id="downvotes-{{ topic.id }}">{{ topic.downvote_count }}</span>
+</button>
+      

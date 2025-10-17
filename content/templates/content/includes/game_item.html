@@ -1,14 +1,10 @@
-<li class="d-flex border-bottom py-2 hover-bg-light" style="cursor: pointer;">
+<li class="d-flex border-bottom py-2 hover-bg-light"
+    style="cursor: pointer;"
+    onclick="window.location='{% url 'content:game-detail' slug=game.slug %}'">
   
   <!-- Vote Section -->
-  <div class="d-flex flex-column align-items-center me-3">
-    <button class="btn btn-light p-0 mb-1" style="border: none;">
-      <i class="bi bi-arrow-up fs-5 text-secondary"></i>
-    </button>
-    <span class="fw-bold text-secondary small">0</span>
-    <button class="btn btn-light p-0 mt-1" style="border: none;">
-      <i class="bi bi-arrow-down fs-5 text-secondary"></i>
-    </button>
+   <div class="d-flex flex-column align-items-center me-3" onclick="event.stopPropagation()">
+    {% include "content/includes/game_vote_buttons.html" %}
   </div>
 
   <!-- Game Icon -->
@@ -23,10 +19,9 @@
   <!-- Game Info -->
   <div class="flex-grow-1">
     <!-- Title -->
-    <a href="{% url 'content:game-detail' slug=game.slug %}" 
-       class="fw-bold text-dark d-block mb-1" style="font-size: 0.95rem;">
+    <span class="fw-bold text-dark d-block mb-1" style="font-size: 0.95rem;">
       {{ game.title }}
-    </a>
+    </span>
 
     <!-- Description -->
     {% if game.description %}
@@ -46,9 +41,11 @@
     </div>
   </div>
 
-  <!-- Action Buttons -->
-  <div class="ms-3 d-flex align-items-center">
-    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+  <!-- Average Rating -->
+  <div class="ms-3 d-flex align-items-center {{ game.rating_color }}">
+    <span class="fw-bold">
+      {{ game.approval_percentage|default:"N/A" }}
+    </span>
   </div>
 
 </li>
