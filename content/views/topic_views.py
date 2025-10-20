@@ -6,6 +6,7 @@ from content.models.community_model import Community
 from content.models.topic_model import Topic
 from content.forms import CommentForm, TopicForm, CommunityForm, SubCommunityForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from content.views.notification_utils_views import create_notification
 
 
 class TopicDetail(View):
@@ -13,6 +14,14 @@ class TopicDetail(View):
          # (reverse relation) ensure the topic belongs to a community, and annotate the community with member count
         community = get_object_or_404(
             Community.objects.annotate(member_count=Count("members")), topics__slug=slug)
+        
+        # Get all sub-communities for the current community with most members first
+        list_of_subs = (
+                community.sub_communities.filter(is_main=False)
+                .annotate(member_count=Count("members"))
+                .order_by("-member_count")
+        )
+
         topic = (Topic.objects
                     .annotate(
                         upvote_count=Count("upvotes", distinct=True),
@@ -20,7 +29,7 @@ class TopicDetail(View):
                     )
                     .get(slug=slug)
                 )
-        # comment_list = topic.comments.all().order_by('-created_at')  # newest first
+       
         # filter to get only top-level comments (parent is null) and order by newest first
         # this way only top level comments are fetched initially, replies are handled in the template
         # instead of fetching all comments and filtering in template using {% if not %} which is inefficient
@@ -29,25 +38,32 @@ class TopicDetail(View):
         subcommunity_form = SubCommunityForm() # for modal create sub-community and returns a clear form
         comment_form = CommentForm()
         topic_form = TopicForm(instance=topic)  # pass form with existing topic data for editing
-        return render(request, "content/topic_detail.html", {"topic": topic,
-                                                             "community": community, # to pass community data to topics detail so that the right panel can render the info
-                                                             "comment_form": comment_form,
-                                                             "comment_list": comment_list,
-                                                             "topic_form": topic_form,
-                                                             "community_form": community_form,
-                                                             "subcommunity_form": subcommunity_form,
-                                                             })
+
+        return render(request, "content/topic_detail.html", 
+                       {"topic": topic,
+                        "community": community, # to pass community data to topics detail so that the right panel can render the info
+                        "comment_form": comment_form,
+                        "comment_list": comment_list,
+                        "topic_form": topic_form,
+                        "community_form": community_form,
+                        "subcommunity_form": subcommunity_form,
+                        "list_of_subs": list_of_subs})
 
 
 class AddTopic(LoginRequiredMixin, View):
     def post(self, request, slug):
         topic_form = TopicForm(request.POST)
+        current_community = get_object_or_404(Community, slug=slug)
         if topic_form.is_valid():
             topic = topic_form.save(commit=False)
-            topic.community = Community.objects.get(slug=slug)
+            topic.community = current_community
             topic.content_type = "Topic"
             topic.author = request.user
             topic.save()
+            
+            create_notification(actor=request.user, recipient=current_community.created_by, 
+                                verb='topic', obj=current_community)
+            
             messages.success(request, "Topic created successfully!")
             return redirect("content:community-detail", slug=slug)
         return render(request, "content/community_detail.html", {"topic_form": topic_form})

@@ -9,7 +9,7 @@
   <title>{% block page_title %}The Sidequest Home{% endblock %}</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="{% static 'assets/willow.ico' %}" />
+  <link rel="icon" type="image/x-icon" href="{% static 'assets/sidequest.ico' %}" />
 
   <!-- Bootstrap Icons -->
 <link rel="stylesheet" 
@@ -64,13 +64,13 @@
           href="#" id="notifDropdown"
           role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-bell fs-5 text-light"></i>
-          <!-- Optional red dot indicator
-          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-            <span class="visually-hidden">New alerts</span>
-          </span> -->
+          <!-- Optional red dot indicator for new notifications -->
+          <span id="notifDot" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none">
+             <span class="visually-hidden">New alerts</span>
+          </span>
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown">
-          <li><span class="dropdown-item-text text-muted">No notifications yet</span></li>
+            <!-- Notifications will be dynamically loaded here by JavaScript -->
         </ul>
       </li>
 
@@ -122,10 +122,12 @@
   <section class="py-4">
     <div class="container-fluid">
       <div class="row">
+
         {% block layout %}
+
           <!-- Left Panel -->
           <div class="col-lg-3 col-md-4">
-            <div class="card shadow-sm" style="min-height: 100vh;">
+            <div class="card" style="min-height: 100vh;">
               {% include "includes/left_sidepanel.html" %}
             </div>
           </div>
@@ -157,5 +159,11 @@
   <script src="{% static 'js/comment.js' %}"></script>
   <script src="{% static 'js/upload_preview.js' %}"></script>
   <script src="{% static 'js/vote.js' %}"></script>
+
+  <!-- Notification URL for JS this calls the url which fetches the latest notifications -->
+  <script>
+     const NOTIFICATIONS_URL = "{% url 'content:latest-notifications' %}";
+  </script>
+  <script src="{% static 'js/notification.js' %}"></script>
 </body>
 </html>

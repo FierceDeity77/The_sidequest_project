@@ -8,6 +8,7 @@ from content.models.comment_model import Comments
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from content.forms import CommentForm
+from content.views.notification_utils_views import create_notification
 
 
 class AddComment(LoginRequiredMixin, View):
@@ -22,9 +23,11 @@ class AddComment(LoginRequiredMixin, View):
                 "parent": parent_id,
                 "author": request.user,
             }
-            if parent_id: # check if it has parent then if yes then it's a reply
-                parent_comment = get_object_or_404(Comments, id=parent_id) # use this if the object must exist
+            if parent_id: # check the parent_id if it has a value if yes then it's a reply
+                parent_comment = get_object_or_404(Comments, id=parent_id) # use 404 if the object must exist
                 comment_data['parent'] = parent_comment # set parent comment and updates inside the dict
+                # create notification for reply
+                create_notification(actor=request.user, recipient=parent_comment.author, verb='reply', obj=parent_comment)
                 
             new_comment = Comments.objects.create(**comment_data) # set the dict as kwargs
             

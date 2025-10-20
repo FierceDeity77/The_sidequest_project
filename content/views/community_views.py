@@ -12,12 +12,12 @@ class CommunityList(View):
     def get(self, request):
         # Annotate each community with the count of its members
         list_of_communities = (Community.objects.filter(is_main=True)
-                                .annotate(member_count=Count("members")))
+                                .annotate(member_count=Count("members"))).order_by("-member_count")
         
         list_of_subs = (Community.objects.filter(is_main=False)
-                            .annotate(member_count=Count("members")))
-        
-        return render(request, "content/community.html", {"communities": list_of_communities, 
+                            .annotate(member_count=Count("members"))).order_by("-member_count")
+
+        return render(request, "content/community.html", {"communities": list_of_communities,
                                                           "sub_communities": list_of_subs})
     
 
@@ -25,6 +25,13 @@ class CommunityDetail(View):
     def get(self, request, slug):
         community = get_object_or_404(
             Community.objects.annotate(member_count=Count("members")), slug=slug)
+        # Get all sub-communities for the current community with most members first
+        list_of_subs = (
+                community.sub_communities.filter(is_main=False)
+                .annotate(member_count=Count("members"))
+                .order_by("-member_count")
+        )
+
         community_form = CommunityForm(instance=community) # for modal edit community, instance in get prepopulates form fields with current model data.
         subcommunity_form = SubCommunityForm() # for modal create sub-community and returns a clear form
         topic_form = TopicForm()
@@ -34,12 +41,14 @@ class CommunityDetail(View):
                 upvote_count=Count("upvotes", distinct=True),
                 downvote_count=Count("downvotes", distinct=True)
             ).order_by('-created_at')  # newest first, annotate calculates something per row and add it a extra fields to each topic object
-        return render(request, "content/community_detail.html", {"community": community, 
-                                                                 "topics": topics,
-                                                                 "topic_form": topic_form,
-                                                                 "slug": slug, 
-                                                                 "community_form": community_form,
-                                                                 "subcommunity_form": subcommunity_form}) # pass id to check if creating sub-community
+        return render(request, "content/community_detail.html", 
+                       {"community": community, 
+                        "topics": topics,
+                        "topic_form": topic_form,
+                        "slug": slug, 
+                        "community_form": community_form,
+                        "subcommunity_form": subcommunity_form,
+                        "list_of_subs": list_of_subs}) # pass id to check if creating sub-community
     
 
 class AddSubCommunity(LoginRequiredMixin, View):

@@ -7,7 +7,7 @@
   <!-- News Feed -->
   {% for topic in topics %}
     {% if topic.author.avatar %}
-    <div class="card shadow-sm mb-3">
+    <div class="card mb-3">
       <div class="card-body">
         <div class="d-flex align-items-center mb-2">
           <img src="{{ topic.author.avatar.url }}" 
@@ -40,7 +40,7 @@
 
 {% block right_panel %}
   <!-- Trending / Popular sections remain the same -->
-  <div class="card shadow-sm mb-3">
+  <div class="card mb-3">
     <div class="card-header fw-bold small">Trending Games</div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item small">Elden Ring</li>
@@ -49,7 +49,7 @@
     </ul>
   </div>
 
-  <div class="card shadow-sm mb-3">
+  <div class="card mb-3">
     <div class="card-header fw-bold small">Top Contributors</div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item small">Jograt3341</li>
@@ -60,7 +60,7 @@
     </ul>
   </div>
 
-  <div class="card shadow-sm mb-3">
+  <div class="card mb-3">
     <div class="card-header fw-bold small">Popular News</div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item small">Witcher 4 Launch Trailer</li>

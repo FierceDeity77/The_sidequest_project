@@ -7,5 +7,7 @@ from .generic_views import *
 from .mixins import * 
 from .search_views import *
 from .news_views import *
+from .notification_views import *
+from .notification_utils_views import *
 
 # by doing this django can still import views

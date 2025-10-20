@@ -6,6 +6,7 @@ from content.views.mixins import PaginationMixin
 from content.models.topic_model import Topic
 from content.models.community_model import Community
 from content.models.game_model import Game
+from django.db.models import Q
 from itertools import chain
 
 
@@ -20,10 +21,22 @@ class SearchView(View, PaginationMixin):
          # union slower and limited you get dictionaries instead of model instances
          # it's nice for sql merging but not for complex queries
          # if you need model instances consider using itertools.chain
-         
-        topics = Topic.objects.filter(title__icontains=query)
-        communities = Community.objects.filter(name__icontains=query)
-        games = Game.objects.filter(title__icontains=query)
+         # Q combines multiple conditions with | OR logic or AND logic (&)
+         # tags__name__icontains=query lets you search inside tag names (since TaggableManager creates a relation to the Tag model).
+         # .distinct() removes duplicates that might appear because of the many-to-many relationship.
+
+        topics = Topic.objects.filter(
+            Q(title__icontains=query) | Q(tags__name__icontains=query)
+        ).distinct()
+
+        communities = Community.objects.filter(
+            Q(name__icontains=query) | Q(tags__name__icontains=query)
+        ).distinct()
+
+        games = Game.objects.filter(
+            Q(title__icontains=query) | Q(tags__name__icontains=query)
+        ).distinct()
+        
         users = CustomUser.objects.filter(username__icontains=query)
 
         # Merge all results into one list

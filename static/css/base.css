@@ -10832,30 +10832,6 @@ textarea.form-control-lg {
   color: white;
 }
 
-.search-input {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.btn-circle {
-  background-color: white;
-  color: black;
-  padding: 8px 20px;   /* wider padding makes it oblong */
-  border-radius: 25px; /* makes it rounded like a pill */
-  border: 2px solid white;
-  text-align: center;
-  text-decoration: none;
-  margin-left: 10px;
-  font-weight: 500;
-  transition: 0.3s;
-}
-
-.btn-circle:hover {
-  background-color: #f8f9fa; /* light gray hover */
-  color: #000;
-}
-
-
 .post-thumbnail {
     width: 100%;           /* makes it responsive */
     max-width: 200px;      /* set the maximum width */
@@ -10868,36 +10844,33 @@ textarea.form-control-lg {
 .card {
   border: none;
   overflow: hidden;
+  border-radius: 16px; /* rounded sides */
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12); /* lighter, softer shadow */
+  background-color: #fff; /* light background for contrast */
 }
 
 .card-img-top {
   object-fit: cover;
-  height: 250px; /* control image height */
-  filter: brightness(0.9); /* slightly lighter */
-  transition: filter 0.3s ease;
-}
-
-.card:hover .card-img-top {
-  filter: brightness(1.1); /* lighten more on hover */
+  height: 250px;
+  filter: brightness(1); /* keep natural brightness */
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
 .card-title {
-  color: white;
+  color: #222;
   font-weight: bold;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-  transition: text-decoration 0.3s ease;
-}
-
-.card:hover .card-title {
-  text-decoration: underline;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6); /* subtle pop */
 }
 
 .card-title-com a {
-  color: #333;  /* darker text */
+  color: #333;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .card-title-com a:hover {
-  color: #000;  /* fully black on hover */
+  color: #000;
   text-decoration: underline;
 }
 
@@ -10979,11 +10952,13 @@ textarea.form-control-lg {
   text-decoration: underline;
 }
 
+
 /* Smooth width transition for search input */
 .search-input {
   transition: width 0.3s ease;
   width: 500px;
   max-width: 60%;
+  margin: 0 auto;
 }
 
 .search-input:focus {

@@ -11,7 +11,7 @@ from content.models.comment_model import Comments
 class GameForm(forms.ModelForm):
     class Meta:
         model = Game
-        fields = ['title', 'platforms', 'genre', 'description', 'release_date', 'cover_image']
+        fields = ['title', 'platforms', 'genre', 'description', 'release_date', 'cover_image', 'tags']
         widgets = {
             'release_date': SelectDateWidget(years=range(1980, 2101)), # best practice to store in the db in this format yyyy-mm-dd
         }
@@ -35,7 +35,7 @@ class TopicForm(forms.ModelForm):
 
     class Meta:
         model = Topic
-        fields = ['title', 'text', "spoiler"]
+        fields = ['title', 'text', 'spoiler', 'tags']
 
 
     def __init__(self, *args, **kwargs):
@@ -59,7 +59,7 @@ class CommentForm(forms.ModelForm):
 class CommunityForm(forms.ModelForm):
     class Meta:
         model = Community
-        fields = ['name', 'description', 'icon', 'banner', 'moderators', 'rules']
+        fields = ['name', 'description', 'icon', 'banner', 'moderators', 'rules', 'tags']
         widgets = {
             "moderators": forms.SelectMultiple(attrs={"class": "form-control"}),  # optional styling
         }
@@ -76,7 +76,7 @@ class CommunityForm(forms.ModelForm):
 class SubCommunityForm(forms.ModelForm): # added this form for creating sub-communities we can use the community form as well but to keep things clear we create a separate form
     class Meta:
         model = Community
-        fields = ['name', 'description', 'icon', 'banner', 'moderators', 'rules']
+        fields = ['name', 'description', 'icon', 'banner', 'moderators', 'rules', 'tags']
         widgets = {
             "moderators": forms.SelectMultiple(attrs={"class": "form-control"}),  # optional styling
         }

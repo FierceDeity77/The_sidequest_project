@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator # can require login to cbv functions
 from django.apps import apps
+from content.views.notification_utils_views import create_notification
 
 
 class GenericFollow(View): # reusable follow view for both communities and games to keep DRY
@@ -46,6 +47,11 @@ class GenericVote(View): # reusable vote view for both topics and comments to ke
                 obj.upvotes.remove(request.user)
             else:
                 obj.upvotes.add(request.user)
+                
+                # calls the create_notification function to notify the author of the upvote
+                # passes actor as the current user, recipient as the object's author, verb as 'upvote', and obj as the object being upvoted
+                create_notification(actor=request.user, recipient=obj.author, verb='upvote', obj=obj)
+
                 # If user upvotes, remove downvote if exists
                 obj.downvotes.remove(request.user)
 

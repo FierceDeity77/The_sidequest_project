@@ -16,7 +16,7 @@
 
     {% elif game.downvote_count > game.upvote_count %}
       <span id="downvotes-{{ game.id }}" class="game-vote-count text-danger fw-bold">
-        -{{ game.net_votes }}</span>
+        {{ game.net_votes }}</span>
 
     {% elif game.upvote_count == game.downvote_count %}
       <span id="upvotes-{{ game.id }}" class="game-vote-count text-warning fw-bold">

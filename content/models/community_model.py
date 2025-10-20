@@ -4,12 +4,14 @@ from django.utils.text import slugify
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from .game_model import Game
+from taggit.managers import TaggableManager
 
 
 class Community(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="communities")
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
+
     # creator/author of the community
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -21,9 +23,13 @@ class Community(models.Model):
     slug = models.SlugField(unique=True, default=None)
     is_main = models.BooleanField(default=False)  # True for the game's main community, False for sub-communities
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="sub_communities")
-    
-     # Members/followers
+
+    # Tags
+    tags = TaggableManager(blank=True)
+
+    # Members/followers
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through="CommunityMembership", related_name="joined_communities")
+    
     # Community-specific moderators
     moderators = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="moderated_communities", blank=True)
 

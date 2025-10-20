@@ -2,7 +2,7 @@
 <!-- Sidebar Column -->
 
 <!-- About Community -->
-<div class="card shadow-sm mb-3">
+<div class="card mb-3">
   <div class="card-header bg-light fw-bold">
     About Community
   </div>
@@ -117,12 +117,12 @@
 
 <!-- Top Sub-communities -->
  {% if community.content_type == "Community" %}
-<div class="card mb-3 shadow-sm">
+<div class="card mb-3">
   <div class="card-header fw-bold">    
     🏛 Sub-communities
   </div>
 <ul class="list-group list-group-flush">
-  {% for sub in community.sub_communities.all %}
+  {% for sub in list_of_subs %}
     <li class="list-group-item d-flex align-items-center py-2">
       <!-- Subcommunity Icon -->
       {% if sub.icon %}
@@ -147,7 +147,7 @@
 </div> {% endif %}
 
 <!-- User Games may like -->
-<div class="card shadow-sm">
+<div class="card">
   <div class="card-header fw-bold">
     🎮 Games You May Like 
   </div>

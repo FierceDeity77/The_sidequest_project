@@ -30,5 +30,8 @@ urlpatterns = [
 
     path("search/", views.SearchView.as_view(), name="search"),
 
+    path("notifications/latest/", views.LatestNotificationsView.as_view(), name="latest-notifications"),
+    path("notifications/mark-read/<int:id>/", views.MarkNotificationsAsReadView.as_view(), name="mark-notification-read"),
+
     path("news/", views.NewsView.as_view(), name="news"),  # News page
 ]

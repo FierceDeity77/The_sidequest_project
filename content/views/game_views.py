@@ -25,9 +25,9 @@ class Games(View, PaginationMixin):
             # calculate approval percentage and output as FloatField
             # and sort by it
             percentage=ExpressionWrapper(
-            100.0 * Count('upvotes', distinct=True) /
-            (Count('upvotes', distinct=True) + Count('downvotes', distinct=True)),
-            output_field=FloatField(),
+                100.0 * Count('upvotes', distinct=True) /
+                (Count('upvotes', distinct=True) + Count('downvotes', distinct=True)),
+                output_field=FloatField(),
             )
         ).order_by('-percentage') # highest approval percentage first
 

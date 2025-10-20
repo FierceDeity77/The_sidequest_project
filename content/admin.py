@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Platform, Genre, Game, Comments, Community, Topic
+from .models import Platform, Genre, Game, Comments, Community, Topic, Notification
 
 # Register your models here.
 
@@ -23,6 +23,10 @@ class TopicAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "author", "created_at", "community", "slug", "content_type")
 
 
+class NotificationAdmin(admin.ModelAdmin):
+    list_filter = ("recipient", "actor", "verb", "is_read", "created_at")
+    list_display = ("id", "recipient", "actor", "verb", "is_read", "created_at")
+
 class PlatformAdmin(admin.ModelAdmin):
     list_filter = ["name"]
 
@@ -43,3 +47,4 @@ admin.site.register(Genre, GenreAdmin)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(Comments, CommentAdmin)
+admin.site.register(Notification, NotificationAdmin)

@@ -35,7 +35,7 @@
       {{ game.member_count }} follower{{ game.member_count|pluralize }}
     </span>
 
-    <!-- Meta -->
+    <!-- Info -->
     <div class="text-muted" style="font-size: 0.75rem;">
       Created by {{ game.author.username }} • {{ game.created_at|timesince }} ago
     </div>
@@ -44,7 +44,7 @@
   <!-- Average Rating -->
   <div class="ms-3 d-flex align-items-center {{ game.rating_color }}">
     <span class="fw-bold">
-      {{ game.approval_percentage|default:"N/A" }}
+      {{ game.approval_percentage|default:"TRASH" }}
     </span>
   </div>
 

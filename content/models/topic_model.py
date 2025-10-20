@@ -3,6 +3,7 @@ from django.conf import settings  # this points to AUTH_USER_MODEL
 from django.utils.text import slugify
 from django.utils import timezone
 from .community_model import Community
+from taggit.managers import TaggableManager
 from django.contrib.contenttypes.fields import GenericRelation
 
 
@@ -16,7 +17,7 @@ class Topic(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.SlugField(unique=True, default=None)
     comments = GenericRelation("Comments", related_name="topic_comments") # for querying comments from generic relation
-
+    tags = TaggableManager(blank=True)
     upvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="topic_upvotes", blank=True)
     downvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="topic_downvotes", blank=True)
 
