@@ -39,6 +39,10 @@ ALLOWED_HOSTS = [
     env("RENDER_EXTERNAL_HOSTNAME"),
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://the-sidequest-project.onrender.com",
+]
+
 
 # Application definition
 
