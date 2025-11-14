@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!jlpe4datc&o=e#*y3#h5!qq#jr!hbyx%2_15rs%dwmee@cy^j'
+SECRET_KEY = env("SECRET_KEY") # gets the value from .env file
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False # set to False for production
@@ -40,7 +40,7 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://the-sidequest-project.onrender.com",
+    f"https://{env('RENDER_EXTERNAL_HOSTNAME')}",
 ]
 
 
@@ -99,7 +99,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'The_sidequest_project.wsgi.application'
 
 # ASGI
-ASGI_APPLICATION = 'The_sidequest_project.wsgi.application'
+ASGI_APPLICATION = "The_sidequest_project.asgi.application"
 
 # Dev channel layer in-memory (works for single process only)
 CHANNEL_LAYERS = {
@@ -132,6 +132,9 @@ DATABASES = {
     'default': env.db(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 }
 
+# Force SSL for Supabase
+if DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql":
+    DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
