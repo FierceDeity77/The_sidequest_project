@@ -31,7 +31,7 @@ SECRET_KEY = env("SECRET_KEY") # gets the value from .env file
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False # set to False for production
 
-# ALLOWED_HOSTS = ['The_sidequest_project.onrender.com']
+# ALLOWED_HOSTS = []
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -129,7 +129,7 @@ CHANNEL_LAYERS = {
 
 # for production using DATABASE_URL from .env
 DATABASES = {
-    'default': env.db(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
+    "default": env.db("DATABASE_URL", default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 }
 
 # Force SSL for Supabase
