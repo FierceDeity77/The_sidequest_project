@@ -14,7 +14,9 @@ from pathlib import Path
 import environ
 import os
 
-
+# Initialize environment variables
+env = environ.Env()
+environ.Env.read_env(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,9 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!jlpe4datc&o=e#*y3#h5!qq#jr!hbyx%2_15rs%dwmee@cy^j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False # set to False for production
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['your-render-app.onrender.com']
 
 
 # Application definition
@@ -42,6 +44,8 @@ INSTALLED_APPS = [
     'channels',
     'widget_tweaks',
     'taggit',
+    'cloudinary_storage', # for cloudinary media storage, remove this if collecting static files locally
+    'cloudinary', # comment these two out for local development
     'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,6 +57,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # for serving static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -146,10 +151,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+
+# global static files directory
 STATICFILES_DIRS = [
-    BASE_DIR / "static"
+    os.path.join(BASE_DIR, "static") # absolute path to static folder
 ] # to see the static files in global 
+
+# Collect static files here for production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_URL = '/static/'
+
+# whitenoise settings for serving static files in production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Uncomment the following line to use default static files storage (for local development)
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -161,8 +178,20 @@ AUTH_USER_MODEL = "accounts.CustomUser" # points to the custom user model
 MEDIA_ROOT = BASE_DIR / "uploads" 
 MEDIA_URL = "/uploads/"
 
-env = environ.Env()
-environ.Env.read_env(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
+
+# Cloudinary settings
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUD_NAME'),
+    'API_KEY': env('API_KEY'),
+    'API_SECRET': env('API_SECRET')
+}
+
+
+# OAuth settings for IGDB API
 CLIENT_ID = env("CLIENT_ID") # gets the value from .env file
 CLIENT_SECRET = env("CLIENT_SECRET")
 AUTHORIZATION = env("AUTHORIZATION")
+
+
+
