@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.views import View
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator # can require login to cbv functions
+from django.utils.decorators import method_decorator # require login to cbv functions
 from django.apps import apps
 from content.views.notification_utils_views import create_notification
 
@@ -12,7 +13,9 @@ class GenericFollow(View): # reusable follow view for both communities and games
     def post(self, request, model, id):
         # Dynamically get model: "community" -> Community, "game" -> Game
         # this makes the follow view reusable for both communities and games
-        Model = apps.get_model("content", model.capitalize()) # gets the model class from the string name and capitalize the first letter to match the class name
+
+        # gets the model class from the string name and capitalize to match the class name
+        Model = apps.get_model("content", model.capitalize())
         obj = get_object_or_404(Model, id=id)
 
         if request.user in obj.members.all():
@@ -32,8 +35,8 @@ class GenericVote(View): # reusable vote view for both topics and comments to ke
     @method_decorator(login_required(login_url='login'))
     def post(self, request, model, id):
         # Dynamically get model: "topic" -> Topic, "comment" -> Comments
-        # this makes the vote view reusable for both topics and comments
-        Model = apps.get_model("content", model.capitalize()) # gets the model class from the string name and capitalize the first letter to match the class name
+        # this makes the vote view reusable for both topics, comments and games
+        Model = apps.get_model("content", model.capitalize()) 
         obj = get_object_or_404(Model, id=id)
 
         action = request.POST.get("action")
@@ -47,17 +50,28 @@ class GenericVote(View): # reusable vote view for both topics and comments to ke
                 obj.upvotes.remove(request.user)
             else:
                 obj.upvotes.add(request.user)
-                
+
                 # calls the create_notification function to notify the author of the upvote
-                # passes actor as the current user, recipient as the object's author, verb as 'upvote', and obj as the object being upvoted
-                create_notification(actor=request.user, recipient=obj.author, verb='upvote', obj=obj)
+                # if conditions to filter which model the upvote belongs to
+                if Model.__name__ == "Topic":
+                # obj=obj passes the model instance to the function call
+                    create_notification(actor=request.user, recipient=obj.author, 
+                                        url=reverse('content:topic-detail', args=[obj.slug]), 
+                                        verb='upvote_topic', obj=obj)
+                
+                elif Model.__name__ == "Comments":
+                     create_notification(actor=request.user, recipient=obj.author, 
+                                        url=reverse('content:topic-detail', args=[obj.id]), 
+                                        verb='upvote_comment', obj=obj)
 
                 # If user upvotes, remove downvote if exists
                 obj.downvotes.remove(request.user)
+                obj.author.karma += 1 # Increases user's xp/karma for upvote
+                obj.author.save()
 
-                # checks to see if the model being voted on is Topic or Comments to adjust user's karma accordingly
-                if Model.__name__ in ["Topic", "Comments"]:
-                    obj.author.karma += 1
+                # if game model then author does not get karma
+                if Model.__name__ in ["Game"]:
+                    obj.author.karma += 0
                     obj.author.save()
                  
         elif action == "downvote":
@@ -67,7 +81,7 @@ class GenericVote(View): # reusable vote view for both topics and comments to ke
                 obj.downvotes.add(request.user)
                 obj.upvotes.remove(request.user)
 
-                # checks to see if the model being voted on is Topic or Comments to adjust user's karma accordingly
+                # reduces karma if models from topic or comments
                 if Model.__name__ in ["Topic", "Comments"]:
                     obj.author.karma -= 1
                     obj.author.save()

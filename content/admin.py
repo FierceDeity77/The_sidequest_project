@@ -25,7 +25,7 @@ class TopicAdmin(admin.ModelAdmin):
 
 class NotificationAdmin(admin.ModelAdmin):
     list_filter = ("recipient", "actor", "verb", "is_read", "created_at")
-    list_display = ("id", "recipient", "actor", "verb", "is_read", "created_at")
+    list_display = ("id", "recipient", "actor", "verb", "is_read", "created_at", "url")
 
 class PlatformAdmin(admin.ModelAdmin):
     list_filter = ["name"]

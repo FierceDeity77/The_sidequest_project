@@ -20,6 +20,7 @@ class Genre(models.Model):
     
 
 class Game(models.Model):
+    igdb_id = models.PositiveIntegerField(unique=True, null=True, blank=True)  # IGDB unique identifier
     title = models.CharField(max_length=255)
     platforms = models.ManyToManyField(Platform, related_name="games")
     genre = models.ManyToManyField(Genre, related_name="games")

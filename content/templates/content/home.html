@@ -4,42 +4,67 @@
 {% block page_title %} Home {% endblock %}
 
 {% block content %}
-  <!-- News Feed -->
-  {% for topic in topics %}
-    {% if topic.author.avatar %}
-    <div class="card mb-3">
-      <div class="card-body">
-        <div class="d-flex align-items-center mb-2">
-          <img src="{{ topic.author.avatar.url }}" 
-               class="rounded-circle me-2" 
-               width="40" height="40" 
-               alt="{{ topic.author.username }}">
-          <div>
-            <h6 class="mb-0 fw-semibold">{{ topic.author.username }}</h6>
-            <small class="text-muted">
-              Posted {{ topic.created_at|timesince }} ago in {{ topic.community.name }} 
-              <span class="text-primary">{{ topic.game.title }}</span>
-            </small>
-          </div>
-        </div>
-        <p class="mb-2">{{ topic.title }}</p>
+  <!-- Filter Bar -->
+  <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+    <h6 class="mb-0 fw-semibold text-muted">Feed</h6>
+    <select class="form-select form-select-sm w-auto" disabled>
+      <option selected>Filter: All</option>
+      <option>Topics</option>
+      <option>News</option>
+      <option>Games</option>
+    </select>
+  </div>
 
-        <div class="d-flex justify-content-between text-muted small">
-          <span><i class="fa-regular fa-thumbs-up me-1"></i> Likes</span>
-          <span><i class="fa-regular fa-comment me-1"></i> {{ topic.comment_count }} Comments</span>
-          <span><i class="fa-solid fa-share me-1"></i> Share</span>
+<!-- News Feed -->
+{% for topic in topics %}
+  {% if topic.community.icon %}
+    <div class="topic-card position-relative py-2 px-3 mb-2 rounded-3" 
+         data-url="{% url 'content:topic-detail' topic.slug %}">
+      
+     <!-- Header: community + author -->
+      <div class="d-flex align-items-center mb-1">
+        <img src="{{ topic.community.icon.url }}" 
+            class="rounded-circle me-2"
+            width="28" height="28"
+            alt="{{ topic.community.name }}">
+        <div>
+          <small class="text-muted fw-semibold">
+            <a href="{% url 'content:community-detail' topic.community.slug %}" 
+              class="text-muted text-decoration-none small-link">
+              h/{{ topic.community.name }}
+            </a>
+          </small><br>
+          <small class="text-muted extra-small">
+            <a href="{% url 'user-profile' topic.author.id %}" 
+              class="text-muted text-decoration-none ">
+              p/{{ topic.author.username }}
+            </a>
+          </small>
         </div>
       </div>
+
+      <!-- Title -->
+      <p class="fw-semibold my-2">{{ topic.title }}</p>
+
+      <!-- Footer: votes/comments/share -->
+      <div class="d-flex align-items-center text-muted small gap-3 mt-1">
+        <span>{% include "content/includes/topic_vote_buttons.html" %}</span>
+        <span><i class="fa-regular fa-comment me-1"></i> {{ topic.comment_count }} Comments</span>
+        <span><i class="fa-solid fa-share me-1"></i> Share</span>
+      </div>
     </div>
+
+    {% if not forloop.last %}
+      <hr class="my-2 text-muted">
     {% endif %}
-  {% empty %}
-    <p class="text-muted text-center">No posts yet. Be the first to post!</p>
-  {% endfor %}
+  {% endif %}
+{% empty %}
+  <p class="text-muted text-center">No posts yet. Be the first to post!</p>
+{% endfor %}
 {% endblock %}
 
-
 {% block right_panel %}
-  <!-- Trending / Popular sections remain the same -->
+  <!-- Trending / Popular sections -->
   <div class="card mb-3">
     <div class="card-header fw-bold small">Trending Games</div>
     <ul class="list-group list-group-flush">

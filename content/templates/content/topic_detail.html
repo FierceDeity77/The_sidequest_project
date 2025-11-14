@@ -15,7 +15,7 @@
         <img src="{{ topic.author.avatar.url }}" alt="avatar" 
              class="rounded-circle me-2" width="32" height="32">
         <a href="{% url 'user-profile' topic.author.id %}" class="author-name-link small text-muted me-2">
-          {{ topic.author.username }}
+          p/{{ topic.author.username }}
         </a>
         <span class="text-muted small me-2">{{ topic.created_at|timesince }} ago</span>
 

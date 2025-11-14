@@ -10980,3 +10980,44 @@ textarea.form-control-lg {
   color: #F44336; 
   font-size: 0.9rem;
 }    /* red for bad */
+
+/* notification bell */
+.nav-item.dropdown {
+  list-style: none !important;
+}
+
+#notifDot {
+  box-shadow: none !important;
+}
+/* home feed */
+
+.topic-card {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.topic-card:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+ /* news feed links */
+.small-link {
+  font-size: 0.875rem; /* slightly smaller text */
+  transition: color 0.2s, text-decoration 0.2s;
+}
+
+.small-link:hover {
+  text-decoration: underline;
+  color: #333; /* or your brand accent */
+}
+
+.extra-small {
+  font-size: 0.7rem; /* for the username */
+}
+
+hr.text-muted {
+  opacity: 0.3;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}

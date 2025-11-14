@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.db.models import Count, FloatField, IntegerField, ExpressionWrapper
 from content.forms import GameForm
 from content.views.mixins import PaginationMixin
+from content.game_api import search_igdb_games
 from content.models.game_model import Game # . only works if in the current folder this tells django to look into content app folder then models.py
 
 
@@ -55,10 +56,10 @@ class AddGame(LoginRequiredMixin, View):
         game_form = GameForm(request.POST, request.FILES) # add request.FILES to handle file uploads
         if game_form.is_valid():
             game_data = game_form.save(commit=False) 
-            game_data.author = request.user # gets the author id of the current user then saves it, assign the whole instance instead of just id
+            game_data.author = request.user # gets the current user instance
             game_data.content_type = "Game"
             game_data.save()
-            game_form.save_m2m()  # <-- VERY IMPORTANT for ManyToMany fields!
+            game_form.save_m2m()  # for ManyToMany field
 
             # for AJAX
             if request.headers.get("x-requested-with") == "XMLHttpRequest":

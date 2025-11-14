@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils import timezone
+from django.core.validators import RegexValidator
 from django.templatetags.static import static
 
 # Create your models here.
@@ -32,7 +33,12 @@ class CustomUserManager(BaseUserManager):
     
 class CustomUser(AbstractBaseUser, PermissionsMixin): # no need to add password field, abstractbaseuser already has a password field and handles hashing
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=100, blank=True, null=False)
+    username = models.CharField(max_length=30, blank=True, unique=True, null=False, 
+                                validators=[RegexValidator(
+                                regex=r'^[a-zA-Z0-9_]+$',
+                                message="Username may only contain letters, numbers, and underscores."
+                                )]
+                                )
     avatar = models.ImageField(upload_to="user_avatars/", null=True)
     about = models.CharField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)

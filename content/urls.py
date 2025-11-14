@@ -7,13 +7,15 @@ urlpatterns = [
     path("", views.Home.as_view(), name="home"),
 
     path("community-list/", views.CommunityList.as_view(), name="communities"),
-    path("view-community/<slug:slug>/", views.CommunityDetail.as_view(), name="community-detail"),
+    path("h/<slug:slug>/", views.CommunityDetail.as_view(), name="community-detail"),
     path("edit-community/<slug:slug>/", views.EditCommunity.as_view(), name="edit-community"),
+    
+    path("t/<slug:slug>/", views.CommunityDetail.as_view(), name="subcommunity-detail"),
     path("create-subcommunity/<slug:slug>/", views.AddSubCommunity.as_view(), name="create-subcommunity"),
 
-    path("games/", views.Games.as_view(), name="game-list"),
+    path("game-list/", views.Games.as_view(), name="game-list"),
     path("add-game/", views.AddGame.as_view(), name="add-game"),
-    path("game-detail/<slug:slug>/", views.GameDetail.as_view(), name="game-detail"),
+    path("g/<slug:slug>/", views.GameDetail.as_view(), name="game-detail"),
     
     path("create-topic/<slug:slug>/", views.AddTopic.as_view(), name="create-topic"),
     path("topic/<slug:slug>/", views.TopicDetail.as_view(), name="topic-detail"),

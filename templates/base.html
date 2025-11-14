@@ -59,20 +59,23 @@
 
       {% if user.is_authenticated %}
       <!-- Notification Bell -->
-      <li class="nav-item dropdown me-1">
-        <a class="nav-link position-relative text-light" 
-          href="#" id="notifDropdown"
-          role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bi bi-bell fs-5 text-light"></i>
-          <!-- Optional red dot indicator for new notifications -->
-          <span id="notifDot" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle d-none">
-             <span class="visually-hidden">New alerts</span>
-          </span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown">
-            <!-- Notifications will be dynamically loaded here by JavaScript -->
-        </ul>
-      </li>
+<li class="nav-item dropdown me-1" style="list-style: none;">
+  <a class="nav-link position-relative text-light" 
+     href="#" id="notifDropdown"
+     role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-bell fs-5 text-light"></i>
+    <!-- Red dot indicator (hidden by default) -->
+    <span id="notifDot" 
+          class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle d-none"
+          style="border: 2px solid white;">
+      <span class="visually-hidden">New alerts</span>
+    </span>
+  </a>
+
+  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="notifDropdown" style="list-style: none;">
+    <!-- Notifications will be dynamically loaded here by JavaScript -->
+  </ul>
+</li>
 
       <!-- User Profile -->
       <li class="nav-item dropdown">

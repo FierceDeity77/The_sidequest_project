@@ -2,7 +2,15 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% block page_title %} Community Overview {% endblock %}
+
+{% block page_title %} 
+  {% if community.content_type == "Community" %}
+     Hub Overview 
+  {% else %}
+    Tavern Overview
+  {% endif %}
+{% endblock %}
+
 
 {% block header %} Detail {% endblock %}
 
@@ -37,14 +45,20 @@
     {% endif %}
 
     <div>
-      <h2 class="card-title mb-1 text-dark community-title">{{ community.name }}</h2>
+      {% if community.content_type == "Community" %}
+      <h2 class="card-title mb-1 text-dark community-title">h/{{ community.name }}</h2>
+      {% else %}
+      <h2 class="card-title mb-1 text-dark community-title">t/{{ community.name }}</h2>
+      {% endif %}
       
-
+      
       <!-- Meta Info -->
       <div class="d-flex flex-wrap text-muted small mt-2">
+      {% if community.content_type == "Sub-community" %}
         <a href="{% url 'user-profile' community.created_by.id %}" class="creator-link me-3">
-            👤 <strong>{{ community.created_by.username }}</strong>
+            👤 <strong>p/{{ community.created_by.username }}</strong>
         </a>
+      {% endif %}
         
         {% if community.parent %}
           <div class="d-flex align-items-center mb-2">
@@ -62,19 +76,19 @@
             <!-- Parent Community Link -->
             <a href="{% url 'content:community-detail' community.parent.slug %}" 
               class="sub-link small fw-semibold">
-              {{ community.parent.name }}
+              h/{{ community.parent.name }}
             </a>
           </div>
         {% endif %}
         <!-- content type badges -->
         {% if community.content_type == "Community" %}
           <span class="ms-3">
-            <span class="badge bg-primary">{{ community.content_type }}</span>
+            <span class="badge bg-primary">Hub</span>
             <span class="badge bg-success">General</span>
           </span>
         {% else %}
           <span class="ms-3">
-            <span class="badge bg-danger">{{ community.content_type }}</span>
+            <span class="badge bg-danger">Tavern</span>
           </span>
         {% endif %}
       </div>
@@ -84,7 +98,7 @@
 
 <!-- Action Buttons -->
  {% if request.user.is_authenticated %}
-<div class="d-flex justify-content-between mb-3">
+<div class="d-flex justify-content-between mb-3 border-bottom">
   <a href="#" 
      class="btn create-topic-btn btn-sm rounded-3 fw-semibold" 
      data-bs-toggle="modal" 
@@ -94,46 +108,49 @@
 </div>
 {% endif %}
 
-<!-- Topics Section -->
+<!-- Topics -->
 <div class="topics-list">
   {% for topic in topics %}
-    <div class="card mb-3">
-      <a href="{% url 'content:topic-detail' topic.slug %}" 
-         class="text-decoration-none text-dark p-3 d-block">
-        
-        <!-- Author + timestamp -->
-        <div class="d-flex align-items-center mb-2">
-          {% if topic.author.avatar %}
-            <img src="{{ topic.author.avatar.url }}" 
-                 alt="{{ topic.author.username }}'s avatar" 
-                 class="rounded-circle me-2"
-                 width="24" height="24">
-          {% else %}
-            <img src="{% static 'avatars/default-avatar.jpg' %}" 
-                 alt="Default avatar" 
-                 class="rounded-circle me-2"
-                 width="24" height="24">
-          {% endif %}
-          <small class="text-muted">
-            <span class="fw-semibold">{{ topic.author.username }}</span>
-            • {{ topic.created_at|timesince }} ago
-          </small>
-        </div>
+    <div class="topic-card position-relative py-2 px-3 mb-2 rounded-3" 
+         data-url="{% url 'content:topic-detail' topic.slug %}">
+      
+      <!-- Author + timestamp -->
+      <div class="d-flex align-items-center mb-1">
+        {% if topic.author.avatar %}
+          <img src="{{ topic.author.avatar.url }}" 
+               alt="{{ topic.author.username }}'s avatar" 
+               class="rounded-circle me-2"
+               width="28" height="28">
+        {% else %}
+          <img src="{% static 'avatars/default-avatar.jpg' %}" 
+               alt="Default avatar" 
+               class="rounded-circle me-2"
+               width="28" height="28">
+        {% endif %}
+        <small class="text-muted">
+          <span class="fw-semibold">p/{{ topic.author.username }}</span>
+          • {{ topic.created_at|timesince }} ago
+        </small>
+      </div>
 
-        <!-- Title -->
-        <div class="fs-5 fw-bold">{{ topic.title }}</div>
-      </a>
+      <!-- Title -->
+      <p class="fw-semibold my-2">
+        <a href="{% url 'content:topic-detail' topic.slug %}" 
+           class="text-dark text-decoration-none">
+          {{ topic.title }}
+        </a>
+      </p>
 
       <!-- Footer: votes + comments -->
-      <div class="d-flex justify-content-between align-items-center px-3 pb-2">
-      <div class="d-flex align-items-center gap-2">
-        {% include "content/includes/topic_vote_buttons.html" %}
-      </div>
-      <div>
-        <span class="text-muted">{{ topic.comment_count }} comments</span>
+      <div class="d-flex align-items-center text-muted small gap-3 mt-1">
+        <span>{% include "content/includes/topic_vote_buttons.html" %}</span>
+        <span><i class="fa-regular fa-comment me-1"></i> {{ topic.comment_count }} Comments</span>
       </div>
     </div>
-  </div> 
+
+    {% if not forloop.last %}
+      <hr class="my-2 text-muted">
+    {% endif %}
   {% empty %}
     <div class="text-muted">No topics available.</div>
   {% endfor %}

@@ -11,7 +11,7 @@ from content.views.notification_utils_views import create_notification
 
 class TopicDetail(View):
     def get(self, request, slug):
-         # (reverse relation) ensure the topic belongs to a community, and annotate the community with member count
+         # (reverse relation) ensure the topic belongs to a community.
         community = get_object_or_404(
             Community.objects.annotate(member_count=Count("members")), topics__slug=slug)
         
@@ -31,9 +31,8 @@ class TopicDetail(View):
                 )
        
         # filter to get only top-level comments (parent is null) and order by newest first
-        # this way only top level comments are fetched initially, replies are handled in the template
-        # instead of fetching all comments and filtering in template using {% if not %} which is inefficient
         comment_list = topic.comments.filter(parent__isnull=True).order_by('-created_at')
+
         community_form = CommunityForm(instance=community) # for modal edit community, instance in get prepopulates form fields with current model data.
         subcommunity_form = SubCommunityForm() # for modal create sub-community and returns a clear form
         comment_form = CommentForm()
@@ -61,8 +60,8 @@ class AddTopic(LoginRequiredMixin, View):
             topic.author = request.user
             topic.save()
             
-            create_notification(actor=request.user, recipient=current_community.created_by, 
-                                verb='topic', obj=current_community)
+            # create_notification(actor=request.user, recipient=current_community.created_by, 
+            #                     verb='topic', obj=current_community)
             
             messages.success(request, "Topic created successfully!")
             return redirect("content:community-detail", slug=slug)

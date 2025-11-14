@@ -11,13 +11,13 @@
             {% if result.content_type == "Topic" %}
               <a href="{% url 'content:topic-detail' result.slug %}">{{ result.title }}</a> (Topic)
             {% elif result.content_type == "Community" %}
-              <a href="{% url 'content:community-detail' result.slug %}">{{ result.name }}</a> (Community)
+              <a href="{% url 'content:community-detail' result.slug %}">h/{{ result.name }}</a> (Hub)
             {% elif result.content_type == "Sub-community" %}
-              <a href="{% url 'content:community-detail' result.slug %}">{{ result.name }}</a> (Sub-Community)
+              <a href="{% url 'content:community-detail' result.slug %}">t{{ result.name }}</a> (Tavern)
             {% elif result.content_type == "Game" %}
-              <a href="{% url 'content:game-detail' result.slug %}">{{ result.title }}</a> (Game)
+              <a href="{% url 'content:game-detail' result.slug %}">g/{{ result.title }}</a> (Game)
             {% elif result.content_type == "User" %}
-              <a href="{% url 'user-profile' result.id %}">{{ result.username }}</a> (User Profile)
+              <a href="{% url 'user-profile' result.id %}">p/{{ result.username }}</a> (Player)
             {% endif %}
           </li>
         {% empty %}

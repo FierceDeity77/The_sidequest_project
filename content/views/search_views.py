@@ -1,6 +1,5 @@
 from django.views import View
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.shortcuts import render
 from accounts.models import CustomUser
 from content.views.mixins import PaginationMixin
 from content.models.topic_model import Topic
@@ -14,16 +13,10 @@ class SearchView(View, PaginationMixin):
     def get(self, request):
         query = request.GET.get('q', '')
 
-         # Filter each model
-         # values makes querysets return the same columns
-         # union requires same number of columns and compatible types
-         # use Value to add a constant column to identify the type of each result
-         # union slower and limited you get dictionaries instead of model instances
-         # it's nice for sql merging but not for complex queries
-         # if you need model instances consider using itertools.chain
+        
          # Q combines multiple conditions with | OR logic or AND logic (&)
          # tags__name__icontains=query lets you search inside tag names (since TaggableManager creates a relation to the Tag model).
-         # .distinct() removes duplicates that might appear because of the many-to-many relationship.
+         # .distinct() removes duplicates that might appear because of the m2m relationship.
 
         topics = Topic.objects.filter(
             Q(title__icontains=query) | Q(tags__name__icontains=query)

@@ -20,7 +20,7 @@
            class="rounded-circle me-3" width="64" height="64">
       {% endif %}
       <div>
-        <h3 class="mb-0">{{ user_profile.username }}</h3>
+        <h3 class="mb-0">p/{{ user_profile.username }}</h3>
         <small class="text-muted">Joined {{ user_profile.created_at|date:"F Y" }}</small><br>
         <small class="text-muted">Sidequest XP: {{ user_profile.karma }} </small>
       </div>

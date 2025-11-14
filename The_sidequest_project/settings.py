@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,6 +39,7 @@ INSTALLED_APPS = [
     'content',
     'guides',
     'reviews',
+    'channels',
     'widget_tweaks',
     'taggit',
     'django_filters',
@@ -78,6 +83,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'The_sidequest_project.wsgi.application'
 
+# ASGI
+ASGI_APPLICATION = 'The_sidequest_project.wsgi.application'
+
+# Dev channel layer in-memory (works for single process only)
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+# For production (recommended): use Redis
+# CHANNEL_LAYERS = {
+#   "default": {
+#     "BACKEND": "channels_redis.core.RedisChannelLayer",
+#     "CONFIG": {"hosts": [("127.0.0.1", 6379)]},
+#   }
+# }
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -138,3 +160,9 @@ AUTH_USER_MODEL = "accounts.CustomUser" # points to the custom user model
 
 MEDIA_ROOT = BASE_DIR / "uploads" 
 MEDIA_URL = "/uploads/"
+
+env = environ.Env()
+environ.Env.read_env(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
+CLIENT_ID = env("CLIENT_ID") # gets the value from .env file
+CLIENT_SECRET = env("CLIENT_SECRET")
+AUTHORIZATION = env("AUTHORIZATION")

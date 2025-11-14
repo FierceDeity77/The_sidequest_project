@@ -79,7 +79,7 @@
     <div class="tab-pane fade" id="community" role="tabpanel">
       {% if game.communities.all %}
         <!-- Main Communities -->
-        <h6 class="fw-bold text-uppercase small text-muted mb-2">Main Communities</h6>
+        <h6 class="fw-bold text-uppercase small text-muted mb-2">Hub:</h6>
         <ul class="list-group list-group-flush mb-3">
           {% for community in game.communities.all %}
             {% if not community.parent %}
@@ -98,7 +98,6 @@
                       {{ community.name }}
                     </a>
                     <div class="text-muted small">
-                      👤 Creator: {{ community.created_by.username }} · 
                       👥 Members: {{ community.members.count }}
                     </div>
                   </div>
@@ -106,12 +105,12 @@
               </li>
             {% endif %}
           {% empty %}
-            <li class="list-group-item text-muted small">No main communities yet.</li>
+            <li class="list-group-item text-muted small">No communities yet.</li>
           {% endfor %}
         </ul>
 
         <!-- Sub-Communities -->
-        <h6 class="fw-bold text-uppercase small text-muted mb-2">Sub-Communities</h6>
+        <h6 class="fw-bold text-uppercase small text-muted mb-2">Taverns:</h6>
         <ul class="list-group list-group-flush">
           {% for community in game.communities.all %}
             {% if community.parent %}

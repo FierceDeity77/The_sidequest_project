@@ -91,6 +91,28 @@ document.querySelectorAll(".follow-btn").forEach(btn => {
   });
 });
 
+// news feed cards 
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.topic-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      const tag = e.target.tagName.toLowerCase();
+
+      // prevent click on links, buttons, icons inside the vote/comment/share section
+      if (
+        tag === 'a' || 
+        tag === 'button' || 
+        e.target.closest('.vote-btn') // optional: wrapper div for your vote buttons
+      ) {
+        e.stopPropagation();
+        return;
+      }
+
+      // go to topic detail
+      window.location.href = card.dataset.url;
+    });
+  });
+});
+
 
 
 

@@ -1,13 +1,17 @@
 {% load static %}
 <!-- Sidebar Column -->
 
-<!-- About Community -->
+<!-- About Hub/Community -->
 <div class="card mb-3">
   <div class="card-header bg-light fw-bold">
-    About Community
+    {% if community.content_type == "Community" %}
+      About Hub
+    {% else %}
+      About Tavern
+    {% endif %}
   </div>
   <div class="card-body">
-    <!-- Community name + icon -->
+    <!-- Hub/Community name + icon -->
     <div class="d-flex align-items-center mb-3">
       {% if community.icon %}
         <img src="{{ community.icon.url }}" alt="{{ community.name }}"
@@ -17,7 +21,15 @@
              style="width:40px; height:40px;"></div>
       {% endif %}
       <div>
-        <h6 class="mb-0">{{ community.name }}</h6>
+        {% if community.content_type == "Community" %}
+        <a href="{% url 'content:community-detail' community.slug %}">
+          <h6 class="mb-0">h/{{ community.name }}</h6>
+        </a>
+        {% else %}
+        <a href="{% url 'content:subcommunity-detail' community.slug %}">
+          <h6 class="mb-0">h/{{ community.name }}</h6>
+        </a>
+        {% endif %}
         <small class="text-muted">Created {{ community.created_at|date:"M d, Y" }}</small>
       </div>
     </div>
@@ -55,7 +67,11 @@
       {% if request.user.role == "admin" or request.user in community.moderators.all %} 
       <a href="#" 
          class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#editCommunityModal">
-        Edit Community Info
+         {% if community.content_type == "Community" %}
+           Edit Hub Info
+         {% else %}
+           Edit Tavern Info
+        {% endif %}
       </a>
       {% endif %}
     </div>
@@ -66,7 +82,7 @@
       {% if community.content_type == "Community" %}
       <a href="#" 
          class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#addSubCommunityModal">
-        Create Sub-community
+        Create Tavern
       </a>
       {% endif %}
     </div>
@@ -94,7 +110,7 @@
         <!-- Name -->
         <a href="{% url 'user-profile' mod.id %}" 
            class="text-dark text-decoration-none moderator-link">
-          {{ mod.username }}
+          p/{{ mod.username }}
         </a>
       </li>
     {% empty %}
@@ -119,7 +135,7 @@
  {% if community.content_type == "Community" %}
 <div class="card mb-3">
   <div class="card-header fw-bold">    
-    🏛 Sub-communities
+    🏛 Taverns
   </div>
 <ul class="list-group list-group-flush">
   {% for sub in list_of_subs %}
@@ -135,9 +151,9 @@
       {% endif %}
 
       <!-- Subcommunity Name -->
-      <a href="{% url 'content:community-detail' sub.slug %}" 
+      <a href="{% url 'content:subcommunity-detail' sub.slug %}" 
          class="sub-link small">
-        {{ sub.name }}
+        t/{{ sub.name }}
       </a>
     </li>
   {% empty %}

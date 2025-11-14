@@ -15,8 +15,10 @@ class LatestNotificationsView(LoginRequiredMixin, View):
 
         for n in latest_notifications:
             message = ""
-            if n.verb == 'upvote':
-                message = f" {n.actor.username} upvoted your post"
+            if n.verb == 'upvote_topic':
+                message = f"⬆️ {n.actor.username} upvoted your post {n.content_object.title}"
+            elif n.verb == 'upvote_comment':
+                message = f"💬 {n.actor.username} upvoted your comment"
             elif n.verb == 'comment':
                 message = f"💬 {n.actor.username} commented on your post"
             elif n.verb == 'reply':
@@ -24,7 +26,6 @@ class LatestNotificationsView(LoginRequiredMixin, View):
             elif n.verb == 'message':
                 message = f"✉️ {n.actor.username} sent you a message"
             elif n.verb == 'topic':
-                # content_object is the model instance bcause of GenericForeignKey in Notification model
                 message = f"📢 {n.actor.username} created a new topic in {n.content_object.name}"
             # append the notification data to the list
             notifications_data.append({
@@ -32,6 +33,7 @@ class LatestNotificationsView(LoginRequiredMixin, View):
                     'created_at': n.created_at.strftime('%b %d, %Y %H:%M'),
                     'is_read': n.is_read,
                     'id': n.id,
+                    'url': n.url
                 })
             # pass the notifications data as json response to the frontend javascript fetch call
         return JsonResponse({'notifications': notifications_data,

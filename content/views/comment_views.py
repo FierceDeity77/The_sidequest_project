@@ -8,6 +8,7 @@ from content.models.comment_model import Comments
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from content.forms import CommentForm
+from django.urls import reverse
 from content.views.notification_utils_views import create_notification
 
 
@@ -26,16 +27,18 @@ class AddComment(LoginRequiredMixin, View):
             if parent_id: # check the parent_id if it has a value if yes then it's a reply
                 parent_comment = get_object_or_404(Comments, id=parent_id) # use 404 if the object must exist
                 comment_data['parent'] = parent_comment # set parent comment and updates inside the dict
+
                 # create notification for reply
-                create_notification(actor=request.user, recipient=parent_comment.author, verb='reply', obj=parent_comment)
+                create_notification(actor=request.user, recipient=parent_comment.author, 
+                                    verb='reply', url=reverse('content:topic-detail', args=[slug])
+                                    , obj=parent_comment)
                 
             new_comment = Comments.objects.create(**comment_data) # set the dict as kwargs
             
             # Render the new comment HTML using your template tag
-            # If AJAX request, return JSON instead of redirect
+            # AJAX request, return JSON instead of redirect
             # render_to_string to render the comment template to a string
-            # and pass it back in the JSON response
-            # because with AJAX we don't want to reload the whole page
+            
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 comment_html = render_to_string(
                     "content/comments/comment.html",

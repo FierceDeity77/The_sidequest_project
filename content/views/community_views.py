@@ -78,8 +78,7 @@ class EditCommunity(LoginRequiredMixin, RoleRequiredMixin, View):
     
 
     def post(self, request, slug): # edit community detail goes to this post request
-        # community = Community.objects.get(slug=slug) # instance in post ensures you edit the same object instead of creating a new one
-        community = self.get_object()
+        community = self.get_object() # calls get_object func with rolereq mixin
         community_form = CommunityForm(request.POST, request.FILES, instance=community) # for modal edit community
         if community_form.is_valid():
             community = community_form.save(commit=False)
