@@ -158,7 +158,7 @@ STATICFILES_DIRS = [
 ] # to see the static files in global 
 
 # Collect static files here for production
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # manual collecting static mostly for testing and debugging
 
 STATIC_URL = '/static/'
 
