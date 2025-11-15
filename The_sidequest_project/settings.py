@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY") # gets the value from .env file
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False # set to False for production
+DEBUG = True # set to False for production
 
 # ALLOWED_HOSTS = []
 
