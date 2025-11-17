@@ -35,6 +35,7 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
+
     <!-- Brand -->
     <a class="navbar-brand d-flex align-items-center" href="{% url 'content:home' %}">
       <img src="{% static 'default_images/the_sidequest_logo.png' %}" 
@@ -42,7 +43,7 @@
       Sidequest
     </a>
 
-    <!-- Toggler -->
+    <!-- Toggler for Mobile -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
             aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +52,8 @@
 
     <!-- Collapsible Content -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <!-- Left-aligned (optional links can go here) -->
+      
+      <!-- Left-aligned links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
@@ -61,10 +63,14 @@
           <a class="nav-link {% if request.resolver_match.url_name == 'game-list' %}active{% endif %}" 
              href="{% url 'content:game-list' %}">Games</a>
         </li>
+        <li class="nav-item d-none d-lg-block">
+          <a class="nav-link {% if request.resolver_match.url_name == 'communities' %}active{% endif %}" 
+             href="{% url 'content:communities' %}">Communities</a>
+        </li>
       </ul>
 
-      <!-- Centered Search (stacked on mobile) -->
-      <form class="d-flex my-2 my-lg-0 w-100 w-lg-auto" role="search" method="get" action="{% url 'content:search' %}">
+      <!-- Search Bar -->
+      <form class="d-flex mx-auto my-2 my-lg-0 w-100 w-lg-auto" role="search" method="get" action="{% url 'content:search' %}">
         <input class="form-control rounded-pill px-3" type="search" placeholder="Search games, guides..." name="q">
       </form>
 
@@ -106,6 +112,7 @@
           </li>
         {% endif %}
       </ul>
+
     </div>
   </div>
 </nav>
