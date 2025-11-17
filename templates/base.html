@@ -34,88 +34,80 @@
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center ms-2" href="{% url 'content:home' %}">
+        <img src="{% static 'default_images/the_sidequest_logo.png' %}" 
+        alt="The Sidequest Logo" 
+        height="40" 
+        class="me-2 navbar-logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <!-- Brand -->
-    <a class="navbar-brand d-flex align-items-center" href="{% url 'content:home' %}">
-      <img src="{% static 'default_images/the_sidequest_logo.png' %}" 
-           alt="Logo" height="40" class="me-2 navbar-logo">
-      Sidequest
-    </a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-    <!-- Toggler for Mobile -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
-            aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+        <!-- Search Bar -->
+        <form class="d-flex mx-auto" role="search" method="get" action="
+        {% url 'content:search' %}">
+          <input class="form-control rounded-pill px-3 search-input" 
+                 type="search" placeholder="Search games, guides..." 
+                 aria-label="Search" name="q">
+        </form>
 
-    <!-- Collapsible Content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      
-      <!-- Left-aligned links -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
-             href="{% url 'content:home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == 'game-list' %}active{% endif %}" 
-             href="{% url 'content:game-list' %}">Games</a>
-        </li>
-        <li class="nav-item d-none d-lg-block">
-          <a class="nav-link {% if request.resolver_match.url_name == 'communities' %}active{% endif %}" 
-             href="{% url 'content:communities' %}">Communities</a>
-        </li>
-      </ul>
+      {% if user.is_authenticated %}
+      <!-- Notification Bell -->
+<li class="nav-item dropdown me-1" style="list-style: none;">
+  <a class="nav-link position-relative text-light" 
+     href="#" id="notifDropdown"
+     role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-bell fs-5 text-light"></i>
+    <!-- Red dot indicator (hidden by default) -->
+    <span id="notifDot" 
+          class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle d-none"
+          style="border: 2px solid white;">
+      <span class="visually-hidden">New alerts</span>
+    </span>
+  </a>
 
-      <!-- Search Bar -->
-      <form class="d-flex mx-auto my-2 my-lg-0 w-100 w-lg-auto" role="search" method="get" action="{% url 'content:search' %}">
-        <input class="form-control rounded-pill px-3" type="search" placeholder="Search games, guides..." name="q">
-      </form>
+  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="notifDropdown" style="list-style: none;">
+    <!-- Notifications will be dynamically loaded here by JavaScript -->
+  </ul>
+</li>
 
-      <!-- Right-aligned items -->
-      <ul class="navbar-nav ms-lg-3 mb-2 mb-lg-0">
-        {% if user.is_authenticated %}
-          <!-- Notifications -->
-          <li class="nav-item dropdown me-2">
-            <a class="nav-link position-relative" href="#" id="notifDropdown"
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-bell fs-5 text-light"></i>
-              <span id="notifDot" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger rounded-circle d-none"
-                    style="border: 2px solid white;"></span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="notifDropdown"></ul>
-          </li>
-
-          <!-- User Profile -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {% if user.avatar %}
-                <img src="{{ user.avatar.url }}" alt="avatar" class="rounded-circle me-2" width="32" height="32">
-              {% else %}
-                <img src="{% static 'default_images/default-avatar.jpg' %}" alt="avatar" class="rounded-circle me-2" width="32" height="32">
-              {% endif %}
-              <span>{{ user.username }}</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-              <li><a class="dropdown-item" href="{% url 'user-profile' user.id %}">View Profile</a></li>
-              <li><a class="dropdown-item" href="#">Achievements</a></li>
-              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-              <li><a class="dropdown-item" href="#">Settings</a></li>
-            </ul>
-          </li>
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">Log In</a>
-          </li>
-        {% endif %}
-      </ul>
-
+      <!-- User Profile -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center text-light" 
+          href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="avatar"
+                class="rounded-circle me-2" width="32" height="32">
+          {% else %}
+            <img src="{% static 'default_images/default-avatar.jpg' %}" alt="default avatar"
+                class="rounded-circle me-2" width="32" height="32">
+          {% endif %}
+          <span class="text-light">{{ user.username }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <li><a class="dropdown-item" href="{% url 'user-profile' user.id %}">View Profile</a></li>
+          <li><a class="dropdown-item" href="#">Achievements</a></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+        </ul>
+      </li>
+    {% else %}
+      <!-- Login Link -->
+      <li class="nav-item">
+        <a class="nav-link text-light {% if request.resolver_match.url_name == 'login' %}active{% endif %}" 
+          href="{% url 'login' %}">Log In</a>
+      </li>
+    {% endif %}
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
   <!-- Flash Messages (global) -->
   <div class="container mt-3">
