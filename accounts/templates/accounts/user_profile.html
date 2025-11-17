@@ -34,12 +34,16 @@
           Edit Profile
         </button>
       
-        <!-- Add Friend Button -->
+        
+      {% endif %}
+
+      <!-- Add Friend Button -->
+         {% if not user_profile == request.user %}
         <form method="post" action="#">
           {% csrf_token %}
           <button type="submit" class="btn btn-sm btn-outline-success">Add Friend</button>
         </form>
-      {% endif %}
+        {% endif %}
     </div>
   </div>
 </div>

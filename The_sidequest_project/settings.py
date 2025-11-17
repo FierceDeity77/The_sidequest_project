@@ -120,17 +120,17 @@ CHANNEL_LAYERS = {
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # for local development using sqlite3
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # for production using DATABASE_URL from .env
-DATABASES = {
-    "default": env.db("DATABASE_URL", default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
-}
+# DATABASES = {
+#     "default": env.db("DATABASE_URL", default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
+# }
 
 # Force SSL for Supabase
 if DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql":
@@ -199,12 +199,12 @@ MEDIA_URL = "/uploads/"
 
 
 # Cloudinary settings
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env('CLOUD_NAME'),
-    'API_KEY': env('API_KEY'),
-    'API_SECRET': env('API_SECRET')
-}
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# CLOUDINARY_STORAGE = {
+#     'CLOUD_NAME': env('CLOUD_NAME'),
+#     'API_KEY': env('API_KEY'),
+#     'API_SECRET': env('API_SECRET')
+# }
 
 
 # OAuth settings for IGDB API

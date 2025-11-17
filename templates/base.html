@@ -128,22 +128,35 @@
 
         {% block layout %}
 
-          <!-- Left Panel -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card" style="min-height: 100vh;">
-              {% include "includes/left_sidepanel.html" %}
-            </div>
-          </div>
+       <!-- Mobile Menu Button -->
+  <div class="d-lg-none p-2">
+    <button class="btn btn-dark w-100"
+            data-bs-toggle="collapse"
+            data-bs-target="#mobileSideMenu">
+      <i class="fa-solid fa-bars me-2"></i> Menu
+    </button>
+  </div>
 
-          <!-- Main Content -->
-          <div class="col-lg-6 col-md-8">
-            {% block content %}{% endblock %}
-          </div>
+  <!-- Left Panel -->
+  <div class="col-12 col-md-4 col-lg-3 mb-3 mb-md-0">
 
-          <!-- Right Panel -->
-          <div class="col-lg-3">
-            {% block right_panel %}{% endblock %}
-          </div>
+    <div id="mobileSideMenu" class="collapse d-lg-block">
+      <div class="card" style="min-height: 100vh;">
+        {% include "includes/left_sidepanel.html" %}
+      </div>
+    </div>
+
+  </div>
+
+        <!-- Main Content -->
+        <div class="col-12 col-md-8 col-lg-6 mb-3 mb-lg-0">
+          {% block content %}{% endblock %}
+        </div>
+
+        <!-- Right Panel -->
+        <div class="col-12 col-lg-3">
+          {% block right_panel %}{% endblock %}
+        </div>
         {% endblock %}
       </div>
     </div>

@@ -7,6 +7,7 @@ from django.db.models import Count, FloatField, IntegerField, ExpressionWrapper
 from content.forms import GameForm
 from content.views.mixins import PaginationMixin
 from content.game_api import search_igdb_games
+from django.db.models.functions import NullIf, Coalesce
 from content.models.game_model import Game # . only works if in the current folder this tells django to look into content app folder then models.py
 
 
@@ -25,10 +26,18 @@ class Games(View, PaginationMixin):
             ),
             # calculate approval percentage and output as FloatField
             # and sort by it
-            percentage=ExpressionWrapper(
-                100.0 * Count('upvotes', distinct=True) /
-                (Count('upvotes', distinct=True) + Count('downvotes', distinct=True)),
-                output_field=FloatField(),
+             # Approval percentage (0%–100%)
+             # nullif to avoid division by zero and coalesce to set null percentages to 0.0
+            percentage=Coalesce(
+                ExpressionWrapper(
+                    100.0 * Count('upvotes', distinct=True) /
+                    NullIf(
+                        Count('upvotes', distinct=True) + Count('downvotes', distinct=True),
+                        0
+                    ),
+                    output_field=FloatField(),
+                ),
+                0.0
             )
         ).order_by('-percentage') # highest approval percentage first
 
