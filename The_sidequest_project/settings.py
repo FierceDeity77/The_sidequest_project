@@ -194,8 +194,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "accounts.CustomUser" # points to the custom user model
 
-MEDIA_ROOT = BASE_DIR / "uploads" 
-MEDIA_URL = "/uploads/"
+# Comment out these lines if storing media files locally
+# MEDIA_ROOT = BASE_DIR / "uploads" 
+# MEDIA_URL = "/uploads/"
 
 
 # Cloudinary settings
