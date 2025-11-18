@@ -201,13 +201,13 @@ AUTH_USER_MODEL = "accounts.CustomUser" # points to the custom user model
 MEDIA_URL = '/media/' # for cloudinary
 
 # Cloudinary settings
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-# CLOUDINARY_STORAGE = {
-#     'CLOUD_NAME': env('CLOUD_NAME'),
-#     'API_KEY': env('API_KEY'),
-#     'API_SECRET': env('API_SECRET'),
-#     'SECURE': True,
-# }
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUD_NAME'),
+    'API_KEY': env('API_KEY'),
+    'API_SECRET': env('API_SECRET'),
+    'SECURE': True,
+}
 
 
 # OAuth settings for IGDB API
