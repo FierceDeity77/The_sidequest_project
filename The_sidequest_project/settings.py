@@ -171,44 +171,39 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 
-# global static files directory
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static") # absolute path to static folder
-] # to see the static files in global 
-
-# Collect static files here for production
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # manual collecting static mostly for testing and debugging
-
+# -----------------------------
+# STATIC FILES
+# -----------------------------
 STATIC_URL = '/static/'
 
-# whitenoise settings for serving static files in production
+# Global project-level static folder
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# Where collectstatic will collect files for production
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Whitenoise: serve static files with compression and cache-busting
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Uncomment the following line to use default static files storage (for local development)
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AUTH_USER_MODEL = "accounts.CustomUser" # points to the custom user model
-
+# -----------------------------
+# MEDIA FILES
+# -----------------------------
 if DEBUG:
+    # Local uploads for development
+    MEDIA_URL = '/uploads/'
     MEDIA_ROOT = BASE_DIR / "uploads"
-    MEDIA_URL = "/uploads/"
 else:
+    # Cloudinary storage for production uploads
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
     MEDIA_URL = "/media/"
 
-# Cloudinary settings
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': env('CLOUD_NAME'),
     'API_KEY': env('API_KEY'),
     'API_SECRET': env('API_SECRET'),
     'SECURE': True,
 }
-
 
 # OAuth settings for IGDB API
 CLIENT_ID = env("CLIENT_ID") # gets the value from .env file
