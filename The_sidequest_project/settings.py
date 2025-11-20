@@ -195,13 +195,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "accounts.CustomUser" # points to the custom user model
 
 # Comment out these lines if storing media files locally
-# MEDIA_ROOT = BASE_DIR / "uploads" 
-# MEDIA_URL = "/uploads/"
+MEDIA_ROOT = BASE_DIR / "uploads" 
+MEDIA_URL = "/uploads/"
 
 MEDIA_URL = '/media/' # for cloudinary
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Cloudinary settings
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': env('CLOUD_NAME'),
     'API_KEY': env('API_KEY'),
