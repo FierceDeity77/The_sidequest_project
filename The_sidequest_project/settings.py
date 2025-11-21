@@ -54,15 +54,17 @@ INSTALLED_APPS = [
     'channels',
     'widget_tweaks',
     'taggit',
-    'cloudinary_storage', # for cloudinary media storage, remove this if collecting static files locally
-    'cloudinary', # comment these two out for local development
-    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third party apps for production
+    'whitenoise.runserver_nostatic',
+    'cloudinary_storage', # for cloudinary media storage, remove this if collecting static files locally
+    'cloudinary', # comment these two out for local development
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -98,7 +100,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'The_sidequest_project.wsgi.application'
 
-# ASGI
 ASGI_APPLICATION = "The_sidequest_project.asgi.application"
 
 # Dev channel layer in-memory (works for single process only)
@@ -183,7 +184,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Whitenoise: serve static files with compression and cache-busting
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 # -----------------------------

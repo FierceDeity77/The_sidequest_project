@@ -24,24 +24,24 @@
               {% if field.name == "icon" %}
                 {% render_field field class="form-control" data-preview-target="subIconPreview" %}
                 {% if community.icon %}
-                  <img id="subIconPreview" data-default-src="{% static 'default_images/default-community-icon.png' %}" 
-                       src="{% static 'default_images/default-community-icon.png' %}" 
+                  <img id="subIconPreview" data-default-src="{% static 'images/default-community-icon.png' %}" 
+                       src="{% static 'images/default-community-icon.png' %}" 
                        alt="Community Icon Preview" class="img-thumbnail mt-2" style="max-height: 100px;">
                 {% else %}
-                  <img id="iconPreview" data-default-src="{% static 'default_images/default-community-icon.png' %}" 
-                       src="{% static 'default_images/default-community-icon.png' %}" 
+                  <img id="iconPreview" data-default-src="{% static 'images/default-community-icon.png' %}" 
+                       src="{% static 'images/default-community-icon.png' %}" 
                        alt="Community Icon Preview" class="img-thumbnail mt-2" style="max-height: 100px;">
                 {% endif %}
               
               {% elif field.name == "banner" %}
                 {% render_field field class="form-control" data-preview-target="subCoverPreview" %}
                 {% if community.banner %}
-                  <img id="subCoverPreview" data-default-src="{% static 'default_images/default-cover.png' %}" 
-                       src="{% static 'default_images/default-cover.png' %}" 
+                  <img id="subCoverPreview" data-default-src="{% static 'images/default-cover.png' %}" 
+                       src="{% static 'images/default-cover.png' %}" 
                        alt="Cover Preview" class="img-fluid mt-2 rounded" style="max-height: 200px;">
                 {% else %}
-                  <img id="coverPreview" data-default-src="{% static 'default_images/default-cover.png' %}" 
-                       src="{% static 'default_images/default-cover.png' %}" 
+                  <img id="coverPreview" data-default-src="{% static 'images/default-cover.png' %}" 
+                       src="{% static 'images/default-cover.png' %}" 
                        alt="Cover Preview" class="img-fluid mt-2 rounded" style="max-height: 200px;">
                 {% endif %}
               
