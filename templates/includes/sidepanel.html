@@ -27,7 +27,7 @@
         </a>
         {% else %}
         <a href="{% url 'content:subcommunity-detail' community.slug %}">
-          <h6 class="mb-0">h/{{ community.name }}</h6>
+          <h6 class="mb-0">t/{{ community.name }}</h6>
         </a>
         {% endif %}
         <small class="text-muted">Created {{ community.created_at|date:"M d, Y" }}</small>

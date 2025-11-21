@@ -20,6 +20,15 @@ class CommunityList(View):
         return render(request, "content/community.html", {"communities": list_of_communities,
                                                           "sub_communities": list_of_subs})
     
+    
+class SubcommunityList(View):
+    def get(self, request):
+        # Annotate each tavern with the count of its members
+        list_of_subs = (Community.objects.filter(is_main=False)
+                            .annotate(member_count=Count("members"))).order_by("-member_count")
+
+        return render(request, "content/tavern_list.html", {"sub_communities": list_of_subs})
+    
 
 class CommunityDetail(View):
     def get(self, request, slug):

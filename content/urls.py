@@ -6,7 +6,8 @@ app_name = "content"
 urlpatterns = [
     path("", views.Home.as_view(), name="home"),
 
-    path("community-list/", views.CommunityList.as_view(), name="communities"),
+    path("community-list/", views.CommunityList.as_view(), name="hubs"),
+    path("tavern-list/", views.SubcommunityList.as_view(), name="taverns"),
     path("h/<slug:slug>/", views.CommunityDetail.as_view(), name="community-detail"),
     path("edit-community/<slug:slug>/", views.EditCommunity.as_view(), name="edit-community"),
     

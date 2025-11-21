@@ -20,9 +20,16 @@
   </li>
 
   <li class="nav-item mb-1">
-    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'communities' %}active{% endif %}" 
-       href="{% url 'content:communities' %}">
-      <i class="fa-solid fa-users-gear me-2"></i> Communities
+    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'hubs' %}active{% endif %}" 
+       href="{% url 'content:hubs' %}">
+      <i class="fa-solid fa-users-gear me-2"></i> Main Hubs
+    </a>
+  </li>
+
+  <li class="nav-item mb-1">
+    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'taverns' %}active{% endif %}" 
+       href="{% url 'content:taverns' %}">
+      <i class="fa-solid fa-cocktail me-2"></i> Taverns
     </a>
   </li>
 
@@ -50,7 +57,7 @@
 
   <!-- Communities Section -->
 <div class="communities-section mt-3">
-  <h6 class="text-uppercase text-muted small mb-2 px-2">Your Communities</h6>
+  <h6 class="text-uppercase text-muted small mb-2 px-2">Main Hubs You Follow</h6>
   <ul class="list-group list-group-flush communities-list">
     {% for com in request.user.joined_communities.all %}
       <li class="list-group-item px-2 py-2 border-0">

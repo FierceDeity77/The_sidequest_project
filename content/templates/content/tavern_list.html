@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block page_title %} Communities {% endblock %}
+{% block page_title %} Taverns {% endblock %}
 
 
 {% block layout %}
 <section class="community-list-section my-4">
-  <h2 class="mb-3">Main Hubs</h2>
+  <h2 class="mb-3">Taverns</h2>
 
   <div class="row g-3">
-    {% for community in communities %}
+    {% for community in sub_communities %}
       <div class="col-lg-3 col-md-6 col-sm-12">
         <li class="d-flex align-items-center py-2 list-unstyled">
           <!-- Number -->
@@ -30,7 +30,7 @@
             <a href="{% url 'content:community-detail' community.slug %}" 
               class="fw-bold text-decoration-none text-dark d-block"
               style="font-size: 0.9rem;">
-              h/{{ community.name }}
+              t/{{ community.name }}
             </a>
 
             <!-- Description (tiny muted) -->
@@ -48,7 +48,7 @@
         </li>
       </div>
     {% empty %}
-      <p class="text-muted">No communities yet.</p>
+      <p class="text-muted">No taverns yet.</p>
     {% endfor %}
   </div>
 </section>
