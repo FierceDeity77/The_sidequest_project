@@ -4,6 +4,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.templatetags.static import static
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 
@@ -39,7 +40,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin): # no need to add password 
                                 message="Username may only contain letters, numbers, and underscores."
                                 )]
                                 )
-    avatar = models.ImageField(upload_to="user_avatars/", null=True)
+    # avatar = models.ImageField(upload_to="user_avatars/", null=True)
+    # cloudinary field for cloud storage
+    avatar = CloudinaryField('image', folder='user_avatars', null=True, blank=True)
     about = models.CharField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     role = models.CharField(max_length=50, choices=[("admin", "Admin"), ("moderator", "Moderator"), ("user", "User")], default="user")

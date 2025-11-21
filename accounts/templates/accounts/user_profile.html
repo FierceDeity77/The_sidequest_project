@@ -11,7 +11,7 @@
     <!-- Avatar + Info -->
     <div class="d-flex align-items-center">
       {% if user_profile.avatar %}
-      <img src="{{ user_profile.avatar.url|default:'/default_images/default-avatar.jpg' }}" 
+      <img src="{{ user_profile.avatar.url }}" 
            alt="{{ user_profile.username }}" 
            class="rounded-circle me-3" width="64" height="64">
       {% else %}

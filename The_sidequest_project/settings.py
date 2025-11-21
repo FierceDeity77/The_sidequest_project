@@ -12,11 +12,19 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import environ
+import cloudinary
 import os
 
 # Initialize environment variables
 env = environ.Env()
 environ.Env.read_env(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
+
+cloudinary.config(
+    cloud_name=env('CLOUD_NAME'),
+    api_key=env('API_KEY'),
+    api_secret=env('API_SECRET'),
+    secure=True
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

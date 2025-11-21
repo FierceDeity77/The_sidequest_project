@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from .game_model import Game
 from taggit.managers import TaggableManager
+from cloudinary.models import CloudinaryField
 
 
 class Community(models.Model):
@@ -16,8 +17,10 @@ class Community(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
-    icon = models.ImageField(upload_to="community_icons/", blank=True, null=True)
-    banner = models.ImageField(upload_to="community_banners/", blank=True, null=True)
+    # icon = models.ImageField(upload_to="community_icons/", blank=True, null=True)
+    # banner = models.ImageField(upload_to="community_banners/", blank=True, null=True)
+    icon = CloudinaryField('image', folder='community_icons', blank=True, null=True)
+    banner = CloudinaryField('image', folder='community_banners', blank=True, null=True)
     content_type = models.CharField(max_length=20, null=True)
     rules = models.TextField(null=True, blank=True)
     slug = models.SlugField(unique=True, default=None)

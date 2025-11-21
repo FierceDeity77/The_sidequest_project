@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.utils import timezone
 from taggit.managers import TaggableManager
+from cloudinary.models import CloudinaryField
 
 
 class Platform(models.Model):
@@ -27,7 +28,8 @@ class Game(models.Model):
     description = models.TextField()
     release_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
-    cover_image = models.ImageField(upload_to="game_covers/", blank=True, null=True)
+    # cover_image = models.ImageField(upload_to="game_covers/", blank=True, null=True)
+    cover_image = CloudinaryField('image', folder='game_covers', blank=True, null=True)
     content_type = models.CharField(max_length=20, null=True) # for querying (Game, Review, Guide)
     slug = models.SlugField(unique=True, default=None) # will be generated from title and author id to ensure uniqueness
     tags = TaggableManager(blank=True)  # for tagging games with keywords
