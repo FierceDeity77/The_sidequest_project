@@ -186,6 +186,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # Whitenoise: serve static files with compression and cache-busting
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
+AUTH_USER_MODEL = 'accounts.CustomUser' # tells django to use your custom user model
 
 # -----------------------------
 # MEDIA FILES
