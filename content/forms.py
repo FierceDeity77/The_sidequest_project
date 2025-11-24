@@ -25,6 +25,11 @@ class GameForm(forms.ModelForm):
         self.fields['release_date'].label = "Release Date"
         self.fields['cover_image'].label = "Cover Image"
 
+    def clean_title(self):
+        title = self.cleaned_data.get('title', '')
+        # Capitalize first letter of the title
+        return title.capitalize() if title else title
+
 
 class TopicForm(forms.ModelForm):
     spoiler = forms.TypedChoiceField(
