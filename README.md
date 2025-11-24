@@ -5,7 +5,7 @@ It brings together community discussions, game information, reviews, guides, and
 
 # Community-Centered Around Games
 
-SideQuest is a community-driven platform where every game has its own main community, called a Hub. Within each Hub, users can create Taverns, 
+The SideQuest is a community-driven platform where every game has its own main community, called a Hub. Within each Hub, users can create Taverns, 
 which are sub-communities associated with that game. This structure ensures that discussions, guides, and content stay organized around each
 game while fostering rich, interconnected communities.
 
