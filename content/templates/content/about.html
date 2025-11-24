@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %} About {% endblock %}
+
+{% block content %}
+  
+    <div class="container my-4">
+
+    <h1><strong>The SideQuest — A Centralized Gaming Community Platform</strong></h1>
+
+    <p>
+        The SideQuest is a full-stack web application inspired by platforms like Reddit, GameFAQs and
+        IGN. It brings together community discussions, game information,
+        reviews, guides, and user-generated content into one centralized hub.
+    </p>
+
+    <hr>
+
+    <h2 class="about">⭐ Why I Built This Project</h2>
+
+    <p>This project solves a real problem I personally dealt with as a gamer:</p>
+
+    <p>Whenever I wanted to look for gaming-related content, I needed to open multiple websites:</p>
+
+    <ul>
+        <li>Reddit for discussions</li>
+        <li>Steam, GameFAQs, and GameSpot for reviews</li>
+        <li>IGN and GameSpot for gaming news</li>
+        <li>Fextralife, GameFAQs, and Steam for guides and walkthroughs</li>
+    </ul>
+
+    <p>
+        I wanted one centralized platform where all of these could exist together
+        a single go-to site for all gaming needs.
+    </p>
+
+    <p>That is why I built SideQuest:</p>
+
+    <ul>
+        <li>✔️ To solve my own personal frustration</li>
+        <li>✔️ To challenge myself as a developer</li>
+        <li>✔️ To create a strong portfolio project</li>
+    </ul>
+
+    <hr>
+
+    <h2 class="about">🚀 Core Features (Current)</h2>
+
+    <h4>🕹️ Game & Community Features</h4>
+    <ul>
+        <li>Add games manually(IGDB API integration to be added)</li>
+        <li>Create Hubs (main communities)</li>
+        <li>Create Taverns (sub-communities inside each hub)</li>
+        <li>Game voting (upvote/downvote)</li>
+        <li>Comment voting (upvote/downvote)</li>
+        <li>Nested comment threads (Reddit-style)</li>
+    </ul>
+
+    <h4>👤 User Features</h4>
+    <ul>
+        <li>User authentication & registration</li>
+        <li>User profiles</li>
+        <li>Follow/Unfollow system</li>
+        <li>Image uploads for:
+            <ul>
+                <li>User avatars</li>
+                <li>Game covers</li>
+                <li>Community banners</li>
+                <li>Community icons</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h4>💬 Platform Features</h4>
+    <ul>
+        <li>Basic notification system</li>
+        <li>Basic search functionality</li>
+        <li>Basic news feed</li>
+        <li>Pagination</li>
+        <li>Responsive UI</li>
+        <li>CRUD functionality (Create, Read, Update, Delete)</li>
+    </ul>
+
+    <h4>☁️ Deployment</h4>
+    <ul>
+        <li>Deployed on Render</li>
+        <li>Media storage with Cloudinary</li>
+        <li>Database via Neon (PostgreSQL)</li>
+        <li>Local development supported by SQLite</li>
+    </ul>
+
+    <hr>
+
+    <h2 class="about">🧩 Upcoming Features (Planned)</h2>
+
+    <h4>📚 Data & Search Features</h4>
+    <ul>
+        <li>IGDB API integration for real game data</li>
+        <li>ElasticSearch for advanced search</li>
+        <li>AI-powered, machine-learning-based feed algorithm</li>
+    </ul>
+
+    <h4>🛠️ Moderator & User Tools</h4>
+    <ul>
+        <li>Moderator dashboard</li>
+        <li>Advanced moderation tools</li>
+        <li>User profile settings</li>
+        <li>Badge / rank system</li>
+        <li>Game & user ranking / leaderboard system</li>
+    </ul>
+
+    <h4>📝 Content Features</h4>
+    <ul>
+        <li>Game reviews (Steam/GameFAQs-style)</li>
+        <li>Game guides & walkthroughs</li>
+        <li>Gaming news section</li>
+    </ul>
+
+    <h4>🔌 Technical Improvements</h4>
+    <ul>
+        <li>WebSockets for real-time notifications</li>
+        <li>Better mobile responsiveness</li>
+        <li>Django REST Framework APIs</li>
+    </ul>
+
+    <hr>
+
+    <h2 class="about">🧰 Technologies Used</h2>
+
+    <h4>Backend</h4>
+    <ul>
+        <li>Python 3.12</li>
+        <li>Django 5.2</li>
+        <li>Django ORM</li>
+    </ul>
+
+    <h4>Frontend</h4>
+    <ul>
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>JavaScript</li>
+        <li>Bootstrap</li>
+    </ul>
+
+    <h4>Databases & Storage</h4>
+    <ul>
+        <li>PostgreSQL (Neon)</li>
+        <li>SQLite (local)</li>
+        <li>Cloudinary (media storage)</li>
+    </ul>
+
+    <h4>Tools & DevOps</h4>
+    <ul>
+        <li>Render (deployment)</li>
+        <li>Git & GitHub</li>
+    </ul>
+
+    <hr>
+
+    <h2 class="about">📖 Inspiration</h2>
+
+    <p>SideQuest takes inspiration from the best features of the top gaming platforms:</p>
+
+    <ul>
+        <li>Reddit — community posts, comments, nested threads</li>
+        <li>Steam — reviews, game pages</li>
+        <li>GameFAQs — walkthroughs, guides</li>
+        <li>IGN / GameSpot — gaming news</li>
+        <li>Fextralife — detailed guides and community hubs</li>
+    </ul>
+
+    <hr>
+
+    <h2 class="about">📌 Project Status</h2>
+
+    <p>
+        SideQuest is actively being developed with regular updates. More features, integrations,
+        and UI improvements are planned.
+    </p>
+
+    <hr>
+
+    <h2 class="about">📩 Contact</h2>
+    <p><strong>Lester James Celeste</strong></p>
+    <p>GitHub: <a href="https://github.com/FierceDeity77" target="_blank">https://github.com/FierceDeity77</a></p>
+    <p>Email: <a href="mailto:ljamesceleste@gmail.com">ljamesceleste@gmail.com</a></p>
+
+</div>
+{% endblock %}
+
+{% block right_panel %}
+
+{% endblock %}

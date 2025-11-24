@@ -48,7 +48,7 @@
       </div>
 
       <h5 class="mb-2">{{ topic.title }}</h5>
-      <p>{{ topic.text }}</p>
+      <p>{{ topic.text|linebreaks }}</p> <!-- Preserves line breaks -->
 
       <!-- Vote Section -->
       <div class="d-flex align-items-center gap-2 me-3">

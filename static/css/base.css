@@ -11021,3 +11021,8 @@ hr.text-muted {
   margin-top: 0.5rem !important;
   margin-bottom: 0.5rem !important;
 }
+
+h2.about {
+  margin-bottom: 20px !important; /* Adjust the space as needed */
+
+}

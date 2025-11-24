@@ -2,6 +2,7 @@ from django.views import View
 from django.shortcuts import render
 from django.db.models import Count
 from content.models.topic_model import Topic
+from django.views.generic import TemplateView
 
 
 class Home(View):
@@ -29,3 +30,7 @@ class Home(View):
         
         return render(request, "content/home.html", {"user": request.user,
                                                       "topics": topics,})
+    
+    
+class AboutView(TemplateView):
+    template_name = "content/about.html"

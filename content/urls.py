@@ -37,4 +37,6 @@ urlpatterns = [
     path("notifications/mark-read/<int:id>/", views.MarkNotificationsAsReadView.as_view(), name="mark-notification-read"),
 
     path("news/", views.NewsView.as_view(), name="news"),  # News page
+
+    path("about/", views.AboutView.as_view(), name="about"),
 ]

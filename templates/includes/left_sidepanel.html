@@ -53,12 +53,20 @@
       <i class="fa-solid fa-newspaper me-2"></i> News
     </a>
   </li>
+
+  <li class="nav-item mb-1">
+    <a class="nav-link-side d-flex align-items-center {% if request.resolver_match.url_name == 'about' %}active{% endif %}" 
+       href="{% url 'content:about' %}">
+      <i class="bi bi-person-vcard me-2"></i> About this Project
+    </a>
+  </li>
 </ul>
 
   <!-- Communities Section -->
 <div class="communities-section mt-3">
   <h6 class="text-uppercase text-muted small mb-2 px-2">Main Hubs You Follow</h6>
   <ul class="list-group list-group-flush communities-list">
+
     {% for com in request.user.joined_communities.all %}
       <li class="list-group-item px-2 py-2 border-0">
         <a href="{% url 'content:community-detail' com.slug %}" 
