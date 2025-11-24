@@ -1,7 +1,13 @@
-# The SideQuest — A Centralized Gaming Community Platform
+# The SideQuest: A Centralized Gaming Community Platform
 
 The SideQuest is a full-stack web application inspired by platforms like Reddit, Steam, GameFAQs, GameSpot, IGN, and Fextralife.  
 It brings together community discussions, game information, reviews, guides, and user-generated content into one centralized hub.
+
+# Community-Centered Around Games
+
+SideQuest is a community-driven platform where every game has its own main community, called a Hub. Within each Hub, users can create Taverns, 
+which are sub-communities associated with that game. This structure ensures that discussions, guides, and content stay organized around each
+game while fostering rich, interconnected communities.
 
 ---
 
