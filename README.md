@@ -22,19 +22,19 @@ Whenever I wanted to look for gaming-related content, I needed to open multiple 
 - IGN and GameSpot for gaming news
 - Fextralife, GameFAQs, and Steam for guides and walkthroughs
 
-I wanted one centralized platform where all of these could exist together — a single go-to site for all gaming needs.
+I wanted one centralized platform where all of these could exist together a single go-to site for all gaming needs.
 
 That is why I built SideQuest:
 
-- ✔️ To solve my own personal frustration
-- ✔️ To challenge myself as a developer
-- ✔️ To create a strong portfolio project
+- To solve my own personal frustration
+- To challenge myself as a developer
+- To create a strong portfolio project
 
 ---
 
 ## 🚀 Core Features (Current)
 
-### 🕹️ Game & Community Features
+### Game & Community Features
 - Add games manually (IGDB API integration to be added)
 - Create Hubs (main communities)
 - Create Taverns (sub-communities inside each hub)
@@ -42,7 +42,7 @@ That is why I built SideQuest:
 - Comment voting (upvote/downvote)
 - Nested comment threads (Reddit-style)
 
-### 👤 User Features
+### User Features
 - User authentication & registration
 - User profiles
 - Follow/Unfollow system
@@ -52,7 +52,7 @@ That is why I built SideQuest:
   - Community banners
   - Community icons
 
-### 💬 Platform Features
+### Platform Features
 - Basic notification system
 - Basic search functionality
 - Basic news feed
@@ -60,7 +60,7 @@ That is why I built SideQuest:
 - Responsive UI
 - CRUD functionality (Create, Read, Update, Delete)
 
-### ☁️ Deployment
+### Deployment
 - Deployed on Render
 - Media storage with Cloudinary
 - Database via Neon (PostgreSQL)
@@ -70,24 +70,24 @@ That is why I built SideQuest:
 
 ## 🧩 Upcoming Features (Planned)
 
-### 📚 Data & Search Features
+### Data & Search Features
 - IGDB API integration for real game data
 - ElasticSearch for advanced search
 - AI-powered, machine-learning-based feed algorithm
 
-### 🛠️ Moderator & User Tools
+### Moderator & User Tools
 - Moderator dashboard
 - Advanced moderation tools
 - User profile settings
 - Badge / rank system
 - Game & user ranking / leaderboard system
 
-### 📝 Content Features
+### Content Features
 - Game reviews (Steam/GameFAQs-style)
 - Game guides & walkthroughs
 - Gaming news section
 
-### 🔌 Technical Improvements
+### Technical Improvements
 - WebSockets for real-time notifications
 - Better mobile responsiveness
 - Django REST Framework APIs
@@ -120,7 +120,7 @@ That is why I built SideQuest:
 
 ## 📖 Inspiration
 
-SideQuest takes inspiration from the best features of top gaming platforms:
+The SideQuest takes inspiration from the best features of top gaming platforms:
 
 - Reddit — community posts, comments, nested threads
 - Steam — reviews, game pages
@@ -132,7 +132,7 @@ SideQuest takes inspiration from the best features of top gaming platforms:
 
 ## 📌 Project Status
 
-SideQuest is actively being developed with regular updates.  
+The SideQuest is actively being developed with regular updates.  
 More features, integrations, and UI improvements are planned.
 
 ---
